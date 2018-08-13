@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html layout:decorator="/admin/layout">
+<head>
+<meta charset="UTF-8">
+<title>修改密码</title>
+</head>
+<body>
+
+	<section class="content" layout:fragment="content">
+		<div class="box">
+			<div class="text-center  page-header">
+				<form th:action="@{/admin/changepwd}" method="post" class="form-horizontal"
+					th:object="${changepwd}">
+					<p th:errors="*{global}" th:if="${ #fields.hasGlobalErrors()}"
+						class="alert alert-warning"></p>
+					<div class="form-group">
+						<label class="col-sm-2  text-right">旧密码</label>
+						<div class="col-sm-9">
+							<input class="form-control" type="password" name="oldpwd" required="required"
+								th:value="${oldpwd}" placeholder="请输入旧密码"> <span
+								th:if="${#fields.hasErrors('oldpwd')}" th:errors="*{oldpwd}">Incorrect
+								date</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2  text-right">新密码</label> 
+						<div class="col-sm-9">
+						<input  required="required"
+							class="form-control" type="password" name="password1"
+							th:value="${password1}" placeholder="请输入新密码"> <span
+							th:if="${#fields.hasErrors('password1')}"
+							th:errors="*{password1}">Incorrect date</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2  text-right">新密码</label> 
+						<div class="col-sm-9">
+						<input  required="required"
+							class="form-control" type="password" name="password2"
+							th:value="${password2}" placeholder="请输入新密码"> <span
+							th:if="${#fields.hasErrors('password2')}"
+							th:errors="*{password2}">Incorrect date</span>
+							</div>
+					</div>
+					<div>
+						<button class="btn btn-primary" type="submit">提交</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

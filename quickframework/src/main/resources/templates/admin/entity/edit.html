@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html layout:decorator="/admin/layout">
+<head>
+<title>编辑[[${entityMeta.entityName}]]</title>
+</head>
+<body>
+<section class="content"  layout:fragment="content"> 
+<div class="box" >
+ <h4 class="box-header">编辑[[${entityMeta.entityName}]]</h4>
+  
+	<form method="post"  action=""
+		id="form_edit" th:action="@{/admin/entity/edit_save/__${entityName}__}"
+		class="form-horizontal">
+
+	 <input type="hidden" name="id"  th:value="${entity.id}">
+	 <div class="form-group" th:each="c : ${columns}"
+			th:if="${c.uiMeta.updateAble  and  c.uiMeta.visable}">
+			<label class="col-sm-2  text-right" th:text="${c.title}">title</label>
+			<div class="col-sm-10" th:object="${entity}" 
+			th:switch="${c.uiMeta.uiType.toString()}" 
+			th:classappend="${#fields.hasErrors( c.dataKey )}?'has-error':'' " >
+			
+			<th:block th:case="Number">
+				<input 	th:field="*{__${c.dataKey}__}" 	type="number" class="form-control" />
+			</th:block>
+			
+			<th:block th:case="Date">
+				<input  th:field="*{__${c.dataKey}__}" type="text"  class="form-control _date" /> 
+			</th:block>
+			
+			<th:block th:case="DateTime">
+				<input  th:field="*{__${c.dataKey}__}" type="datetime"  class="form-control _datetime" />
+			</th:block>
+			
+			<th:block th:case="Boolean">
+				<input  th:field="*{__${c.dataKey}__}" type="radio"     value="1"/>是
+				<input  th:field="*{__${c.dataKey}__}" type="radio"    value="0"/>否
+			</th:block>
+			
+			<div th:case="Img" class="_uploadContainer row"  th:with="value=${entityUtil.getColumnValue(entity,c)}" >
+				<div style="padding:6px 12px"> <input type="file"  th:hidName="${c.dataKey}"   /> </div>
+				<div class="_upload_item" >
+				 <input type="hidden" th:value="${value}" th:name="${c.dataKey}"> 
+				 <img	th:if="${value!=null and !#strings.isEmpty(value)}" th:src="${entityUtil.getColumnValue(entity,c)}"  />
+				 <button th:if="${value!=null and !#strings.isEmpty(value)}" type="button" class="btn   btn-remove _upload_remove">删除</button>
+				</div>
+				 
+				 
+			</div>
+			
+			<div th:case="File" th:with="fileValue=${entityUtil.getColumnValue(entity,c)}" 
+			class="_uploadContainer row" th:multiple="${c.uiMeta.multi}" th:attrappend="uploadUrl='system/common/upload'"  >
+				<div  class="col-sm-10">
+					<input type="file" class="form-control" th:hidName="${c.dataKey}"   /> 
+				</div>
+				<div th:if="${c.uiMeta.multi}" th:each="item :${fileValue}" class="_upload_item ">
+				 <input type="hidden" th:value="${item}" th:name="${c.dataKey}">
+				 <a href="javascript:" class="_upload_remove" >[[${item}]]<i class='glyphicon glyphicon-remove'></i></a>
+				</div>
+				
+				<div th:if="${!c.uiMeta.multi and !#strings.isEmpty(fileValue)}"  class="_uoload_item ">
+				 <a href="javascript:" class="_upload_remove" >[[${fileValue}]]<i class='glyphicon glyphicon-remove'></i></a>
+				</div>
+			</div>
+			
+			<th:block th:case="Dictionary">
+				<select class="form-control" th:field="*{__${c.dataKey}__}">
+						<option th:each="o : ${entityUtil.getDictMap(c)}"
+							th:text="${o.value}" th:value="${o.key}">
+				</select>
+			</th:block>
+			
+			<th:block th:case="Password">
+				<input th:value="${entityUtil.getColumnValue(entity,c)}" th:name="${c.dataKey}" type="password"  class="form-control"   />
+			</th:block>
+			
+			 <th:block th:case="RichContent">
+			 
+			  <textarea  th:field="*{__${c.dataKey}__}" class="_richeditor form-control"></textarea>
+			 </th:block>
+			
+			
+			<th:block th:case="Pick" th:with="pv=${entityUtil.getColumnValue(entity,c)}">
+				<select class="_select2 form-control" th:name="${c.dataKey}"
+				 th:attrappend="data-ajax-url=@{/admin/entity/pick/__${c.uiMeta.pickEntityShortName}__}"
+				 th:multiple="${c.uiMeta.multiPick}"
+				 >
+				 <option th:if="${c.uiMeta.multiPick and pv!=null}" th:each="v:${pv}" selected="selected" th:value="${v.id}">[[${v}]]</option>
+				 <option th:if="${not c.uiMeta.multiPick and pv!=null}"   th:value="${pv.id}">[[${pv}]]</option>
+				
+				</select>
+			</th:block>
+
+			 
+		 <th:block  th:case="List">
+			<div class="row _input_list_row" th:each="d:${#conversions.convert(entityUtil.getColumnValue(entity,c),'java.util.List')}">
+				<div class="col-sm-10" >
+					<input th:name="${c.dataKey}" th:value="${d}" type="text" class="form-control " />
+				</div> 
+				
+			 <div class="col-sm-2" >
+				<button class="_input_list_row_add" type="button"><i class="glyphicon glyphicon-plus"></i></button>
+				<button  class="_input_list_row_remove" type="button"><i class="glyphicon glyphicon-remove"></i></button>
+			 </div>
+			</div>
+			 </th:block>
+
+			<textarea th:case="TextArea" class="form-control" th:field="*{__${c.dataKey}__}"></textarea>
+
+			<input th:case="*"  th:field="*{__${c.dataKey}__}" type="text"  class="form-control"   />
+			
+		   <p th:if="${#fields.hasErrors(c.dataKey)}"    th:errors="*{__${c.dataKey}__}">Incorrect date</p>
+			</div>
+		</div>
+
+			<div class="text-center" style="padding-bottom:10px">
+			<button type="submit" class="btn btn-save">保存</button>
+			<button type="button" class="btn btn-cancel _updatecancel" data-dismiss="modal">取消</button>
+		</div>
+	</form>
+
+</div>
+</section>
+<th:block layout:fragment="js">
+<link rel="stylesheet" type="text/css" th:href="@{/bower_components/select2/dist/css/select2.min.css}">
+<script type="text/javascript" th:src="@{/bower_components/select2/dist/js/select2.min.js}"></script>
+
+
+<script th:inline="javascript">
+$(function(){
+	var rus={},message={};
+	var columns=[[${columns}]];
+	columns.forEach(function(c){
+		var name=c.dataKey;
+		var vm=c.uiMeta.validMeta;
+		if(vm && vm.length>0){
+			var r={};
+			var rm={};
+			vm.forEach(function(v){
+				r[v.validName]= v.validConstraint;
+				rm[v.validName]=v.errorMsg;
+			})
+			rus[name]=r;
+			message[name]=rm;
+		}
+		 
+	})
+	 $('form').validate({rules:rus,messages:message});
+})
+
+ 
+</script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html layout:decorator="/admin/layout">
+<head>
+<meta charset="UTF-8">
+<title>[[${entityMeta.entityName}]] 详情</title>
+</head>
+<body>
+	<section class="content" layout:fragment="content">
+		<h4>[[${entityMeta.entityName}]] 详情</h4>
+		<p>
+			<a href="javascript:void()" onclick="history.back()"
+				class="btn btn-link"><i class="glyphicon glyphicon-share-alt"></i>返回</a>
+		</p>
+		<div class="box">
+			<table class="table table-responsive table-hover">
+			<tbody>
+				<tr th:each="c : ${columns}">
+					<td class="text-right " style="min-width: 100px;" th:text="${c.title+'：'}">列名</td>
+					<td  th:switch="${c.uiMeta.uiType.toString()}">
+
+						<th:block th:case="File"
+							th:with="value=${ entityUtil.getColumnValue(entity,c)}">
+							<ol th:if="${c.uiMeta.multi}">
+								<li th:each="item :${value}"
+									th:if="${not #strings.isEmpty(item)}"><a
+									th:href="${item}" th:text="${item}">download</a></li>
+							</ol>
+							<a th:if="${not c.uiMeta.multi and !#strings.isEmpty(value)}"
+								th:href="${value}">download</a>
+						</th:block>
+
+						<img th:case="Img"
+							th:src="${entityUtil.getColumnValue(entity,c)}"
+							alt="image">
+
+						<th:block th:case="Dictionary"
+							th:text="${entityUtil.getDictText(entity,c)}"></th:block>
+
+						<th:block th:case="Password">******</th:block>
+
+						<th:block th:case="Pick">
+									 
+							<th:block	th:if="${c.uiMeta.multiPick}">
+								<a class="btn btn-link" th:href="@{/admin/entity/picklist/__${entityName}__/__${entity.id}__/__${entityUtil.getPickEntityClass(c).simpleName}__}">详情  </a>
+							 </th:block>
+							<th:block th:if="${not c.uiMeta.multiPick}" th:with="value=${entityUtil.getColumnValue(entity,c)}">
+								<a
+								th:href="@{/admin/entity/detail/__${c.uiMeta.pickEntityShortName}__/__${value.id}__}"
+								th:if="${value!=null}"
+								th:text="${entityUtil.getColumnValue(entity,c)}">siglePick</a>
+							</th:block>
+									
+								</th:block>
+			 <th:block  th:case="List">
+				<div class="row _input_list_row" th:each="d:${#conversions.convert(entityUtil.getColumnValue(entity,c),'java.util.List')}">
+				<div class="col-sm-10" th:text="${d}">
+					<a href="/">1</a>
+				</div> 
+				</div>
+			 </th:block>
+			 
+						<th:block th:case="Date"
+							th:text="${#dates.format(entityUtil.getColumnValue(entity,c),'yyyy-MM-dd')}">Date</th:block>
+						<th:block th:case="DateTime"
+							th:text="${#dates.format(entityUtil.getColumnValue(entity,c),'yyyy-MM-dd HH:mm:ss')}">DateTime</th:block>
+						<th:block th:case="*"
+							th:utext="${entityUtil.getColumnValue(entity,c)}">其他类型显示</th:block>
+
+					</td>
+				</tr>
+				</tbody>
+			</table>
+
+		</div>
+
+
+
+
+	</section>
+</body>
+</html>

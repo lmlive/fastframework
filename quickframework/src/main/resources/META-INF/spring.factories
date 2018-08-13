@@ -1,0 +1,9 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.livem.quickframework.config.ConverterAutoConfig,\
+com.livem.quickframework.config.CustValidatorAutoConfig,\
+com.livem.quickframework.config.OAuthServerAutoConfig,\
+com.livem.quickframework.config.ReadWriteDataSourceAutoConfig,\
+com.livem.quickframework.config.ShiroAutoConfig,\
+com.livem.quickframework.config.StoreServiceAutoConfig,\
+  com.livem.quickframework.config.KaptachAutoConfig

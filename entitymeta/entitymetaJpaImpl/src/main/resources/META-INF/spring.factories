@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.livem.entitymeta.config.JpaEntityMetaParserAutoConfig,\
+  org.livem.entitymeta.config.GenericalRepositoryAutoConfig,\
+  org.livem.entitymeta.config.ValidationParserAutoConfig

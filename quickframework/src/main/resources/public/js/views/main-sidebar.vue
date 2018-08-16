@@ -20,7 +20,7 @@
                         <span slot="title">ueditor</span>
                     </el-menu-item>
                 </el-submenu>
-                <sub-menu v-for="menu in menuList" :key="menu.menuId" :menu="menu" :dynamicMenuRoutes="dynamicMenuRoutes">
+                <sub-menu v-for="menu in menuList" :key="menu.obj.id" :menu="menu" :dynamicMenuRoutes="dynamicMenuRoutes">
                 </sub-menu>
             </el-menu>
         </div>

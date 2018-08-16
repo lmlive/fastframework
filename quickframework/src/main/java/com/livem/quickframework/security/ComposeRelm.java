@@ -3,7 +3,7 @@ package com.livem.quickframework.security;
 import com.livem.quickframework.auth.oauth2.OAuthService;
 import com.livem.quickframework.constant.SessionConstant;
 import com.livem.quickframework.entity.Role;
-import com.livem.quickframework.entity.RoleMenu;
+import com.livem.quickframework.entity.SysMenu;
 import com.livem.quickframework.entity.SystemUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -63,7 +63,7 @@ public class ComposeRelm extends AuthorizingRealm {
             throw new AuthenticationException("账号已不存在");
         }
 
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(loginName, Strings.EMPTY, getName());// password
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user.getId(), Strings.EMPTY, getName());// password
         // set empty
         // when
         // oauth
@@ -88,7 +88,7 @@ public class ComposeRelm extends AuthorizingRealm {
             throw new AccountException("账号或者密码错误");
         }
 
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(username, upToken.getPassword(), getName());
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user.getId(), upToken.getPassword(), getName());
         SecurityUtils.getSubject().getSession(true).setAttribute(SessionConstant.KEY_CURRENT_USER, user);
         return info;
     }
@@ -117,8 +117,8 @@ public class ComposeRelm extends AuthorizingRealm {
         Set<String> permissions = new HashSet<String>();
 
         for (Role role : user.getRoles()) {
-            for (RoleMenu p : role.getRolePermissions()) {
-                permissions.add(p.getPermissionId());
+            for (SysMenu p : role.getMenus()) {
+                permissions.add(p.getPerms());
             }
         }
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roleNames);

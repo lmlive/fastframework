@@ -61,7 +61,6 @@
             mounted() {
                 this.resetDocumentClientHeight()
                 this.getUserInfo()
-                this.loadMenuList()
             },
             methods: {
                 // 重置窗口可视高度
@@ -80,25 +79,19 @@
                         params: this.$http.adornParams()
                     }).then(function (res) {
                         var data = res.data
+
                         if (data && data.code === 0) {
+                            console.info(data)
                             self.loading = false
-                            self.userId = data.id
-                            self.userName = data.disName
+                            self.userId = data.user.id
+                            self.userName = data.user.disName
+
+
+                            sessionStorage.setItem('menuList',  JSON.stringify(data.menus));
                         }
-                    })
-                },
-                //load menulist
-                loadMenuList(){
-                    var  self=this
-                    this.$http.get(self.$http.adornUrl('/sys/menu/nav')).then(function(res){
-                        if(res.data.code==0){
-                            sessionStorage.setItem('menuList',  JSON.stringify(res.data.menuList));
-                            // sessionStorage.setItem('')
-                        }
-                    }).catch(function(err){
-                        console.error('-------load menulist error'+err)
                     })
                 }
+
             }
 
         })

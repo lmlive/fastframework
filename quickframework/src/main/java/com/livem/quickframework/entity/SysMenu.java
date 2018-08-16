@@ -9,6 +9,12 @@ import javax.persistence.Entity;
 @Entity
 @EntityConfig(title = "菜单")
 public class SysMenu extends BaseEntity {
+
+    public  static  enum  menuType{
+        FOLDER,
+        MENU,
+        BUTTON
+    }
     private Long menuId;
 
     /**
@@ -39,7 +45,7 @@ public class SysMenu extends BaseEntity {
      * 类型     0：目录   1：菜单   2：按钮
      */
     @Field(title = "类型     0：目录   1：菜单   2：按钮")
-    private Integer type;
+    private menuType type;
 
     /**
      * 菜单图标
@@ -94,11 +100,11 @@ public class SysMenu extends BaseEntity {
         this.perms = perms;
     }
 
-    public Integer getType() {
+    public menuType getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(menuType type) {
         this.type = type;
     }
 

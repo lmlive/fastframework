@@ -85,7 +85,9 @@ public class WebConfig implements WebMvcConfigurer, InitializingBean {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/system/**");
-        registry.addMapping("/admin/login");
+        registry.addMapping("/admin/**");
+
+
 
     }
 

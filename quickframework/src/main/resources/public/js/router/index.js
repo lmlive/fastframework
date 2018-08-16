@@ -14,10 +14,10 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
 
 
     //异步动态组件相关参数
-    let dynamicData={}
+    var  dynamicData={}
 
     // 全局路由(无需嵌套上左右整体布局)
-    const globalRoutes = [{
+    var globalRoutes = [{
             path: '/404',
             component: function () {
                 return loader('views/common/404')
@@ -40,14 +40,14 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
     ]
 
     // 主入口路由(需嵌套上左右整体布局)
-    const mainRoutes = {
+    var mainRoutes = {
         path: '/',
         component: function () {
             return loader('views/main')
         },
         name: 'main',
         beforeEnter (to, from, next) {
-            let token = Vue.cookies.get('token')
+            var token = Vue.cookies.get('token')
             if (!token || !/\S/.test(token)) {
                 next({ name: 'login' })
             }

@@ -1,8 +1,8 @@
 define(['axios', 'lib/vue-cookies', 'vue', 'VueRouter', 'lib/qs', 'lib/merge'],
     function (axios, cookie, Vue, router, qs, merge) {
         Vue.use(cookie)
-        const  baseUrl = "http://localhost/"
-        const http = axios.create({
+        var  baseUrl = "http://localhost:64699/js/mock/"
+        var http = axios.create({
             timeout: 1000 * 30,
             withCredentials: true,
             headers: {

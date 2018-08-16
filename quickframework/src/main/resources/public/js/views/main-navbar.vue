@@ -2,7 +2,7 @@
     <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
         <div class="site-navbar__header">
             <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
-                <a class="site-navbar__brand-lg" href="javascript:;">智慧眼交通系统</a>
+                <a class="site-navbar__brand-lg" href="javascript:;">{{app.name}}</a>
                 <a class="site-navbar__brand-mini" href="javascript:;">LM</a>
             </h1>
         </div>
@@ -64,21 +64,20 @@
             data() {
                 return {
                     updatePassowrdVisible: false,
-                    appName:'--appname--'
+                    app:{name:'--appname--'}
                 }
             },
             mounted(){
+                var url="system/entity/Application/singlePage";
+                url="application.js";
+              var self=this;
                 self.$http({
-                    url: self.$http.adornUrl('system/entity/Application/singlePage'),
+                    url: self.$http.adornUrl(url),
                     method: 'post',
                 }).then(function(res){
                     var  data=res.data
                     if (data && data.code === 0) {
-                        self.$cookies.delete('token')
-                        self.$router.options.isAddDynamicMenuRoutes = false
-                        self.$router.push({
-                            name: 'login'
-                        })
+                     self.app=data.application;
                     }
                 })
             },

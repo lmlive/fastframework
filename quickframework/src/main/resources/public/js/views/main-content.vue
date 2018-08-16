@@ -32,7 +32,7 @@
 
 <script>
     define(['vue','validate'], function (Vue,validate) {
-       const isURL=validate.isURL
+       var isURL=validate.isURL
         return Vue.component('main-content', {
             template: template,
 
@@ -131,7 +131,7 @@
                 },
                 // tabs, 刷新当前
                 tabsRefreshCurrentHandle() {
-                    const self=this
+                    var  self=this
                     var tempTabName = this.mainTabsActiveName
                     this.removeTabHandle(tempTabName)
                     this.$nextTick(function() {

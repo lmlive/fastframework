@@ -73,15 +73,17 @@
                 // 获取当前管理员信息
                 getUserInfo() {
                     var self = this
+                    var url='/system/SystemUser/info';
+                    url="userinfo.js"
                     this.$http({
-                        url: this.$http.adornUrl('/system/SystemUser/info'),
+                        url: this.$http.adornUrl(url),
                         method: 'get',
                         params: this.$http.adornParams()
                     }).then(function (res) {
                         var data = res.data
 
                         if (data && data.code === 0) {
-                            console.info(data)
+                           
                             self.loading = false
                             self.userId = data.user.id
                             self.userName = data.user.disName

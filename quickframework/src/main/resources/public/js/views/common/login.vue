@@ -82,9 +82,10 @@
                     const self = this
                     this.$refs['dataForm'].validate(function (valid) {
                         if (valid) {
-
+                            var url='/admin/login';
+                               url='login.js'
                             self.$http.post(
-                                self.$http.adornUrl('/admin/login'),
+                                self.$http.adornUrl(url),
 
                                 self.$http.adornData({
                                     'username': self.dataForm.userName,

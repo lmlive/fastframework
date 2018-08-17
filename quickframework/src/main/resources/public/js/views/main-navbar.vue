@@ -69,7 +69,7 @@
             },
             mounted(){
                 var url="system/entity/Application/singlePage";
-                url="application.js";
+                url="singlepage/application.json";
               var self=this;
                 self.$http({
                     url: self.$http.adornUrl(url),

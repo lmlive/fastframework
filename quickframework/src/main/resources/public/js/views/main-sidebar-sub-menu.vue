@@ -38,8 +38,12 @@
             methods: {
                 // 通过menuId与动态(菜单)路由进行匹配跳转至指定路由
                 gotoRouteHandle(menu) {
-
-                  this.$router.push({name:'dynamic',params:{path:menu.url,name:menu.name}})
+                 if(menu.url.indexOf('dynamic')){
+                     var url=menu.url.substring(menu.url.indexOf('dynamic/')+8)
+                     var entityName=url.substring(0,url.indexOf('/'))
+                     this.$router.push({name:'dynamic',params:{entityName:entityName,name:menu.name}})
+                 }else
+                  this.$router.push(menu.url)
                     // var route = this.dynamicMenuRoutes.filter(function(item){return  item.meta.menuId === menu.menuId } )
                     // if (route.length >= 1) {
                     //     this.$router.push({

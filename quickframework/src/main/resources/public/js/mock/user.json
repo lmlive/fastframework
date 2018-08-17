@@ -1,9 +1,4 @@
-define([
-    'require',
-     
-], function(require) {
-    'use strict';
-    return 	 {
+ {
         "code": 0,
         "msg": "操作成功",
         "data": {
@@ -27,7 +22,7 @@ define([
                     "menuId": null,
                     "parentId": 2,
                     "name": "应用配置",
-                    "url": "/system/entity/Application/list",
+                    "url": "/dynamic/Application",
                     "perms": "sys:application:all",
                     "type": null,
                     "icon": null,
@@ -41,7 +36,7 @@ define([
                     "menuId": null,
                     "parentId": 2,
                     "name": "用户管理",
-                    "url": "/system/entity/SystemUser/list",
+                    "url": "/dynamic/SystemUser",
                     "perms": "sys:user:all",
                     "type": null,
                     "icon": null,
@@ -55,7 +50,7 @@ define([
                     "menuId": null,
                     "parentId": 2,
                     "name": "角色管理",
-                    "url": "/system/entity/Role/list",
+                    "url": "/dynamic/Role",
                     "perms": "sys:role:all",
                     "type": null,
                     "icon": null,
@@ -69,7 +64,7 @@ define([
                     "menuId": null,
                     "parentId": 2,
                     "name": "菜单管理",
-                    "url": "/system/entity/SysMenu/list",
+                    "url": "/dynamic/SysMenu",
                     "perms": "sys:menu:all",
                     "type": null,
                     "icon": null,
@@ -83,7 +78,7 @@ define([
                     "menuId": null,
                     "parentId": 2,
                     "name": "字典管理",
-                    "url": "/system/entity/Dictionary/list",
+                    "url": "/dynamic/Dictionary",
                     "perms": "sys:dictionary:all",
                     "type": null,
                     "icon": null,
@@ -114,4 +109,4 @@ define([
           }
         }
       }
-});
+ 

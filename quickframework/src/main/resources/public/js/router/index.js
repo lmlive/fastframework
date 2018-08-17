@@ -104,15 +104,14 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
                     isTab: true
                 }
             },{
-                path:'/dynamic/:path*',
+                path:'/dynamic',
                 name:'dynamic',
-                component:function () {
-                 var path=dynamicData.path;
-                    return loader('views/modules/'+path)
+                component:function(){
+                    return loader('views/common/entitylist')
                 },
                 meta:{
                     title:'dynamic',
-                    isTab:true
+                    isTab:false
                 }
             }
         ],

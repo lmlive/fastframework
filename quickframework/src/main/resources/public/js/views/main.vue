@@ -74,16 +74,16 @@
                 getUserInfo() {
                     var self = this
                     var url='/system/SystemUser/info';
-                    url="userinfo.json"
+                    url="user.json"
                     this.$http({
                         url: this.$http.adornUrl(url),
                         method: 'get',
                         params: this.$http.adornParams()
                     }).then(function (res) {
                         var data = res.data
-
+                    
                         if (data && data.code === 0) {
-                           
+                            data=data.data;
                             self.loading = false
                             self.userId = data.user.id
                             self.userName = data.user.disName
@@ -91,7 +91,9 @@
 
                             sessionStorage.setItem('menuList',  JSON.stringify(data.menus));
                         }
-                    })
+                    }).catch(function(e){
+                        alert(e)
+                    }) 
                 }
 
             }

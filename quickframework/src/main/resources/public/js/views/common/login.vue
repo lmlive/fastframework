@@ -83,7 +83,7 @@
                     this.$refs['dataForm'].validate(function (valid) {
                         if (valid) {
                             var url='/admin/login';
-                               url='login.js'
+                               url='login.json'
                             self.$http.post(
                                 self.$http.adornUrl(url),
 

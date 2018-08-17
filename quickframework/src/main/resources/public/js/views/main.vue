@@ -74,7 +74,7 @@
                 getUserInfo() {
                     var self = this
                     var url='/system/SystemUser/info';
-                    url="userinfo.js"
+                    url="userinfo.json"
                     this.$http({
                         url: this.$http.adornUrl(url),
                         method: 'get',

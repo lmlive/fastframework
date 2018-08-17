@@ -61,6 +61,7 @@ public class EntityRestController extends BaseRestController {
 
     @RequestMapping("/{entityName}/list")
     public BaseStaus list(@PathVariable("entityName") String entityName, HttpServletRequest request, @RequestBody(required = false) Map<String, Object> map) {
+        if(map==null)map=new HashMap<>();
         for (Map.Entry<String, String[]> en : request.getParameterMap().entrySet()) {
             map.put(en.getKey(), en.getValue() == null ? null : en.getValue()[0]);
         }

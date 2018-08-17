@@ -1,0 +1,24 @@
+{
+    "code": 0,
+    "msg": "操作成功",
+       
+      "user": {
+        "id": 8,
+        "loginName": "admin",
+        "disName": null,
+        "password": "123456",
+        "roles": [],
+        "recordInfo": {
+          "createDate": "2018-08-16 03:48:10",
+          "updateDate": null
+        },
+        "age": null,
+        "introduce": "system user",
+        "regDate": "2018-08-16 03:48:10",
+        "photo": null,
+        "file": null,
+        "upFiles": null,
+        "sex": null
+      }
+    
+}

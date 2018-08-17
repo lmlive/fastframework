@@ -1,0 +1,234 @@
+{
+    "code": 0,
+    "msg": "操作成功",
+    "data": [
+      {
+        "dataKey": "roles",
+        "title": "用户角色",
+        "type": "java.util.List",
+        "entityClass": "com.livem.quickframework.entity.SystemUser",
+        "entityName": null,
+        "extendMeta": null,
+        "uiMeta": {
+          "updateAble": true,
+          "insertAble": true,
+          "visable": true,
+          "disAsReadOnly": false,
+          "uiType": "Pick",
+          "validMeta": [],
+          "pickEntityShortName": "List",
+          "pickEntityType": "java.util.List",
+          "multiPick": true
+        },
+        "key": false
+      },
+      {
+        "dataKey": "file",
+        "title": "文件",
+        "type": "java.lang.String",
+        "entityClass": "com.livem.quickframework.entity.SystemUser",
+        "entityName": null,
+        "extendMeta": null,
+        "uiMeta": {
+          "updateAble": true,
+          "insertAble": true,
+          "visable": true,
+          "disAsReadOnly": false,
+          "uiType": "File",
+          "validMeta": [],
+          "multi": false
+        },
+        "key": false
+      },
+      {
+        "dataKey": "password",
+        "title": "密碼",
+        "type": "java.lang.String",
+        "entityClass": "com.livem.quickframework.entity.SystemUser",
+        "entityName": null,
+        "extendMeta": null,
+        "uiMeta": {
+          "updateAble": true,
+          "insertAble": true,
+          "visable": true,
+          "disAsReadOnly": false,
+          "uiType": "Password",
+          "validMeta": []
+        },
+        "key": false
+      },
+      {
+        "dataKey": "sex",
+        "title": "性别",
+        "type": "java.lang.Integer",
+        "entityClass": "com.livem.quickframework.entity.SystemUser",
+        "entityName": null,
+        "extendMeta": null,
+        "uiMeta": {
+          "updateAble": true,
+          "insertAble": true,
+          "visable": true,
+          "disAsReadOnly": false,
+          "uiType": "Dictionary",
+          "validMeta": [],
+          "dictKey": "sex",
+          "dictGroup": "SYSTEM_DATA"
+        },
+        "key": false
+      },
+      {
+        "dataKey": "loginName",
+        "title": "登录账号",
+        "type": "java.lang.String",
+        "entityClass": "com.livem.quickframework.entity.SystemUser",
+        "entityName": null,
+        "extendMeta": null,
+        "uiMeta": {
+          "updateAble": true,
+          "insertAble": true,
+          "visable": true,
+          "disAsReadOnly": false,
+          "uiType": "Text",
+          "validMeta": []
+        },
+        "key": true
+      },
+      {
+        "dataKey": "regDate",
+        "title": "regDate",
+        "type": "java.util.Date",
+        "entityClass": "com.livem.quickframework.entity.SystemUser",
+        "entityName": null,
+        "extendMeta": null,
+        "uiMeta": {
+          "updateAble": false,
+          "insertAble": false,
+          "visable": false,
+          "disAsReadOnly": false,
+          "uiType": "Number",
+          "validMeta": []
+        },
+        "key": false
+      },
+      {
+        "dataKey": "photo",
+        "title": "照片",
+        "type": "java.lang.String",
+        "entityClass": "com.livem.quickframework.entity.SystemUser",
+        "entityName": null,
+        "extendMeta": null,
+        "uiMeta": {
+          "updateAble": true,
+          "insertAble": true,
+          "visable": true,
+          "disAsReadOnly": false,
+          "uiType": "Img",
+          "validMeta": []
+        },
+        "key": false
+      },
+      {
+        "dataKey": "introduce",
+        "title": "自我介绍",
+        "type": "java.lang.String",
+        "entityClass": "com.livem.quickframework.entity.SystemUser",
+        "entityName": null,
+        "extendMeta": null,
+        "uiMeta": {
+          "updateAble": true,
+          "insertAble": true,
+          "visable": true,
+          "disAsReadOnly": false,
+          "uiType": "RichContent",
+          "validMeta": []
+        },
+        "key": false
+      },
+      {
+        "dataKey": "upFiles",
+        "title": "upFiles",
+        "type": "java.util.List",
+        "entityClass": "com.livem.quickframework.entity.SystemUser",
+        "entityName": null,
+        "extendMeta": null,
+        "uiMeta": {
+          "updateAble": true,
+          "insertAble": true,
+          "visable": true,
+          "disAsReadOnly": false,
+          "uiType": "File",
+          "validMeta": [],
+          "multi": true
+        },
+        "key": false
+      },
+      {
+        "dataKey": "recordInfo",
+        "title": "recordInfo",
+        "type": "com.livem.quickframework.entity.Recorded",
+        "entityClass": "com.livem.quickframework.entity.SystemUser",
+        "entityName": null,
+        "extendMeta": null,
+        "uiMeta": {
+          "updateAble": true,
+          "insertAble": true,
+          "visable": true,
+          "disAsReadOnly": false,
+          "uiType": null,
+          "validMeta": []
+        },
+        "key": false
+      },
+      {
+        "dataKey": "id",
+        "title": "ID",
+        "type": "java.lang.Long",
+        "entityClass": "com.livem.quickframework.entity.SystemUser",
+        "entityName": null,
+        "extendMeta": null,
+        "uiMeta": {
+          "updateAble": false,
+          "insertAble": false,
+          "visable": true,
+          "disAsReadOnly": true,
+          "uiType": "Number",
+          "validMeta": []
+        },
+        "key": true
+      },
+      {
+        "dataKey": "disName",
+        "title": "名字",
+        "type": "java.lang.String",
+        "entityClass": "com.livem.quickframework.entity.SystemUser",
+        "entityName": null,
+        "extendMeta": null,
+        "uiMeta": {
+          "updateAble": true,
+          "insertAble": true,
+          "visable": true,
+          "disAsReadOnly": false,
+          "uiType": "Text",
+          "validMeta": []
+        },
+        "key": false
+      },
+      {
+        "dataKey": "age",
+        "title": "年龄",
+        "type": "java.lang.Integer",
+        "entityClass": "com.livem.quickframework.entity.SystemUser",
+        "entityName": null,
+        "extendMeta": null,
+        "uiMeta": {
+          "updateAble": true,
+          "insertAble": true,
+          "visable": true,
+          "disAsReadOnly": false,
+          "uiType": "Number",
+          "validMeta": []
+        },
+        "key": false
+      }
+    ]
+  }

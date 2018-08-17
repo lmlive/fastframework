@@ -1,0 +1,30 @@
+{
+  "code": 0,
+  "msg": "操作成功",
+  "data": {
+    "totalCount": 1,
+    "pages": 0,
+    "pageSize": 10,
+    "pageNo": 1,
+    "list": [
+      {
+        "id": 8,
+        "loginName": "admin",
+        "disName": null,
+        "password": "123456",
+        "roles": [],
+        "recordInfo": {
+          "createDate": "2018-08-17 11:44:36",
+          "updateDate": null
+        },
+        "age": null,
+        "introduce": "system user",
+        "regDate": "2018-08-17 11:44:36",
+        "photo": null,
+        "file": null,
+        "upFiles": null,
+        "sex": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+    "code": 0,
+    "msg": "操作成功",
+    "data": {
+      "entityName": "SystemUser",
+      "entityClass": "com.livem.quickframework.entity.SystemUser",
+      "title": "系统账号",
+      "pickFields": [
+        ""
+      ],
+      "disColumn": [
+        ""
+      ],
+      "singlePage": false
+    }
+  }

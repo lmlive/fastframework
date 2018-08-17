@@ -52,14 +52,9 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
  
- <el-dialog :visible="dialog.showdialog" @open="loadInfo">
-   <template slot="title">
-     <h3>{{dialog.action}}</h3>
-   </template>
-   <template slot="-" >
-     <l-info ref="entityInfo" :entityName="entityName" :id="dialog.id"></l-info>
-   </template>
- </el-dialog>
+
+     <l-info ref="entityInfo" :show="dialog.showdialog" :entityName="entityName" :id="dialog.id"></l-info>
+   
   </div>
 </template>
 
@@ -98,6 +93,9 @@ define(["vue", "v!views/common/info"], function(Vue) {
         this.dialog.action = "查看详情";
         this.dialog.id = id;
         this.dialog.showdialog = true;
+        console.info(id)
+      
+        console.info(this.$refs.entityInfo.id)
       },
       loadInfo() {
         console.log(this.$refs.entityInfo);

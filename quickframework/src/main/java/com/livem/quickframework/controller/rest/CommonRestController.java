@@ -3,6 +3,8 @@ package com.livem.quickframework.controller.rest;
 import com.google.code.kaptcha.Producer;
 import com.livem.quickframework.entity.Dictionary;
 import com.livem.quickframework.exception.RestException;
+import com.livem.quickframework.model.BaseStaus;
+import com.livem.quickframework.model.ResponseStatus;
 import com.livem.quickframework.model.UploadStatus;
 import com.livem.quickframework.service.StoreService;
 import com.livem.quickframework.utils.ShiroUtils;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @RequestMapping("/system/common")
@@ -58,14 +61,13 @@ public class CommonRestController extends BaseRestController {
 
 
     @RequestMapping("/dictionary")
-    public Map<String, Object> dictionary_byKey(String group, String key) {
+    public BaseStaus dictionary_byKey(String group, String key) {
         Dictionary d = new Dictionary();
         d.setGroup(group);
         d.setKey(key);
         Query2<Dictionary> query = generiEntityService.createQuery(Dictionary.class).eq("Group", group).eq("Key", key);
         Dictionary dict = generiEntityService.findOne(query);
-        if (dict == null) return null;
-        return dict.getValue();
+        return ResponseStatus.ok(dict);
     }
 
 

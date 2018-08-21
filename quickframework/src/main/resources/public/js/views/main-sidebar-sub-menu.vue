@@ -38,9 +38,14 @@
             methods: {
                 // 通过menuId与动态(菜单)路由进行匹配跳转至指定路由
                 gotoRouteHandle(menu) {
-                 if(menu.url.indexOf('dynamic')){
+                  
+                 if(menu.url.indexOf('dynamic')>-1){
                      var url=menu.url.substring(menu.url.indexOf('dynamic/')+8)
-                     var entityName=url.substring(0,url.indexOf('/'))
+                     var entityName=''
+                     if(url.lastIndexOf('/')>-1)
+                      entityName=url.substring(0,url.indexOf('/'))
+                      else
+                      entityName=url
                      this.$router.push({name:'dynamic',params:{entityName:entityName,name:menu.name}})
                  }else
                   this.$router.push(menu.url)

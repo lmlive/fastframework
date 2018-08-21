@@ -9,9 +9,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.TypeUtils;
 
 import javax.persistence.Column;
+import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.Version;
 import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.EmbeddableType;
 import javax.persistence.metamodel.SingularAttribute;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -22,6 +24,12 @@ public class AttributeParser {
     private MessageSource messageSource;
     private Locale locale;
     List<ValidationParser> validationParser;
+    private EntityManager entityManager;
+    private Class<?> entityClass;
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     public void setValidationParser(List<ValidationParser> validationParser) {
         this.validationParser = validationParser;
@@ -37,8 +45,20 @@ public class AttributeParser {
     }
 
     public ColumnMeta getColumnMeta(Class<?> entityClass, Attribute<?, ?> attribute) {
+        this.entityClass = entityClass;
         if (attribute == null) return null;
         ColumnMeta meta = new ColumnMeta();
+        if(attribute.getPersistentAttributeType()== Attribute.PersistentAttributeType.EMBEDDED){
+            meta=new EmbeddedColumnMeta();
+            ((EmbeddedColumnMeta) meta).setSubColumns(new ArrayList<>());
+            EmbeddableType<?> emtype = entityManager.getMetamodel().embeddable(attribute.getJavaType());
+            Set<Attribute<?, ?>> subatts = (Set<Attribute<?, ?>>) emtype.getAttributes();
+            for (Attribute<?, ?> subatt : subatts) {
+                ((EmbeddedColumnMeta) meta).getSubColumns().add(getColumnMeta(emtype.getJavaType(),subatt));
+            }
+
+        }
+
         meta.setTitle(attribute.getName());
         meta.setDataKey(attribute.getName());
         meta.setType(attribute.getJavaType());
@@ -58,6 +78,14 @@ public class AttributeParser {
         BaseUiMeta uimeta = parserUiMeta(attribute);
         meta.setUiMeta(uimeta);
 
+        parseValidation(attribute, meta);
+
+        parseJpaAnonotation(attribute, uimeta);
+        return meta;
+
+    }
+
+    private void parseValidation(Attribute<?, ?> attribute, ColumnMeta meta) {
         if (validationParser != null && !validationParser.isEmpty()) {
             Set<Validation> sets = new HashSet<>();
             for (ValidationParser parser : validationParser) {
@@ -66,10 +94,6 @@ public class AttributeParser {
             }
             meta.getUiMeta().setValidMeta(sets);
         }
-
-        parseJpaAnonotation(attribute, uimeta);
-        return meta;
-
     }
 
 
@@ -158,7 +182,7 @@ public class AttributeParser {
                 if (TypeUtils.isAssignable(bt.getClass(), type)) {
                     uimeta.setUiType(UIType.File);
                 } else uimeta.setUiType(UIType.Text);
-            } else if (List.class.isAssignableFrom(type)) {
+            } else if (Collection.class.isAssignableFrom(type)) {
                 uimeta.setUiType(UIType.List);
             } else uimeta.setUiType(UIType.Text);
         }
@@ -227,6 +251,7 @@ public class AttributeParser {
         return meta;
     }
 
+
     private BaseUiMeta createPickMeta(Attribute attribute, boolean multipick) {
         PickUiMeta pickMeta = new PickUiMeta();
         pickMeta.setUiType(UIType.Pick);
@@ -243,7 +268,6 @@ public class AttributeParser {
         } else {
             return ((java.lang.reflect.Field) attr.getJavaMember()).getAnnotation(c);
         }
-
     }
 
 }

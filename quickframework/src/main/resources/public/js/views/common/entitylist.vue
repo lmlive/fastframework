@@ -93,9 +93,8 @@ define(["vue", "v!views/common/info"], function(Vue) {
         this.dialog.action = "查看详情";
         this.dialog.id = id;
         this.dialog.showdialog = true;
-        console.info(id)
-      
-        console.info(this.$refs.entityInfo.id)
+        console.log(this.entityName)
+      // this.$refs.entityInfo.loaddata();
       },
       loadInfo() {
         console.log(this.$refs.entityInfo);
@@ -122,7 +121,7 @@ define(["vue", "v!views/common/info"], function(Vue) {
       // 获取数据列表
       getDataList() {
         this.dataListLoading = true;
-        var mock = "entity/userlist.json";
+        var mock = "entity/userlist.json?entityName="+this.entityName;
         this.$http({
           url: this.$http.adornUrl(mock),
           method: "get",
@@ -205,6 +204,7 @@ define(["vue", "v!views/common/info"], function(Vue) {
     },
     mounted() {
       //get entityname from url
+      console.log(this.$route.params)
       this.entityName = this.$route.params.entityName;
       this.getColumns();
       this.getDataList();

@@ -1,8 +1,7 @@
 {
   "code": 0,
   "msg": "操作成功",
-  "data": [
-    {
+  "data": [{
       "dataKey": "roles",
       "title": "用户角色",
       "type": "java.util.List",
@@ -164,20 +163,46 @@
     },
     {
       "dataKey": "recordInfo",
+      "entityClass": "org.livem.test.entity.SystemUser",
+      "key": false,
+      "subColumns": [{
+        "dataKey": "createDate",
+        "entityClass": "org.livem.test.entity.Recorded",
+        "key": false,
+        "title": "createDate",
+        "type": "java.util.Date",
+        "uiMeta": {
+          "disAsReadOnly": false,
+          "insertAble": true,
+          "uiType": "Date",
+          "updateAble": false,
+          "validMeta": [],
+          "visable": true
+        }
+      }, {
+        "dataKey": "updateDate",
+        "entityClass": "org.livem.test.entity.Recorded",
+        "key": false,
+        "title": "updateDate",
+        "type": "java.util.Date",
+        "uiMeta": {
+          "disAsReadOnly": false,
+          "insertAble": false,
+          "uiType": "Date",
+          "updateAble": true,
+          "validMeta": [],
+          "visable": true
+        }
+      }],
       "title": "recordInfo",
-      "type": "com.livem.quickframework.entity.Recorded",
-      "entityClass": "com.livem.quickframework.entity.SystemUser",
-      "entityName": null,
-      "extendMeta": null,
+      "type": "org.livem.test.entity.Recorded",
       "uiMeta": {
-        "updateAble": true,
-        "insertAble": true,
-        "visable": true,
         "disAsReadOnly": false,
-        "uiType": null,
-        "validMeta": []
-      },
-      "key": false
+        "insertAble": true,
+        "updateAble": true,
+        "validMeta": [],
+        "visable": true
+      }
     },
     {
       "dataKey": "id",

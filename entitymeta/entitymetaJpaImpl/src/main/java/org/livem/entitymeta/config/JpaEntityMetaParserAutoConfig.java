@@ -2,6 +2,7 @@ package org.livem.entitymeta.config;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import org.livem.entitymeta.service.AttributeParser;
@@ -36,7 +37,8 @@ public class JpaEntityMetaParserAutoConfig {
 
 	@Bean
 	public EntityMetaService entityMetaService(EntityManagerFactory ef) {
-		JpaMetaService jpaMetaService = new JpaMetaService(ef.createEntityManager());
+		EntityManager entityManager = ef.createEntityManager();
+		JpaMetaService jpaMetaService = new JpaMetaService(entityManager);
 		if (cacheManager != null) {
 			Cache cache = cacheManager.getCache("");
 			if (cache != null)
@@ -45,6 +47,7 @@ public class JpaEntityMetaParserAutoConfig {
 		AttributeParser attributeParser = new AttributeParser();
 		attributeParser.setValidationParser(validationParsers);
 		attributeParser.setMessageSource(messageSource);
+		attributeParser.setEntityManager(entityManager);
 		// attributeParser.setLocale();
 		jpaMetaService.setAttributeParser(attributeParser);
 		return jpaMetaService;

@@ -1,16 +1,14 @@
-define(['vue'],function (Vue) {
-var c=Vue.extend({template:"<h1>ok</h1>",data(){return {}},
-mounted:function () {
-    console.log(this.$route)
-    console.log(this.$route.params)
-}
-})
+define(['vue','loader'],function (Vue,loader) {
+ 
+ 
     var  mainRoutes = {
-        path: '/test/:post*',
-        component:c,
+        path: '/test',
+        component:function(){
+            return loader('views/demo/testupload')
+        },
         meta: {
-            title: '主入口整体布局',
-            isTab:true
+            title: 'test',
+            isTab:false
         },
     }
     return mainRoutes;

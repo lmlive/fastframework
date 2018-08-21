@@ -110,7 +110,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/sys/scheduleLog/list'),
+          url: this.$http.addUrl('/sys/scheduleLog/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
@@ -142,7 +142,7 @@
       // 失败信息
       showErrorInfo (id) {
         this.$http({
-          url: this.$http.adornUrl(`/sys/scheduleLog/info/${id}`),
+          url: this.$http.addUrl(`/sys/scheduleLog/info/${id}`),
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {

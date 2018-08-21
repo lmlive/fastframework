@@ -2,7 +2,7 @@
  
      <el-dialog :visible.sync="show" @open="loaddata">
     <el-form   ref="dataForm"  label-width="80px">
-      <el-form-item v-for="item in columns" :label="item.title+':'" :prop="item.dataKey">
+      <el-form-item v-for="item in columns" :label="item.title+':'" :prop="item.dataKey" :key="item.dataKey">
         <el-input v-if="item.uiMeta.uiType==='RichContent'" autosize  type="textarea"  v-model="entity[item.dataKey]"></el-input>
         
           <template  v-else-if="item.uiMeta.uiType==='Boolean'">
@@ -28,12 +28,18 @@
   :file-list="getupfilelist(entity[item.dataKey])">
 </el-upload> 
 
-<span   v-else-if="item.uiMeta.uiType==='Dictionary'">{{item.title}}</span>
+<l-dictionary   v-else-if="item.uiMeta.uiType==='Dictionary'" 
+:value="entity[item.dataKey]"
+:dkey="item.uiMeta.dictKey" 
+:group="item.uiMeta.dictGroup"
+:source="dictUrl"
+:readonly="true"
+ 
+></l-dictionary>
 
 <a href="/"   v-else-if="item.uiMeta.uiType==='Pick'">{{item.title}}</a>
 
-<l-embedded v-else-if="item.uiMeta.uiType==undefined" :entity="entity" :columnMeta="item">
-</l-embedded>
+<l-embedded v-else-if="item.uiMeta.uiType==undefined" :entity="entity" :columnMeta="item"></l-embedded>
 
 <span v-else >{{entity[item.dataKey]}}</span>
 </el-form-item>
@@ -44,17 +50,14 @@
 </template>
 
 <script>
-define(["require", "vue", "v!views/common/embedded"], function(
-  require,
-  Vue,
-  em
-) {
+define(["require", "vue", "v!views/common/embedded",'v!views/common/dictionary'], function(require, Vue) {
   "use strict";
   return Vue.component("l-info", {
     template: template,
     props: ["entityName", "id", "show"],
     data() {
       return {
+        dictUrl: this.$http.addUrl("dictionary.json"), // config.service.dictionaryPath),
         columns: [],
         entity: {}
       };
@@ -76,24 +79,24 @@ define(["require", "vue", "v!views/common/embedded"], function(
 
         var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
         var self = this;
-        this.$http({ url: this.$http.adornUrl(mock) })
+        this.$http({ url: this.$http.addUrl(mock) })
           .then(({ data }) => {
             if (data.code === 0) {
               self.columns = data.data;
             }
           })
           .catch(ex => {
-            alert(ex);
+            self.$message('get column info error ,'+ex)
           });
 
         //get entity info
         var mockEntitiyInfo = "entity/user.json?id=" + this.id;
-        this.$http({ url: this.$http.adornUrl(mockEntitiyInfo) })
+        this.$http({ url: this.$http.addUrl(mockEntitiyInfo) })
           .then(({ data }) => {
             self.entity = data.data;
           })
           .catch(ex => {
-            alert(ex);
+           self.$message('get entity info error ,'+ex)
           });
       },
       getColumnValue(column) {

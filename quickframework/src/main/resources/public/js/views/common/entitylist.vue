@@ -26,7 +26,7 @@
         width="50">
       </el-table-column>
        
-       <el-table-column v-for="c in columns"  :label="c.title"  :prop="c.dataKey">
+       <el-table-column v-for="c in columns"  :label="c.title"  :prop="c.dataKey" :key="c.dataKey">
           <template slot-scope="scope">
             <el-button v-if="scope.column.property=='id'"  type="text" size="small" @click="detail(scope.row['id'])">{{scope.row.id}}</el-button>
             <span v-else>{{scope.row[scope.column.property]}}</span>
@@ -53,13 +53,13 @@
     </el-pagination>
  
 
-     <l-info ref="entityInfo" :show="dialog.showdialog" :entityName="entityName" :id="dialog.id"></l-info>
-   
+     <l-info ref="entityInfo" :show="infoDialog.showdialog" :entityName="entityName" :id="infoDialog.id"></l-info>
+    <l-create ref="addOrUpdate" :show="updateDialog.showdialog" :entityName="entityName" :id="updateDialog.id"></l-create>
   </div>
 </template>
 
 <script>
-define(["vue", "v!views/common/info"], function(Vue) {
+define(["vue", "v!views/common/info","v!views/common/create"], function(Vue) {
   "use strict";
   return Vue.component("l-entitylist", {
     template: template,
@@ -70,8 +70,11 @@ define(["vue", "v!views/common/info"], function(Vue) {
         },
         entityName: null,
         columns: [],
-        dialog: {
-          action: null,
+        infoDialog: {
+          id: null,
+          showdialog: false
+        },
+        updateDialog:{
           id: null,
           showdialog: false
         },
@@ -90,22 +93,17 @@ define(["vue", "v!views/common/info"], function(Vue) {
     },
     methods: {
       detail(id) {
-        this.dialog.action = "查看详情";
-        this.dialog.id = id;
-        this.dialog.showdialog = true;
-        console.log(this.entityName)
-      // this.$refs.entityInfo.loaddata();
+        this.infoDialog.id = id;
+        this.infoDialog.showdialog = true;
+       this.$refs.entityInfo.loaddata();
       },
-      loadInfo() {
-        console.log(this.$refs.entityInfo);
-        console.log(this.$refs);
-      },
+    
       getColumns() {
         this.dataListLoading = true;
         var self = this;
         var mock = "entity/user.columnmeta.json";
         this.$http({
-          url: this.$http.adornUrl(mock),
+          url: this.$http.addUrl(mock),
           method: "get"
         })
           .then(({ data }) => {
@@ -123,7 +121,7 @@ define(["vue", "v!views/common/info"], function(Vue) {
         this.dataListLoading = true;
         var mock = "entity/userlist.json?entityName="+this.entityName;
         this.$http({
-          url: this.$http.adornUrl(mock),
+          url: this.$http.addUrl(mock),
           method: "get",
           params: this.$http.adornParams({
             page: this.pageIndex,
@@ -158,10 +156,9 @@ define(["vue", "v!views/common/info"], function(Vue) {
       },
       // 新增 / 修改
       addOrUpdateHandle(id) {
-        this.addOrUpdateVisible = true;
-        this.$nextTick(() => {
-          this.$refs.addOrUpdate.init(id);
-        });
+        this.updateDialog.showdialog = true
+        this.updateDialog.id=id
+        this.$refs.addOrUpdate.loaddata()
       },
       // 删除
       deleteHandle(id) {
@@ -181,7 +178,7 @@ define(["vue", "v!views/common/info"], function(Vue) {
         )
           .then(() => {
             this.$http({
-              url: this.$http.adornUrl("/sys/user/delete"),
+              url: this.$http.addUrl("/sys/user/delete"),
               method: "post",
               data: this.$http.adornData(userIds, false)
             }).then(({ data }) => {

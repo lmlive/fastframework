@@ -1,0 +1,11 @@
+{
+    "code":0,
+    "msg":"ok",
+    "data":{
+        "id":1,
+        "key":"sex",
+        "group":"SYSTEM_DATA",
+        "value":{"0":"男","1":"女"}
+    }
+  
+}

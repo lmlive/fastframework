@@ -135,7 +135,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/sys/schedule/list'),
+          url: this.$http.addUrl('/sys/schedule/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
@@ -186,7 +186,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/sys/schedule/delete'),
+            url: this.$http.addUrl('/sys/schedule/delete'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {
@@ -216,7 +216,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/sys/schedule/pause'),
+            url: this.$http.addUrl('/sys/schedule/pause'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {
@@ -246,7 +246,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/sys/schedule/resume'),
+            url: this.$http.addUrl('/sys/schedule/resume'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {
@@ -276,7 +276,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/sys/schedule/run'),
+            url: this.$http.addUrl('/sys/schedule/run'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {

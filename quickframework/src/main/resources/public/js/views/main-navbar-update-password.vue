@@ -90,7 +90,7 @@
                     this.$refs['dataForm'].validate(function (valid) {
                         if (valid) {
                             self.$http({
-                                url: self.$http.adornUrl('/sys/user/password'),
+                                url: self.$http.addUrl('/sys/user/password'),
                                 method: 'post',
                                 data: self.$http.adornData({
                                     'password': self.dataForm.password,

@@ -85,7 +85,7 @@
                             var url='/admin/login';
                                url='login.json'
                             self.$http.post(
-                                self.$http.adornUrl(url),
+                                self.$http.addUrl(url),
 
                                 self.$http.adornData({
                                     'username': self.dataForm.userName,
@@ -114,7 +114,7 @@
                 getCaptcha() {
                     var uuid = util.getUUID()
                     this.dataForm.uuid = uuid
-                    this.captchaPath = this.$http.adornUrl('system/auth/captcha.jpg?t=' + new Date().getMilliseconds())
+                    this.captchaPath = this.$http.addUrl('system/auth/captcha.jpg?t=' + new Date().getMilliseconds())
                 }
             }
         })

@@ -76,7 +76,7 @@
                     var url='/system/SystemUser/info';
                     url="user.json"
                     this.$http({
-                        url: this.$http.adornUrl(url),
+                        url: this.$http.addUrl(url),
                         method: 'get',
                         params: this.$http.adornParams()
                     }).then(function (res) {

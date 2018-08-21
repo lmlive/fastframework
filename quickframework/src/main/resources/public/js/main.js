@@ -1,5 +1,5 @@
 requirejs.config({
-    basePath: 'lib',
+    basePath: '',
     paths: {
         'vue': "lib/vue",
         "ELEMENT": "lib/elementjs",
@@ -14,7 +14,8 @@ requirejs.config({
 		"loader":'lib/loader',
 		'merge':'lib/merge',
 		'vuex':'lib/vuex',
-		'validate':'utils/validate',
+        'validate':'utils/validate',
+        'config':'utils/config'
 		//'vue-cookie':'lib/vue-cookie'
 		 
     },

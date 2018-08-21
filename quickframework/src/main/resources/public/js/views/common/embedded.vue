@@ -1,7 +1,18 @@
 <template>
-<span>
+<span v-if="readonly">
     <div v-if="columnMeta.subColumns && columnMeta.subColumns.length>0" v-for="item in columnMeta.subColumns" :key="item.dataKey">
-       {{item['title']}}: {{entity[columnMeta.dataKey][item.dataKey]}} 
+       {{item['title']}}:
+       <template v-if="entity[columnMeta.dataKey]!=undefined">
+           {{entity[columnMeta.dataKey][item.dataKey]}} 
+       </template> 
+    </div>
+ </span>
+ <span v-else>
+     <div v-if="columnMeta.subColumns && columnMeta.subColumns.length>0" v-for="item in columnMeta.subColumns" :key="item.dataKey">
+       {{item['title']}}:
+       <template v-if="entity[columnMeta.dataKey]!=undefined">
+           {{entity[columnMeta.dataKey][item.dataKey]}} 
+       </template> 
     </div>
  </span>
 </template>

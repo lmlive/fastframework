@@ -72,7 +72,7 @@
                 url="singlepage/application.json";
               var self=this;
                 self.$http({
-                    url: self.$http.adornUrl(url),
+                    url: self.$http.addUrl(url),
                     method: 'post',
                 }).then(function(res){
                     var  data=res.data
@@ -129,7 +129,7 @@
                         type: 'warning'
                     }).then(function() {
                         self.$http({
-                            url: self.$http.adornUrl('/sys/logout'),
+                            url: self.$http.addUrl('/sys/logout'),
                             method: 'post',
                             data: self.$http.adornData()
                         }).then(function(res){

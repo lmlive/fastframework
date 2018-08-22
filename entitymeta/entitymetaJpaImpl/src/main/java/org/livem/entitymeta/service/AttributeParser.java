@@ -101,8 +101,8 @@ public class AttributeParser {
         if (getAttrAnnotation(attr, Id.class) != null) {
             return true;
         }
-        Column c = getAttrAnnotation(attr, Column.class);
-        if (c != null && c.unique()) return true;
+//        Column c = getAttrAnnotation(attr, Column.class);
+//        if (c != null && c.unique()) return true;
         return false;
     }
 

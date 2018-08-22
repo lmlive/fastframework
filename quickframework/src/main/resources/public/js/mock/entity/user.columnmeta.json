@@ -90,7 +90,7 @@
         "uiType": "Text",
         "validMeta": []
       },
-      "key": true
+      "key": false
     },
     {
       "dataKey": "regDate",

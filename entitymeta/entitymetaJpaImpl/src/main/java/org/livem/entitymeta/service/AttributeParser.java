@@ -103,7 +103,6 @@ public class AttributeParser {
         }
 //        Column c = getAttrAnnotation(attr, Column.class);
 //        if (c != null && c.unique()) return true;
-
         return false;
     }
 

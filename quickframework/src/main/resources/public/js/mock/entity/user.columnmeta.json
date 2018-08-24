@@ -104,7 +104,7 @@
         "insertAble": false,
         "visable": false,
         "disAsReadOnly": false,
-        "uiType": "Number",
+        "uiType": "Date",
         "validMeta": []
       },
       "key": false

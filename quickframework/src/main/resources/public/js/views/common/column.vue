@@ -27,7 +27,7 @@
 
     <span v-else>
 
-        <el-input v-if="cmeta.uiMeta.uiType==='RichContent'" autosize type="textarea" v-model="cvalue" readonly></el-input>
+        <el-input v-if="cmeta.uiMeta.uiType==='RichContent'" autosize type="textarea" v-model="cvalue" ></el-input>
 
         <template v-else-if="cmeta.uiMeta.uiType==='Boolean'">
             <el-radio v-model="cvalue" label="true">是</el-radio>
@@ -62,11 +62,10 @@
 
         <a href="/" v-else-if="cmeta.uiMeta.uiType==='Pick'">{{cmeta.title}}</a>
 
-        <l-embedded v-else-if="cmeta.uiMeta.uiType==undefined" :entity="entity" :columnMeta="cmeta"></l-embedded>
+        <l-embedded v-else-if="cmeta.uiMeta.uiType==undefined" v-model="value[cmeta.dataKey]" :columnMeta="cmeta"></l-embedded>
 
         <template v-else>
             <el-input v-model="cvalue" v-if="!cmeta.key"></el-input>
-            <span v-else>{{cvalue}}</span>
         </template>
     </span>
 </template>

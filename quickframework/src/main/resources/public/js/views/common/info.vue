@@ -1,68 +1,32 @@
 <template>
- 
-     <el-dialog :visible.sync="show" @open="loaddata">
-    <el-form   ref="dataForm"  label-width="80px">
-      <el-form-item v-for="item in columns" :label="item.title+':'" :prop="item.dataKey" :key="item.dataKey">
-        <el-input v-if="item.uiMeta.uiType==='RichContent'" autosize  type="textarea"  v-model="entity[item.dataKey]"></el-input>
-        
-          <template  v-else-if="item.uiMeta.uiType==='Boolean'">
-            <span v-if="entity[item.dataKey]">是</span>
-            <span v-else>否</span>
-         </template>
+  <el-dialog :visible="show" @open="loaddata" @close="()=>{this.$emit('close')}">
+    <el-form ref="dataForm" label-width="80px">
+      <l-autoformitem v-for="item in columns" 
+      :label="item.title" 
+      :value="entity[item.dataKey]" 
+      :cmeta="item" 
+      :readonly="true" 
+      :key="item.dataKey" />
 
-      <span  v-else-if="item.uiMeta.uiType==='Password'"  >*************</span>
-  
-     
-  <el-upload  v-else-if="item.uiMeta.uiType==='Img'"
-  class="upload-demo"
-  action="/"
-  :before-remove="()=>{return false}"
-  :file-list="getupfilelist(entity[item.dataKey])"
-  list-type="picture">
-</el-upload>
-
- <el-upload  v-else-if="item.uiMeta.uiType==='File'"
-  class="upload-demo"
-  action="/"
-  :before-remove="()=>{return false}"
-  :file-list="getupfilelist(entity[item.dataKey])">
-</el-upload> 
-
-<l-dictionary   v-else-if="item.uiMeta.uiType==='Dictionary'" 
-:value="entity[item.dataKey]"
-:dkey="item.uiMeta.dictKey" 
-:group="item.uiMeta.dictGroup"
-:source="dictUrl"
-:readonly="true"
- 
-></l-dictionary>
-
-<a href="/"   v-else-if="item.uiMeta.uiType==='Pick'">{{item.title}}</a>
-
-<l-embedded v-else-if="item.uiMeta.uiType==undefined" :entity="entity" :columnMeta="item"></l-embedded>
-
-<span v-else >{{entity[item.dataKey]}}</span>
-</el-form-item>
-       
     </el-form>
-   </el-dialog>
- 
+  </el-dialog>
 </template>
 
 <script>
-define(["require", "vue", "v!views/common/embedded",'v!views/common/dictionary'], function(require, Vue) {
+define(["require", "vue", "v!views/common/autoformitem"], function(require, Vue) {
   "use strict";
   return Vue.component("l-info", {
     template: template,
-    props: ["entityName", "id", "show"],
+    props: {entityName:{required:true}, id:{required:true},show:{required:true,type:Boolean,default:false}},
     data() {
       return {
         dictUrl: this.$http.addUrl("dictionary.json"), // config.service.dictionaryPath),
         columns: [],
         entity: {}
+       
       };
     },
-
+ 
     methods: {
       getupfilelist(data) {
         if (data instanceof Array && data.length > 0) {
@@ -86,7 +50,7 @@ define(["require", "vue", "v!views/common/embedded",'v!views/common/dictionary']
             }
           })
           .catch(ex => {
-            self.$message('get column info error ,'+ex)
+            self.$message('get column info error ,' + ex)
           });
 
         //get entity info
@@ -96,7 +60,7 @@ define(["require", "vue", "v!views/common/embedded",'v!views/common/dictionary']
             self.entity = data.data;
           })
           .catch(ex => {
-           self.$message('get entity info error ,'+ex)
+            self.$message('get entity info error ,' + ex)
           });
       },
       getColumnValue(column) {

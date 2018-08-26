@@ -1,15 +1,25 @@
 define([], function () {
 
-    var uuid=null;
+    var uuid = null;
+    var __ = __ || {}
+    if (!__.mycache) {
+        var cache = function () { this.data = {} }
+        cache.prototype.put = function (key, value) { this.data[key]=value }
+        cache.prototype.remove = function (key) { }
+        cache.prototype.get = function (key) {
+            return this.data[key] === undefined ? null : this.data[key]
+        }
+        __.mycache = new cache()
+    }
     return {
-
+        cache: __.mycache,
         /**
          * 获取uuid
          */
         getUUID() {
-            if(uuid)return uuid;
-              'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-                uuid= (c === 'x' ? (Math.random() * 16 | 0) : ('r&0x3' | '0x8')).toString(16)
+            if (uuid) return uuid;
+            'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                uuid = (c === 'x' ? (Math.random() * 16 | 0) : ('r&0x3' | '0x8')).toString(16)
             })
             return uuid;
         },

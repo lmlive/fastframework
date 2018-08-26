@@ -1,20 +1,22 @@
 <template>
- 
-     <el-dialog :visible.sync="show" @open="loaddata">
-    <el-form   ref="dataForm"  label-width="80px">
-      <el-form-item v-for="item in columns" :label="item.title" :prop="item.dataKey" :key="item.dataKey">
-       <l-column :readonly="false" :cmeta="item" v-model="entity[item.dataKey]"></l-column>
-
-
+  <el-dialog :visible="show" @open="loaddata" @close="()=>{this.$emit('close')}">
+    <el-form  size="mini" label-width="80px">
+      <l-autoformitem v-if="item.uiMeta.insertAble && !item.uiMeta.disAsReadOnly"
+       v-for="item in columns" 
+       :cmeta="item"
+       :value="entity[item.dataKey]"
+       :key="item.dataKey">
+      </l-autoformitem>
+      <el-form-item >
+        <el-button @click="save">保存</el-button>
       </el-form-item>
-       <el-button @click="save">保存</el-button>
+      
     </el-form>
-   </el-dialog>
- 
+  </el-dialog>
 </template>
 
 <script>
-define(["require", "vue", "v!views/common/dictionary", "config",'v!views/common/column'], function(
+define(["require", "vue", "v!views/common/dictionary", "config", 'v!views/common/autoformitem'], function(
   require,
   Vue,
   d,
@@ -29,7 +31,7 @@ define(["require", "vue", "v!views/common/dictionary", "config",'v!views/common/
         dictUrl: this.$http.addUrl("dictionary.json"), // config.service.dictionaryPath),
         columns: [],
         entity: {},
-        uploadUrl:this.$http.addUrl(config.service.uploadPath)
+        uploadUrl: this.$http.addUrl(config.service.uploadPath)
       };
     },
 

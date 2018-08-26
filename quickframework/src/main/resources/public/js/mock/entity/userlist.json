@@ -22,7 +22,7 @@
         "regDate": "2018-08-17 11:44:36",
         "photo": null,
         "file": null,
-        "upFiles": null,
+        "upFiles": ["/admin/upload/1.jpg","/admin/upload/2.jpg"],
         "sex":1
       },
       {

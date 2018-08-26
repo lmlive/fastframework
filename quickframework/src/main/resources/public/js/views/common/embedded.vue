@@ -1,17 +1,15 @@
 <template>
 <span v-if="readonly">
-    <div v-if="columnMeta.subColumns && columnMeta.subColumns.length>0" v-for="item in columnMeta.subColumns" :key="item.dataKey">
+    <div  v-for="item in columnMeta.subColumns" :key="item.dataKey">
        {{item['title']}}:
-       <template v-if="entity[columnMeta.dataKey]!=undefined">
-           {{value[columnMeta.dataKey][item.dataKey]}} 
-       </template> 
+      
+       <l-field :readonly="true" :cmeta="item" v-model="cvalue[item.dataKey]"></l-field>
     </div>
  </span>
  <span v-else>
-     <div v-if="columnMeta.subColumns && columnMeta.subColumns.length>0" v-for="item in columnMeta.subColumns" 
-         :key="item.dataKey">
-       {{item['title']}}:<l-column :readonly="false" :cmeta="item" v-model="value[item.dataKey]"></l-column>
-      
+      <div  v-if="item.uiMeta.visiable"  v-for="item in columnMeta.subColumns" :key="item.dataKey">
+       {{item['title']}}:
+       <l-field  :readonly="false" :cmeta="item" v-model="cvalue[item.dataKey]"></l-field>
     </div>
  </span>
 </template>
@@ -19,7 +17,7 @@
 define([
     'require',
     'vue',
-    'v!views/common/column'
+    'v!views/common/field'
 ], function(require, Vue) {
     'use strict';
     return Vue.component('l-embedded',{
@@ -27,9 +25,20 @@ define([
         props:['columnMeta','value','readonly'],
         data(){
             return {
-                
+                cvalue:{}
             }
-        }
+        },
+        watch:{
+            value:function(v){
+                this.cvalue=v
+                
+            },
+            cvalue:function(v){
+                this.$emit('input',v)
+            }
+        },
+     
+        
     })
 });
 </script>

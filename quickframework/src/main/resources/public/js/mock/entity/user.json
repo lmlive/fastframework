@@ -4,19 +4,19 @@
   "data": {
     "id": 8,
     "loginName": "admin",
-    "disName": null,
+    "disName": "test",
     "password": "123456",
     "roles": [],
     "recordInfo": {
       "createDate": "2018-08-17 11:44:36",
       "updateDate": null
     },
-    "age": null,
+    "age": 33,
     "introduce": "system user",
     "regDate": "2018-08-17 11:44:36",
-    "photo": null,
-    "file": null,
-    "upFiles": null,
+    "photo": "/admin/upload/aa.jpg",
+    "file": ["/admin/upload/3.jpg"],
+    "upFiles": ["/admin/upload/1.jpg","/admin/upload/2.jpg"],
     "sex": 1
   }
 }

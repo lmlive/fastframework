@@ -102,7 +102,7 @@
       "uiMeta": {
         "updateAble": false,
         "insertAble": false,
-        "visable": false,
+        "visable": true,
         "disAsReadOnly": false,
         "uiType": "Date",
         "validMeta": []

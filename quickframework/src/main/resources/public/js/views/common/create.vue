@@ -68,6 +68,7 @@ define(["require", "vue", "v!views/common/dictionary", "config", 'v!views/common
           });
 
         //get entity info
+         
         if (this.id != undefined) {
           var mockEntitiyInfo = "entity/user.json?id=" + this.id;
           this.$http({ url: this.$http.addUrl(mockEntitiyInfo) })

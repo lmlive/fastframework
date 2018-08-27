@@ -47,10 +47,10 @@
 
             </template>
 
-            <el-date-picker v-else-if="cmeta.uiMeta.uiType==='Date'" v-model="cvalue" type="date" placeholder="选择日期">
+            <el-date-picker v-else-if="cmeta.uiMeta.uiType==='Date'" value-format="yyyy-MM-dd" v-model="cvalue" type="date" placeholder="选择日期">
             </el-date-picker>
 
-            <el-date-picker v-else-if="cmeta.uiMeta.uiType==='DateTime'" v-model="cvalue" type="datetime" placeholder="选择日期">
+            <el-date-picker v-else-if="cmeta.uiMeta.uiType==='DateTime'"  value-format="yyyy-MM-dd HH:mm:ss" v-model="cvalue" type="datetime" placeholder="选择日期">
             </el-date-picker>
 
             <el-upload v-else-if="cmeta.uiMeta.uiType==='Img'" :multiple="cmeta.uiMeta.multi" class="upload-demo" action="uploadUrl" :file-list="getupfilelist(cvalue)" ist-type="picture-card">

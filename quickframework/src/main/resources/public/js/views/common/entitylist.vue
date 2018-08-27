@@ -6,7 +6,7 @@
         <el-input v-model="dataForm.query" placeholder="关键词" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-dropdown @command="search">
+        <el-dropdown @command="searchCmd">
           <el-button type="primary">
             搜索
             <i class="el-icon-arrow-down el-icon--right"></i>
@@ -18,7 +18,7 @@
           </el-dropdown-menu>
         </el-dropdown>
 
-        <el-button type="primary" @click="addOrUpdateHandle">新增</el-button>
+        <el-button type="primary" @click="addOrUpdateHandle(null)">新增</el-button>
         <el-button type="danger" @click="deleteHandle" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
@@ -46,7 +46,7 @@
 
     <l-info ref="entityInfo" @close="infoDialog.showdialog=false" :show="infoDialog.showdialog" :entityName="entityName" :id="infoDialog.id"></l-info>
     <l-create ref="addOrUpdate" @close="updateDialog.showdialog=false" :show="updateDialog.showdialog" :entityName="entityName" :id="updateDialog.id"></l-create>
-    <l-searchbox @close="searchDialog.showdialog=false" :show="searchDialog.showdialog" :columnMetas="columns" v-model="searchEntity"></l-searchbox>
+    <l-searchbox @search="doSearch" @close="searchDialog.showdialog=false" :show="searchDialog.showdialog" :columnMetas="columns" v-model="searchEntity"></l-searchbox>
   </div>
 </template>
 
@@ -90,15 +90,17 @@ define(["vue",'v!views/common/searchbox','v!views/common/autodiscolumn', "v!view
         this.infoDialog.showdialog = true;
         this.$refs.entityInfo.loaddata();
       },
-      search(cmd) {
+      searchCmd(cmd) {
         console.info(cmd)
         if(cmd==='getDataList'){
           this.getDataList()
         }else{
           this.searchDialog.showdialog = true
-        }
-       
-        
+        } 
+      },
+      doSearch(searchEntity){
+        console.info('-----TODO dosearch from server ---'+JSON.stringify(searchEntity))
+
       },
       getColumns() {
         this.dataListLoading = true;

@@ -42,7 +42,19 @@
 
         <l-dictionary v-else-if="cmeta.uiMeta.uiType==='Dictionary'" :value="cvalue" :dkey="cmeta.uiMeta.dictKey" :group="cmeta.uiMeta.dictGroup" :source="dictUrl" :readonly="true"></l-dictionary>
 
-        <a href="/" v-else-if="cmeta.uiMeta.uiType==='Pick'">{{cmeta.title}}::::TODO</a>
+<template v-else-if="cmeta.uiMeta.uiType==='Pick'">
+  <el-dropdown v-if="cmeta.uiMeta.multi" trigger="click">
+      <span class="el-dropdown-link">列表<i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown"  >
+                    <el-dropdown-item v-for="item in cvalue" :key="item" >
+                        <a :href="entityDetail(item.id)">{{item.id}}</a>
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+  </el-dropdown>    
+   <a :href="entityDetail(item.id)" v-else>{{item.id}}</a>
+</template>
+      
 
         <span v-else>{{cvalue}}</span>
 
@@ -71,6 +83,9 @@ define(['vue', 'v!views/common/dictionary'], function(Vue) {
         },
 
         methods: {
+            entityDetail(id){
+                this.$route.push('/entity/detail/'+id)
+            },
             getupfilelist(data) {
                 if (data instanceof Array && data.length > 0) {
                     return data.map(d => {

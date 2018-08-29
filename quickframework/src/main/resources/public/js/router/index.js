@@ -104,13 +104,35 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
                     isTab: true
                 }
             },{
-                path:'/dynamic',
-                name:'dynamic',
+                path:'/entity/list',
+                name:'dynamicList',
                 component:function(){
                     return loader('views/common/entitylist')
                 },
                 meta:{
-                    title:'dynamic',
+                    title:'列表',
+                    isTab:false
+                }
+            }
+            ,{
+                path:'/entity/edit',
+                name:'dynamicEdit',
+                component:function(){
+                    return loader('views/common/create')
+                },
+                meta:{
+                    title:'编辑',
+                    isTab:false
+                }
+            }
+            ,{
+                path:'/entity/detail',
+                name:'dynamicInfo',
+                component:function(){
+                    return loader('views/common/info')
+                },
+                meta:{
+                    title:'详情',
                     isTab:false
                 }
             }

@@ -21,7 +21,9 @@
         <el-button type="primary" @click="addOrUpdateHandle(null)">新增</el-button>
         <el-button type="danger" @click="deleteHandle" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
+    
     </el-form>
+     <el-alert     :title="searchDialog.searchDesc"     type="info">  </el-alert>
     <el-table :data="dataList" border stripe size="mini" v-loading="dataListLoading" @selection-change="selectionChangeHandle" style="width: 100%;">
       <el-table-column type="selection" header-align="center" align="center" width="50">
       </el-table-column>
@@ -71,7 +73,8 @@ define(["vue",'v!views/common/searchbox','v!views/common/autodiscolumn', "v!view
           showdialog: false
         },
         searchDialog: {
-          showdialog: false
+          showdialog: false,
+          searchDesc:null
         },
         searchEntity: {},
         dataList: [],
@@ -98,9 +101,9 @@ define(["vue",'v!views/common/searchbox','v!views/common/autodiscolumn', "v!view
           this.searchDialog.showdialog = true
         } 
       },
-      doSearch(searchEntity){
+      doSearch(searchEntity,desc){
         console.info('-----TODO dosearch from server ---'+JSON.stringify(searchEntity))
-
+        this.searchDialog.searchDesc=desc
       },
       getColumns() {
         this.dataListLoading = true;

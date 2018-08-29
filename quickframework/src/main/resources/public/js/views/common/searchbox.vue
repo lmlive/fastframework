@@ -46,7 +46,7 @@ define(["vue", "v!views/common/autoformitem"], function(Vue) {
     methods: {
       search() {
          console.info('-----------serarch object='+JSON.stringify(this.searchEntity))
-        this.$emit("search", this.searchEntity);
+        this.$emit("search", this.searchEntity,this.getSearchDesc());
       },
       clear(){
           this.searchEntity={}

@@ -104,7 +104,7 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
                     isTab: true
                 }
             },{
-                path:'/entity/list',
+                path:'/entity/list/:entityName',
                 name:'dynamicList',
                 component:function(){
                     return loader('views/common/entitylist')
@@ -115,10 +115,10 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
                 }
             }
             ,{
-                path:'/entity/edit',
+                path:'/entity/edit/:entityName/:id',
                 name:'dynamicEdit',
                 component:function(){
-                    return loader('views/common/create')
+                    return loader('views/common/edit')
                 },
                 meta:{
                     title:'编辑',
@@ -126,7 +126,18 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
                 }
             }
             ,{
-                path:'/entity/detail',
+                path:'/entity/edit/:entityName',
+                name:'dynamicCreate',
+                component:function(){
+                    return loader('views/common/create')
+                },
+                meta:{
+                    title:'新增',
+                    isTab:false
+                }
+            }
+            ,{
+                path:'/entity/detail/:entityName/:id',
                 name:'dynamicInfo',
                 component:function(){
                     return loader('views/common/info')

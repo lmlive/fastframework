@@ -1,7 +1,15 @@
 <template>
   <div class="mod-user">
-    <p>{{entityName}}</p>
-    <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
+        <p>
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+  <el-breadcrumb-item :to="{ path: '/entity/list/'+this.entityName }">{{entityMeta.title}}列表</el-breadcrumb-item>
+ 
+ 
+</el-breadcrumb>
+     </p>
+
+    <el-form :inline="true" :model="dataForm" @keyup.enter.native="loadData()">
       <el-form-item>
         <el-input v-model="dataForm.query" placeholder="关键词" clearable></el-input>
       </el-form-item>
@@ -12,7 +20,7 @@
             <i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown" >
-            <el-dropdown-item command="getDataList">搜索</el-dropdown-item>
+            <el-dropdown-item command="loadData">搜索</el-dropdown-item>
             <el-dropdown-item command="advanceSearch">高级搜索</el-dropdown-item>
 
           </el-dropdown-menu>
@@ -23,7 +31,7 @@
       </el-form-item>
     
     </el-form>
-     <el-alert     :title="searchDialog.searchDesc"     type="info">  </el-alert>
+     <el-alert  v-show="searchDialog.searchDesc!=''"   :title="searchDialog.searchDesc"     type="info">  </el-alert>
     <el-table :data="dataList" border stripe size="mini" v-loading="dataListLoading" @selection-change="selectionChangeHandle" style="width: 100%;">
       <el-table-column type="selection" header-align="center" align="center" width="50">
       </el-table-column>
@@ -31,14 +39,13 @@
       <el-table-column v-for="c in columns" :label="c.title" :prop="c.dataKey" :key="c.dataKey">
         <template slot-scope="scope">
           <el-button v-if="scope.column.property=='id'" type="text" size="small" @click="detail(scope.row['id'])">{{scope.row.id}}</el-button>
-          <l-autodiscolumn v-else :value="scope.row[scope.column.property]" :cmeta="c">
-          </l-autodiscolumn>
+          <l-autotablecolumn v-else :value="scope.row[scope.column.property]" :cmeta="c"> </l-autotablecolumn>
         </template>
       </el-table-column>
 
       <el-table-column align="center" width="100" fixed="right" label="操作">
         <span slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </span>
       </el-table-column>
@@ -46,14 +53,16 @@
     <el-pagination @size-change="sizeChangeHandle" @current-change="currentChangeHandle" :current-page="pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" :total="totalCount" layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
 
-    <l-info ref="entityInfo" @close="infoDialog.showdialog=false" :show="infoDialog.showdialog" :entityName="entityName" :id="infoDialog.id"></l-info>
-    <l-create ref="addOrUpdate" @close="updateDialog.showdialog=false" :show="updateDialog.showdialog" :entityName="entityName" :id="updateDialog.id"></l-create>
-    <l-searchbox @search="doSearch" @close="searchDialog.showdialog=false" :show="searchDialog.showdialog" :columnMetas="columns" v-model="searchEntity"></l-searchbox>
+     <l-searchbox @search="doSearch" @close="searchDialog.showdialog=false" :show="searchDialog.showdialog" :columnMetas="columns" v-model="searchEntity"></l-searchbox>
   </div>
 </template>
 
 <script>
-define(["vue",'v!views/common/searchbox','v!views/common/autodiscolumn', "v!views/common/info", "v!views/common/create", ], function(Vue) {
+define([
+  "vue",
+  "v!views/common/searchbox",
+  "v!views/common/autotablecolumn" 
+], function(Vue) {
   "use strict";
   return Vue.component("l-entitylist", {
     template: template,
@@ -63,6 +72,7 @@ define(["vue",'v!views/common/searchbox','v!views/common/autodiscolumn', "v!view
           query: ""
         },
         entityName: null,
+        entityMeta: {},
         columns: [],
         infoDialog: {
           id: null,
@@ -74,8 +84,9 @@ define(["vue",'v!views/common/searchbox','v!views/common/autodiscolumn', "v!view
         },
         searchDialog: {
           showdialog: false,
-          searchDesc:null
+          searchDesc: ""
         },
+
         searchEntity: {},
         dataList: [],
         pageIndex: 1,
@@ -86,26 +97,48 @@ define(["vue",'v!views/common/searchbox','v!views/common/autodiscolumn', "v!view
         addOrUpdateVisible: false
       };
     },
-  
+
     methods: {
+      //详情
       detail(id) {
-        this.infoDialog.id = id;
-        this.infoDialog.showdialog = true;
-        this.$refs.entityInfo.loaddata();
+        this.$router.push("/entity/detail/" + this.entityName + "/" + id);
+      },
+      // 新增 / 修改
+      addOrUpdateHandle(id) {
+        var url = "/entity/edit/" + this.entityName;
+        if (id != undefined) url += "/" + id;
+        this.$router.push(url);
       },
       searchCmd(cmd) {
-        console.info(cmd)
-        if(cmd==='getDataList'){
-          this.getDataList()
-        }else{
-          this.searchDialog.showdialog = true
-        } 
+        console.info(cmd);
+        if (cmd === "loadData") {
+          this.loadData();
+        } else {
+          this.searchDialog.showdialog = true;
+        }
       },
-      doSearch(searchEntity,desc){
-        console.info('-----TODO dosearch from server ---'+JSON.stringify(searchEntity))
-        this.searchDialog.searchDesc=desc
+      doSearch(searchEntity, desc) {
+        console.info(
+          "-----TODO dosearch from server ---" + JSON.stringify(searchEntity)
+        );
+        this.searchDialog.searchDesc = desc;
       },
-      getColumns() {
+      loadEntityMeta() {
+        var self = this;
+
+        var mockEntitiyMeta =
+          "entity/user.entitymeta.json?entityName" + this.entityName;
+        this.$http({ url: this.$http.addUrl(mockEntitiyMeta) })
+          .then(({ data }) => {
+            self.entityMeta = data.data;
+          })
+          .catch(ex => {
+            this.$message("get entityMeta   error ," + ex);
+          });
+      },
+
+      // 获取数据列表
+      loadData() {
         this.dataListLoading = true;
         var self = this;
         var mock = "entity/user.columnmeta.json";
@@ -116,16 +149,16 @@ define(["vue",'v!views/common/searchbox','v!views/common/autodiscolumn', "v!view
           .then(({ data }) => {
             if (data && data.code === 0) {
               self.columns = data.data;
+              self.loadList();
             }
             self.dataListLoading = false;
           })
           .catch(ex => {
             alert(ex);
           });
+        self.loadEntityMeta();
       },
-      // 获取数据列表
-      getDataList() {
-        console.info('-----------load data------------')
+      loadList() {
         this.dataListLoading = true;
         var mock = "entity/userlist.json?entityName=" + this.entityName;
         this.$http({
@@ -151,30 +184,25 @@ define(["vue",'v!views/common/searchbox','v!views/common/autodiscolumn', "v!view
       sizeChangeHandle(val) {
         this.pageSize = val;
         this.pageIndex = 1;
-        this.getDataList();
+        this.loadData();
       },
       // 当前页
       currentChangeHandle(val) {
         this.pageIndex = val;
-        this.getDataList();
+        this.loadData();
       },
       // 多选
       selectionChangeHandle(val) {
         this.dataListSelections = val;
       },
-      // 新增 / 修改
-      addOrUpdateHandle(id) {
-        this.updateDialog.showdialog = true
-        this.updateDialog.id = id
-        this.$refs.addOrUpdate.loaddata()
-      },
+
       // 删除
       deleteHandle(id) {
         var ids = id
           ? [id]
           : this.dataListSelections.map(item => {
-            return item.id;
-          });
+              return item.id;
+            });
         this.$confirm(
           `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
           "提示",
@@ -196,7 +224,7 @@ define(["vue",'v!views/common/searchbox','v!views/common/autodiscolumn', "v!view
                   type: "success",
                   duration: 1500,
                   onClose: () => {
-                    this.getDataList();
+                    this.loadData();
                   }
                 });
               } else {
@@ -204,15 +232,17 @@ define(["vue",'v!views/common/searchbox','v!views/common/autodiscolumn', "v!view
               }
             });
           })
-          .catch(() => { });
+          .catch(() => {});
       }
     },
     mounted() {
-      //get entityname from url
-      //console.log(this.$route.params)
       this.entityName = this.$route.params.entityName;
-      this.getColumns();
-      this.getDataList();
+      this.loadData();
+    },
+    beforeRouteUpdate(to, from, next) {
+      this.entityName = to.params.entityName;
+      this.loadData();
+      next();
     }
   });
 });

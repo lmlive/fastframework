@@ -15,8 +15,8 @@
     "introduce": "system user",
     "regDate": "2018-08-17 11:44:36",
     "photo": "/admin/upload/aa.jpg",
-    "file": ["/admin/upload/3.jpg"],
+    "file": "/admin/upload/3.jpg",
     "upFiles": ["/admin/upload/1.jpg","/admin/upload/2.jpg"],
-    "sex": 1
+    "sex": 0
   }
 }

@@ -4,7 +4,7 @@
       <el-breadcrumb separator-class="el-icon-arrow-right">
   <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
   <el-breadcrumb-item :to="{ path: '/entity/list/'+this.entityName }">{{entityMeta.title}}列表</el-breadcrumb-item>
-  <el-breadcrumb-item >新增{{entityMeta.title}}</el-breadcrumb-item>
+  <el-breadcrumb-item >编辑{{entityMeta.title}}</el-breadcrumb-item>
 </el-breadcrumb>
      </p>
 
@@ -32,7 +32,7 @@ define([
   "v!views/common/autoformitem"
 ], function(require, Vue, d, config) {
   "use strict";
-  return Vue.component("l-create", {
+  return Vue.component("l-edit", {
     template: template,
     data() {
       return {
@@ -71,6 +71,8 @@ define([
           .then(({ data }) => {
             if (data.code === 0) {
               self.columns = data.data;
+              //get entity info
+              self.loadEntityInfo();
             }
           })
           .catch(ex => {
@@ -78,6 +80,18 @@ define([
           });
 
         self.loadEntityMeta();
+      },
+      loadEntityInfo() {
+        var self = this;
+          var mockEntitiyInfo = "entity/user.json?id=" + this.id;
+          this.$http({ url: this.$http.addUrl(mockEntitiyInfo) })
+            .then(({ data }) => {
+              self.entity = data.data;
+            })
+            .catch(ex => {
+              this.$message("get entity info error ," + ex);
+            });
+        
       },
       loadEntityMeta() {
         var self = this;
@@ -114,7 +128,7 @@ define([
       this.reset()
       this.entityName = to.params.entityName;
       this.id = to.params.id;
- console.info('--------create '+JSON.stringify(this.$data))
+      console.info('--------edit '+JSON.stringify(this.$data))
       this.loadData();
       next();
     }

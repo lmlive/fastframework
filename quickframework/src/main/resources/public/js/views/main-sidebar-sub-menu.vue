@@ -38,17 +38,7 @@
             methods: {
                 // 通过menuId与动态(菜单)路由进行匹配跳转至指定路由
                 gotoRouteHandle(menu) {
-                  
-                 if(menu.url.indexOf('dynamicList')>-1){
-                     var url=menu.url.substring(menu.url.indexOf('dynamicList/')+12)
-                     var entityName=''
-                     if(url.lastIndexOf('/')>-1)
-                      entityName=url.substring(0,url.indexOf('/'))
-                      else
-                      entityName=url
-                     this.$router.push({name:'dynamicList',params:{entityName:entityName,name:menu.name}})
-                 }else
-
+                   
                  
                   this.$router.push(menu.url)
                     // var route = this.dynamicMenuRoutes.filter(function(item){return  item.meta.menuId === menu.menuId } )

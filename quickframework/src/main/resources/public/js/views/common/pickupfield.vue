@@ -9,11 +9,7 @@
       v-for="item in options"
       :key="item.id"
       :label="displayLabel(item)"
-      :value="item.id">
-      <!-- <template v-for="c in pickFields">
-        <span style="padding-right:3px;" :key="c">{{ item[c] }}</span>
-      </template> -->
-      
+      :value="item.id"> 
     </el-option>
   </el-select>
 
@@ -24,7 +20,7 @@
 insert ,update  显示单选，多选
 info ，list 显示连接
 */
-define(["require", "vue", "utils/config"], function(require, Vue, config) {
+define([ "vue", "utils/config"], function( Vue, config) {
   "use strict";
   return Vue.component("l-pickupfield", {
     template: template,
@@ -51,6 +47,7 @@ define(["require", "vue", "utils/config"], function(require, Vue, config) {
       };
     },
     mounted() {
+      console.info('-----------------pick mounted--------------------')
       if (this.value != null) {
         this.querySearch("", this.value);
       }

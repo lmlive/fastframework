@@ -1,32 +1,45 @@
 <template>
-  <el-dialog :visible="show" @open="loaddata" @close="()=>{this.$emit('close')}">
+  
     <el-form ref="dataForm" label-width="80px">
-      <l-autoformitem v-for="item in columns" 
-      :label="item.title" 
-      :value="entity[item.dataKey]" 
-      :cmeta="item" 
-      :readonly="true" 
-      :key="item.dataKey" />
+        <p>
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+  <el-breadcrumb-item :to="{ path: '/entity/list/'+this.entityName }">{{entityMeta.title}}列表</el-breadcrumb-item>
+  <el-breadcrumb-item>{{entityMeta.title}} 详情</el-breadcrumb-item>
+ 
+</el-breadcrumb>
+     </p>
+ 
+  <el-form>
+    <el-form-item :label="item.title+'：'" v-for="item in columns" :key="item.dataKey">
+    <l-autotablecolumn  :value="entity[item.dataKey]" :cmeta="item"   />
+    </el-form-item>
+  </el-form>
+      
 
     </el-form>
-  </el-dialog>
+  
 </template>
 
 <script>
-define(["require", "vue", "v!views/common/autoformitem"], function(require, Vue) {
+define(["require", "vue", "v!views/common/autotablecolumn"], function(
+  require,
+  Vue
+) {
   "use strict";
   return Vue.component("l-info", {
     template: template,
-    props: {entityName:{required:true}, id:{required:true},show:{required:true,type:Boolean,default:false}},
     data() {
       return {
         dictUrl: this.$http.addUrl("dictionary.json"), // config.service.dictionaryPath),
         columns: [],
-        entity: {}
-       
+        entity: {},
+        entityName: null,
+        id: null,
+        entityMeta: {}
       };
     },
- 
+
     methods: {
       getupfilelist(data) {
         if (data instanceof Array && data.length > 0) {
@@ -40,32 +53,61 @@ define(["require", "vue", "v!views/common/autoformitem"], function(require, Vue)
 
       loaddata() {
         //get column metainfo
-
         var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
         var self = this;
         this.$http({ url: this.$http.addUrl(mock) })
           .then(({ data }) => {
             if (data.code === 0) {
               self.columns = data.data;
+              self.loadEntityData();
             }
           })
           .catch(ex => {
-            self.$message('get column info error ,' + ex)
+            self.$message("get column info error ," + ex);
           });
 
-        //get entity info
+        self.loadEntityMeta();
+      },
+      //get entity info
+      loadEntityData() {
+        var self = this;
         var mockEntitiyInfo = "entity/user.json?id=" + this.id;
         this.$http({ url: this.$http.addUrl(mockEntitiyInfo) })
           .then(({ data }) => {
             self.entity = data.data;
           })
           .catch(ex => {
-            self.$message('get entity info error ,' + ex)
+            self.$message("get entity info error ," + ex);
+          });
+      },
+      loadEntityMeta() {
+        var self = this;
+
+        var mockEntitiyMeta =
+          "entity/user.entitymeta.json?entityName" + this.entityName;
+        this.$http({ url: this.$http.addUrl(mockEntitiyMeta) })
+          .then(({ data }) => {
+            self.entityMeta = data.data;
+          })
+          .catch(ex => {
+            this.$message("get entityMeta   error ," + ex);
           });
       },
       getColumnValue(column) {
         return this.entity[column.dataKey] + "";
       }
+    },
+
+    mounted() {
+      this.entityName = this.$route.params.entityName;
+      this.id = this.$route.params.id;
+      this.loaddata();
+    },
+    beforeRouteUpdate(to, from, next) {
+      this.entityName = to.params.entityName;
+      this.id = to.params.id;
+      this.loadData();
+      next();
     }
   });
 });

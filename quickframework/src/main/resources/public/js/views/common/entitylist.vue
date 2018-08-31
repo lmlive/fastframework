@@ -105,8 +105,11 @@ define([
       },
       // 新增 / 修改
       addOrUpdateHandle(id) {
-        var url = "/entity/edit/" + this.entityName;
-        if (id != undefined) url += "/" + id;
+      var url="";
+        if (id != undefined)
+         url="/entity/edit/" + this.entityName+ "/" + id;
+         else
+         url="/entity/create/"+this.entityName
         this.$router.push(url);
       },
       searchCmd(cmd) {

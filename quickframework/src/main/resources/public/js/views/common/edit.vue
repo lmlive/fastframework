@@ -62,7 +62,7 @@ define([
           else return [];
         }
       },
-      loaddata() {
+      loadcolMeta() {
         //get column metainfo
 
         var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
@@ -71,27 +71,28 @@ define([
           .then(({ data }) => {
             if (data.code === 0) {
               self.columns = data.data;
-              //get entity info
-              self.loadEntityInfo();
             }
           })
           .catch(ex => {
             this.$message("get column info error ," + ex);
           });
 
-        self.loadEntityMeta();
+      
       },
-      loadEntityInfo() {
+      loaddata() {
         var self = this;
-          var mockEntitiyInfo = "entity/user.json?id=" + this.id;
+          var mockEntitiyInfo = "/entity/user.json?id=" + this.id;
+          console.info('eidt mockurl='+mockEntitiyInfo)
           this.$http({ url: this.$http.addUrl(mockEntitiyInfo) })
             .then(({ data }) => {
               self.entity = data.data;
+              console.info('edit mock data'+JSON.stringify(data.data))
+              self.loadcolMeta()
             })
             .catch(ex => {
               this.$message("get entity info error ," + ex);
             });
-        
+          self.loadEntityMeta();
       },
       loadEntityMeta() {
         var self = this;

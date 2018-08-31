@@ -37,7 +37,8 @@
     <l-pickupfield  v-else-if="cmeta.uiMeta.uiType==='Pick'" 
             :entityName="cmeta.uiMeta.pickEntityShortName"    
             :multiPick="cmeta.uiMeta.multiPick"   
-                v-model="cvalue"></l-pickupfield>  
+            :pickFields="cmeta.uiMeta.pickFields"
+                v-model="cvalue"></l-pickupfield> 
    
    
     <l-embedded :readonly="false" v-else-if="cmeta.uiMeta.uiType==undefined" v-model="cvalue" :columnMeta="cmeta"></l-embedded>

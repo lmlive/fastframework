@@ -1,26 +1,15 @@
 <template>
- 
-      
- <el-select v-model="cvalue" :multiple="multiPick" placeholder="请选择"   
- :remote ="true"
- :filterable="true"
- :remote-method="querySearch" :loading="loading">
-    <el-option
-      v-for="item in options"
-      :key="item.id"
-      :label="displayLabel(item)"
-      :value="item.id"> 
+  <el-select v-model="selectValue" :multiple="multiPick" placeholder="请选择" :remote="true" :filterable="true" :remote-method="querySearch" :loading="loading">
+    <el-option v-for="item in options" :key="item.id" :label="displayLabel(item)" :value="item.id">
     </el-option>
   </el-select>
-
-
 </template>
 <script>
 /*
 insert ,update  显示单选，多选
 info ，list 显示连接
 */
-define([ "vue", "utils/config"], function( Vue, config) {
+define(["vue", "config"], function(Vue, config) {
   "use strict";
   return Vue.component("l-pickupfield", {
     template: template,
@@ -28,31 +17,53 @@ define([ "vue", "utils/config"], function( Vue, config) {
       entityName: { required: true },
       pickFields: { required: false },
       multiPick: { type: Boolean, required: false, default: false },
-      value: {},
+      value: null,
       url: { type: String, required: false }
     },
     watch: {
       value: function(v) {
-        this.cvalue = v;
+        this.cvalue = v; 
+       // this.selectValue =this.convertToSelectValue(v)
       },
-      cvalue: function(v) {
-        this.$emit("input", v);
+      selectValue:function(v){
+        
+        this.cvalue=this.convertToReturnValue(v)
+      },
+      cvalue:function(v){
+         this.$emit('input',v)
+     // console.info(v)
+      //console.info(old)
       }
     },
     data() {
       return {
         cvalue: null,
         loading: false,
-        options: []
+        options: [],
+        selectValue: null
       };
     },
     mounted() {
-      console.info('-----------------pick mounted--------------------')
+      // console.info('-----------------pick mounted--------------------'+JSON.stringify(this.value))
       if (this.value != null) {
-        this.querySearch("", this.value);
+        var v=this.convertToSelectValue(this.value)
+        this.querySearch("", v);
       }
     },
     methods: {
+    
+      convertToSelectValue(value){
+     if (this.multiPick)
+          return  value.map((d) => { return d.id })
+        else
+         return   value
+      },
+      convertToReturnValue(value){
+          if (this.multiPick)
+          return  value.map((d) => { return {id:d} })
+        else
+          return   {id:value}
+      },
       displayLabel(item) {
         if (this.pickFields) {
           return this.pickFields
@@ -82,7 +93,7 @@ define([ "vue", "utils/config"], function( Vue, config) {
             if (data.code == 0) {
               _this.options = data.data.list;
               if (value) {
-                _this.cvalue = value;
+                _this.selectValue = value;
               }
             } else {
               _this.$message("---load data error" + data.msg);

@@ -11,15 +11,12 @@ import org.springframework.context.annotation.Import;
 import com.livem.quickframework.FrameWorkBooter;
 
 @SpringBootApplication
-@Import(FrameWorkBooter.class)
 @EntityScan(basePackageClasses = Product.class)
 public class TestBoot     {
 
 	public static void main(String[] args) {
 		startWeb(args);
 		// new ZookeeperTester().test();
-		
-		
 	}
 
 	private static void startWeb(String[] args) {

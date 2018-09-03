@@ -14,7 +14,7 @@ import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.List;
 
-@Transactional
+@Transactional(readOnly = true)
 public class GenericalRepositoryService implements GeneriEntityService {
 
     private EntityManager em;
@@ -38,7 +38,6 @@ public class GenericalRepositoryService implements GeneriEntityService {
     public <T> List<T> findAll(Class<T> entityClass) {
         EntityQuery query = (EntityQuery) createQuery(entityClass);
         return this.em.createQuery(query.getCriteriaQuery()).getResultList();
-
     }
 
     @Override
@@ -79,14 +78,17 @@ public class GenericalRepositoryService implements GeneriEntityService {
     }
 
     @Override
+    @Transactional
     public void updateOrSave(Object entity) {
         EntityMetadata metadata = new JpaMetamodelEntityInformation(entity.getClass(), em.getMetamodel());
         if (((JpaMetamodelEntityInformation) metadata).isNew(entity)) {
             this.em.persist(entity);
         } else this.em.merge(entity);
+        em.flush();
     }
 
     @Override
+    @Transactional
     public void updateOrSaveBatch(List<?> entites) {
         for (Object entity : entites) {
             this.em.persist(entity);
@@ -95,6 +97,7 @@ public class GenericalRepositoryService implements GeneriEntityService {
 
 
     @Override
+    @Transactional
     public <T> void deleteById(Class<T> entityClass, Long id) {
         T find = this.em.find(entityClass, id);
         if (find != null) em.remove(find);
@@ -104,6 +107,12 @@ public class GenericalRepositoryService implements GeneriEntityService {
     public List<?> queryBySql(String sql) {
         return this.em.createNativeQuery(sql, List.class).getResultList();
 
+    }
+
+    @Override
+    @Transactional
+    public void flush() {
+        em.flush();
     }
 
 

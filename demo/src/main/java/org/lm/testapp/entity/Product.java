@@ -1,7 +1,9 @@
 package org.lm.testapp.entity;
 
 import com.livem.quickframework.entity.BaseEntity;
+import org.livem.entitymeta.annotation.EntityConfig;
 import org.livem.entitymeta.annotation.Field;
+import org.livem.entitymeta.annotation.Ordered;
 import org.livem.meta.UIType;
 
 import javax.persistence.Column;
@@ -9,6 +11,8 @@ import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@EntityConfig(title = "产品")
+@Ordered("id,pname,price,img,desc")
 public class Product extends BaseEntity {
 
     @Field(title = "产品名称")

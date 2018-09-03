@@ -1,11 +1,13 @@
 package org.livem.test.entity;
 
 import org.hibernate.annotations.NaturalId;
+import org.livem.entitymeta.annotation.EntityConfig;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity(name="roles")
+@EntityConfig(title = "角色",pickColumns = {"id","role_name"})
 public class Role   extends  BaseEntity {
 	
 	@Column(unique = true)

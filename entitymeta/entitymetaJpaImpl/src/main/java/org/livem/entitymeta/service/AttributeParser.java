@@ -1,5 +1,6 @@
 package org.livem.entitymeta.service;
 
+import org.livem.entitymeta.annotation.EntityConfig;
 import org.livem.entitymeta.annotation.Field;
 import org.livem.entitymeta.service.validation.ValidationParser;
 import org.livem.meta.*;
@@ -17,6 +18,7 @@ import javax.persistence.metamodel.EmbeddableType;
 import javax.persistence.metamodel.SingularAttribute;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 public class AttributeParser {
@@ -48,13 +50,13 @@ public class AttributeParser {
         this.entityClass = entityClass;
         if (attribute == null) return null;
         ColumnMeta meta = new ColumnMeta();
-        if(attribute.getPersistentAttributeType()== Attribute.PersistentAttributeType.EMBEDDED){
-            meta=new EmbeddedColumnMeta();
+        if (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.EMBEDDED) {
+            meta = new EmbeddedColumnMeta();
             ((EmbeddedColumnMeta) meta).setSubColumns(new ArrayList<>());
             EmbeddableType<?> emtype = entityManager.getMetamodel().embeddable(attribute.getJavaType());
             Set<Attribute<?, ?>> subatts = (Set<Attribute<?, ?>>) emtype.getAttributes();
             for (Attribute<?, ?> subatt : subatts) {
-                ((EmbeddedColumnMeta) meta).getSubColumns().add(getColumnMeta(emtype.getJavaType(),subatt));
+                ((EmbeddedColumnMeta) meta).getSubColumns().add(getColumnMeta(emtype.getJavaType(), subatt));
             }
 
         }
@@ -256,9 +258,20 @@ public class AttributeParser {
         PickUiMeta pickMeta = new PickUiMeta();
         pickMeta.setUiType(UIType.Pick);
         Class<?> pickEntityClass = attribute.getJavaType();
+        if (attribute.isCollection()) {
+            if (attribute.getJavaMember() instanceof Method) {
+                pickEntityClass = (Class<?>) ((ParameterizedType) ((Method) attribute.getJavaMember()).getGenericReturnType()).getActualTypeArguments()[0];
+            } else {
+                pickEntityClass = (Class<?>) ((ParameterizedType) ((java.lang.reflect.Field) attribute.getJavaMember()).getGenericType()).getActualTypeArguments()[0];
+            }
+        }
         pickMeta.setPickEntityShortName(pickEntityClass.getSimpleName());
         pickMeta.setPickEntityType(pickEntityClass);
         pickMeta.setMultiPick(multipick);
+
+        EntityConfig entityconfig = pickEntityClass.getAnnotation(EntityConfig.class);
+        if (entityconfig != null) pickMeta.setPickColumns(Arrays.asList(entityconfig.pickColumns()));
+
         return pickMeta;
     }
 

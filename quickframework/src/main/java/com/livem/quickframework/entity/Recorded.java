@@ -18,8 +18,7 @@ public class Recorded {
     @Field(title = "修改日期", readOnly = true, uitype = UIType.DateTime)
     private Date updateDate = new Date();
 
-    @Version
-    private  Long version;
+
 
     public Date getCreateDate() {
         return createDate;
@@ -37,11 +36,4 @@ public class Recorded {
         this.updateDate = updateDate;
     }
 
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 }

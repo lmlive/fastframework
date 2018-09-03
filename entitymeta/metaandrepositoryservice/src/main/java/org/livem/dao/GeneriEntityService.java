@@ -25,4 +25,6 @@ public interface GeneriEntityService {
 
 	public List<?> queryBySql(String sql);
 
+	public void flush();
+
 }

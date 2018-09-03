@@ -10,7 +10,7 @@ import javax.persistence.ManyToMany;
 import java.util.List;
 
 @Entity(name="roles")
-@EntityConfig(title="角色")
+@EntityConfig(title="角色",pickColumns = {"id","role_name"})
 public class Role extends BaseEntity{
 	
 	@NaturalId

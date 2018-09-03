@@ -1,7 +1,7 @@
 <template>
  
       
- <el-select v-model="cvalue" :multiple="multiPick" placeholder="请选择"   
+ <el-select @change="onchange"  v-model="selectValue" :multiple="multiPick" placeholder="请选择"   
  :remote ="true"
  :filterable="true"
  :remote-method="querySearch" :loading="loading">
@@ -20,46 +20,63 @@
 insert ,update  显示单选，多选
 info ，list 显示连接
 */
-define([ "vue", "utils/config"], function( Vue, config) {
+define([ "vue", "config"], function( Vue, config) {
   "use strict";
   return Vue.component("l-pickupfield", {
     template: template,
     props: {
       entityName: { required: true },
-      pickFields: { required: false },
+      pickFields: { required: false,default:null,type:Array },
       multiPick: { type: Boolean, required: false, default: false },
       value: {},
       url: { type: String, required: false }
     },
     watch: {
       value: function(v) {
-        this.cvalue = v;
-      },
-      cvalue: function(v) {
-        this.$emit("input", v);
+        this.selectValue = this.objToSelectValue(v);
       }
+    
     },
     data() {
       return {
         cvalue: null,
         loading: false,
+        selectValue:null,
         options: []
       };
     },
     mounted() {
       console.info('-----------------pick mounted--------------------')
+      
       if (this.value != null) {
-        this.querySearch("", this.value);
+        this.selectValue=this.objToSelectValue(this.value)
+        this.querySearch("", this.selectValue);
       }
     },
     methods: {
+      onchange(v){
+        this.$emit('input',this.selectValueToObj(v))
+      },
+      objToSelectValue(v){
+        if(this.multiPick){
+          return v.map(d=>{return d.id})
+        }else
+        return v.id
+      },
+      selectValueToObj(v){
+        if(this.multiPick){
+          return v.map(d=>{
+            return {id:d}
+          })
+        }else
+        return {id:d}
+      },
       displayLabel(item) {
-        if (this.pickFields) {
-          return this.pickFields
-            .map(d => {
+        if (this.pickFields!=null ) {
+          console.info(this.pickFields)
+          return this.pickFields.map(d => {
               return item[d];
-            })
-            .join(",");
+            }).join(",");
         } else {
           return item["id"];
         }
@@ -82,7 +99,7 @@ define([ "vue", "utils/config"], function( Vue, config) {
             if (data.code == 0) {
               _this.options = data.data.list;
               if (value) {
-                _this.cvalue = value;
+                _this.selectValue = value;
               }
             } else {
               _this.$message("---load data error" + data.msg);

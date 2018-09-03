@@ -34,10 +34,11 @@
 
     <l-dictionary v-else-if="cmeta.uiMeta.uiType==='Dictionary'" :key="cmeta.uiMeta.dictKey" :group="cmeta.uiMeta.dictGroup" :source="dictUrl" :readonly="false" v-model="cvalue"></l-dictionary>
 
-    <l-pickupfield  v-else-if="cmeta.uiMeta.uiType==='Pick'" 
+     <l-pickupfield  v-else-if="cmeta.uiMeta.uiType==='Pick'" 
             :entityName="cmeta.uiMeta.pickEntityShortName"    
             :multiPick="cmeta.uiMeta.multiPick"   
-                v-model="cvalue"></l-pickupfield>  
+            :pickFields="cmeta.uiMeta.pickColumns"
+                v-model="cvalue"></l-pickupfield>   
    
    
     <l-embedded :readonly="false" v-else-if="cmeta.uiMeta.uiType==undefined" v-model="cvalue" :columnMeta="cmeta"></l-embedded>
@@ -53,7 +54,7 @@ define([
   "vue",
   "v!views/common/embedded",
   "v!views/common/dictionary",
-  "v!views/common/pickupfield"
+   "v!views/common/pickupfield"
 ], function(Vue) {
   return Vue.component("l-autoformitem", {
     template: template,

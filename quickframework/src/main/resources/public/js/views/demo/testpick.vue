@@ -19,7 +19,7 @@ define([
   return Vue.component("l-test-pick", {
     template: template,
     data() {
-      return { pick: [10], pickFields: ["id", "loginName"] };
+      return { pick: [{id:10}], pickFields: ["id", "loginName"] };
     },
     methods: {
       getValue() {
@@ -27,7 +27,7 @@ define([
         console.info(JSON.stringify(_this.pick));
       },
       setValue() {
-        this.pick = 10;
+        this.pick = [{id:9}];
       }
     },
     mounted(){

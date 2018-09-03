@@ -9,15 +9,18 @@
       "entityName": null,
       "extendMeta": null,
       "uiMeta": {
-        "updateAble": true,
-        "insertAble": true,
-        "visable": true,
-        "disAsReadOnly": false,
-        "uiType": "Pick",
-        "validMeta": [],
-        "pickEntityShortName": "List",
-        "pickEntityType": "java.util.List",
-        "multiPick": true
+        "disAsReadOnly":false,
+        "insertAble":true,
+        "multiPick":true,
+        "pickColumns":[
+            "id","loginName"
+        ],
+        "pickEntityShortName":"Role",
+        "pickEntityType":"org.livem.test.entity.Role",
+        "uiType":"Pick",
+        "updateAble":true,
+        "validMeta":[],
+        "visable":true
       },
       "key": false
     },

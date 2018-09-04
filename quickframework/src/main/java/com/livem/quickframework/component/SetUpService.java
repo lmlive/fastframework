@@ -81,7 +81,6 @@ public class SetUpService implements ApplicationListener<ContextRefreshedEvent> 
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-
         this.app = event.getApplicationContext();
         doSetUp();
 

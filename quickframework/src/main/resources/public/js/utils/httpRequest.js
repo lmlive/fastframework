@@ -26,7 +26,6 @@ define(['axios', 'lib/vue-cookies', 'vue', 'VueRouter', 'lib/qs', 'lib/merge'],
          */
         http.interceptors.response.use(function (response) {
             if (response.data && response.data.code === 401) { // 401, token失效
-                console.log('-------------login expired and reauthed required---------------------')
                 Vue.cookies.cookie = undefined
                // router.options.isAddDynamicMenuRoutes = false
                 router.push({

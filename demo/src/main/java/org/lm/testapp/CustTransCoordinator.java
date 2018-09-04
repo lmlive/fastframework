@@ -5,9 +5,9 @@ import org.hibernate.resource.transaction.backend.jdbc.spi.JdbcResourceTransacti
 import org.hibernate.resource.transaction.spi.TransactionCoordinatorBuilder;
 import org.hibernate.resource.transaction.spi.TransactionCoordinatorOwner;
 
-public class CustTransCoordinator extends JdbcResourceLocalTransactionCoordinatorImpl {
+public class CustTransCoordinator   {
     CustTransCoordinator(TransactionCoordinatorBuilder transactionCoordinatorBuilder, TransactionCoordinatorOwner owner, JdbcResourceTransactionAccess jdbcResourceTransactionAccess) {
-        super(transactionCoordinatorBuilder, owner, jdbcResourceTransactionAccess);
+       // super(transactionCoordinatorBuilder, owner, jdbcResourceTransactionAccess);
     }
 
 

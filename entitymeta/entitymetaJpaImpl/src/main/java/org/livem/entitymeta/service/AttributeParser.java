@@ -65,7 +65,7 @@ public class AttributeParser {
         meta.setDataKey(attribute.getName());
         meta.setType(attribute.getJavaType());
         meta.setKey(parseKey(attribute));
-        Field an = getAttrAnnotation(attribute, Field.class);
+        Field an =Util. getAttrAnnotation(attribute, Field.class);
         if (an != null) {
             meta.setTitle(an.title());
         }
@@ -100,7 +100,7 @@ public class AttributeParser {
 
 
     boolean parseKey(Attribute attr) {
-        if (getAttrAnnotation(attr, Id.class) != null) {
+        if (Util.getAttrAnnotation(attr, Id.class) != null) {
             return true;
         }
 //        Column c = getAttrAnnotation(attr, Column.class);
@@ -110,7 +110,7 @@ public class AttributeParser {
 
 
     void parserColumAnnotation(BaseUiMeta meta, Attribute attribute) {
-        javax.persistence.Column ano = getAttrAnnotation(attribute, Column.class);
+        javax.persistence.Column ano =Util. getAttrAnnotation(attribute, Column.class);
         if (ano != null) {
             meta.setUpdateAble(ano.updatable());
             meta.setInsertAble(ano.insertable());
@@ -122,7 +122,7 @@ public class AttributeParser {
     }
 
     BaseUiMeta parserFeldAnnotation(Attribute attribute) {
-        Field uitype = getAttrAnnotation(attribute, Field.class);
+        Field uitype =Util. getAttrAnnotation(attribute, Field.class);
         BaseUiMeta uimeta = new BaseUiMeta();
         if (uitype != null) {
             UIType uitype2 = uitype.uitype();
@@ -197,7 +197,7 @@ public class AttributeParser {
         parseIdAnnotation(attribute, uimeta);
         // @column
         parserColumAnnotation(uimeta, attribute);
-        Version version = getAttrAnnotation(attribute, Version.class);
+        Version version =Util. getAttrAnnotation(attribute, Version.class);
         if (version != null) {
             uimeta.setInsertAble(false);
             uimeta.setUpdateAble(false);
@@ -207,7 +207,7 @@ public class AttributeParser {
     }
 
     private void parseIdAnnotation(Attribute attribute, BaseUiMeta uimeta) {
-        Annotation idan = getAttrAnnotation(attribute, Id.class);
+        Annotation idan =Util. getAttrAnnotation(attribute, Id.class);
         if (idan != null) {
             uimeta.setInsertAble(false);
             uimeta.setUpdateAble(false);
@@ -275,12 +275,6 @@ public class AttributeParser {
         return pickMeta;
     }
 
-    <T extends Annotation> T getAttrAnnotation(Attribute attr, Class<T> c) {
-        if (attr.getJavaMember() instanceof Method) {
-            return ((Method) attr.getJavaMember()).getDeclaredAnnotation(c);
-        } else {
-            return ((java.lang.reflect.Field) attr.getJavaMember()).getAnnotation(c);
-        }
-    }
+
 
 }

@@ -47,7 +47,7 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
         },
         name: 'main',
         beforeEnter (to, from, next) {
-            // var token = Vue.cookies.get('token')
+            var token = Vue.cookies.get('token')
             // if (!token || !/\S/.test(token)) {
             //     next({ name: 'login' })
             // }

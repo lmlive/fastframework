@@ -1,6 +1,6 @@
 <template  >
-     <div>
-    <el-form-item v-if="cmeta.uiMeta.visable" :label="cmeta.title" :prop="cmeta.dataKey">
+     
+    <el-form-item v-if="cmeta.uiMeta.visable" :label="cmeta.title" :prop="cmeta.dataKey" :rules="rules">
     <el-input v-if="cmeta.uiMeta.uiType==='RichContent'" autosize type="textarea" v-model="cvalue"></el-input>
 
     <template v-else-if="cmeta.uiMeta.uiType==='Boolean'">
@@ -47,7 +47,7 @@
         <el-input v-model="cvalue" type="text"></el-input>
     </template>
     </el-form-item>
-    </div>  
+     
 </template>
 <script>
 define([
@@ -65,7 +65,8 @@ define([
     data() {
       return {
         dictUrl: this.$http.addUrl("dictionary.json"), // config.service.dictionaryPath),
-        cvalue: this.value
+        cvalue: this.value,
+        rules:[]
       };
     },
     watch: {
@@ -76,9 +77,17 @@ define([
         this.$emit("input", v);
       }
     },
-
+    created(){ 
+      console.info('created'+this.cmeta.uiMeta.validMeta.length)
+         var rule=[]
+          this.cmeta.uiMeta.validMeta.forEach(d=>{
+              rule.push({message:d.errorMsg, pattern:d.regEx,required:d.required})
+          })
+          this.rules=rule
+          console.info(this.rules)
+     },
     methods: {
-     
+   
       getupfilelist(data) {
         if (data instanceof Array && data.length > 0) {
           return data.map(d => {

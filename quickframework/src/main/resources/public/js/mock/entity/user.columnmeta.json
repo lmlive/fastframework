@@ -91,7 +91,9 @@
         "visable": true,
         "disAsReadOnly": false,
         "uiType": "Text",
-        "validMeta": []
+        "validMeta": [{"regEx":"^\\S+$",
+          "required":true,
+          "validName":"required"}]
       },
       "key": false
     },
@@ -142,7 +144,9 @@
         "visable": true,
         "disAsReadOnly": false,
         "uiType": "RichContent",
-        "validMeta": []
+        "validMeta": [{ "errorMsg":"最多500字",
+          "regEx":"^(\\S|\\s){0,500}$",
+          "validName":"range"}]
       },
       "key": false
     },

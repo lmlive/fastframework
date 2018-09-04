@@ -9,6 +9,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 
 import com.livem.quickframework.FrameWorkBooter;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @SpringBootApplication
 @EntityScan(basePackageClasses = Product.class)
@@ -24,7 +25,8 @@ public class TestBoot     {
 		app.setBannerMode(Mode.OFF);
 		app.setWebEnvironment(true);
 		ConfigurableApplicationContext con = app.run(args);
-
+		String transmang = con.getBean(PlatformTransactionManager.class).getClass().getName();
+		System.out.println("-----transactionManager::::"+transmang);
 		
 	}
 

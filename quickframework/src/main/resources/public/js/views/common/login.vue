@@ -24,7 +24,7 @@
                                     </el-input>
                                 </el-col>
                                 <el-col :span="10" class="login-captcha">
-                                    <img :src="captchaPath" @click="getCaptcha" alt="">
+                                    <img :src="captchaPath" @click="getCaptcha" alt="验证码">
                                 </el-col>
                             </el-row>
                         </el-form-item>
@@ -70,11 +70,11 @@
                             trigger: 'blur'
                         }]
                     },
-                    captchaPath: ''
+                    captchaPath: null
                 }
             },
             created() {
-              //  this.getCaptcha()
+                 this.getCaptcha()
             },
             methods: {
                 // 提交表单
@@ -112,7 +112,7 @@
                 },
                 // 获取验证码
                 getCaptcha() {
-                    var uuid = util.getUUID()
+                    let  uuid = util.getUUID()
                     this.dataForm.uuid = uuid
                     this.captchaPath = this.$http.addUrl('system/auth/captcha.jpg?t=' + new Date().getMilliseconds())
                 }

@@ -1,9 +1,13 @@
 package org.livem.test.entity;
 
 import org.hibernate.annotations.NaturalId;
+import org.livem.entitymeta.annotation.Field;
 import  org.livem.test.EntityListProprertyConvert;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +16,7 @@ import java.util.Set;
 public class SystemUser  extends  BaseEntity   {
 
 	@Column(unique=true)
+	@NotBlank(message = "登陆账号不能为空")
 	private String loginName;
 
 //	@ColumnTransformer(read = "decrypt( 'AES', '101010101', pswd  )", write = "encrypt('AES', '101010101', ?)")
@@ -33,6 +38,7 @@ public class SystemUser  extends  BaseEntity   {
 	private Integer age;
 
 	@Column(length = 500)
+	@Size(max = 500,message = "最多500字")
 	private String introduce;
 
 	public String getIntroduce() {

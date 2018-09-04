@@ -8,7 +8,7 @@
 </el-breadcrumb>
      </p>
 
-    <el-form  size="mini" label-width="80px">
+    <el-form :model="entity"  size="mini" label-width="80px" ref='form'>
       <l-autoformitem v-if="item.uiMeta.insertAble && !item.uiMeta.disAsReadOnly"
        v-for="item in columns" 
        :cmeta="item"
@@ -47,8 +47,13 @@ define([
     },
     methods: {
       save() {
-        this.$message("正在保存。。。。。");
+        this.$refs['form'].validate(d=>{
+          if(d){
+       this.$message("正在保存。。。。。");
         console.info(this.entity);
+          }
+        })
+      
       },
       getupfilelist(data) {
         if (data instanceof Array) {

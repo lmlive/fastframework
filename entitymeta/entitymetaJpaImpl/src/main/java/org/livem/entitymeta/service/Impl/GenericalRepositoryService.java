@@ -84,7 +84,7 @@ public class GenericalRepositoryService implements GeneriEntityService {
         if (((JpaMetamodelEntityInformation) metadata).isNew(entity)) {
             this.em.persist(entity);
         } else this.em.merge(entity);
-        em.flush();
+       // em.flush();
     }
 
     @Override

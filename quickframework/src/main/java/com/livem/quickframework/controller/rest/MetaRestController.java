@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MetaRestController extends BaseRestController {
 
-    @RequestMapping("/{entityName}/entityMeta")
+    @RequestMapping("/entityMeta/{entityName}")
     public BaseStaus getEntityMeta(@PathVariable(name = "entityName", required = false) String entityName) {
         EntityMeta entityMeta = entityClassMetaResolver.getEntityMetaByName(entityName);
         return ResponseStatus.ok(entityMeta);
     }
 
-    @RequestMapping("/{entityName}/columnMeta")
+    @RequestMapping("/columnMeta/{entityName}")
     public BaseStaus getColumns(@PathVariable(name = "entityName", required = false) String entityName) {
         List<ColumnMeta> coloumnMeta = propertyMetaService.getColumnMetasByEntityName(entityName);
         return ResponseStatus.ok(coloumnMeta);

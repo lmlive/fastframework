@@ -83,10 +83,9 @@
                     this.$refs['dataForm'].validate(function (valid) {
                         if (valid) {
                             var url='/admin/login';
-                               url='login.json'
+                              // url='login.json'
                             self.$http.post(
                                 self.$http.addUrl(url),
-
                                 self.$http.adornData({
                                     'username': self.dataForm.userName,
                                     'password': self.dataForm.password,
@@ -114,7 +113,7 @@
                 getCaptcha() {
                     let  uuid = util.getUUID()
                     this.dataForm.uuid = uuid
-                    this.captchaPath = this.$http.addUrl('system/auth/captcha.jpg?t=' + new Date().getMilliseconds())
+                    this.captchaPath = this.$http.addUrl('/system/auth/captcha.jpg?t=' + new Date().getMilliseconds())
                 }
             }
         })

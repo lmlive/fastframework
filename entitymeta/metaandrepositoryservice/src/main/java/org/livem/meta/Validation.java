@@ -8,6 +8,8 @@ public class Validation {
     //    错误提示
     private String errorMsg;
 
+    private  boolean required;
+
 
     public Validation(String validName, String constraint, String msg) {
         this.regEx = constraint;
@@ -41,5 +43,13 @@ public class Validation {
 
     public void setRegEx(String regEx) {
         this.regEx = regEx;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 }

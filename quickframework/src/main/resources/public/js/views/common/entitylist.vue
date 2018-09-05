@@ -60,9 +60,11 @@
 <script>
 define([
   "vue",
+  'config',
   "v!views/common/searchbox",
-  "v!views/common/autotablecolumn" 
-], function(Vue) {
+  //"v!views/common/autotablecolumn" 
+  
+], function(Vue,config) {
   "use strict";
   return Vue.component("l-entitylist", {
     template: template,
@@ -101,15 +103,12 @@ define([
     methods: {
       //详情
       detail(id) {
-        this.$router.push("/entity/detail/" + this.entityName + "/" + id);
+        this.$router.push("/system/entity/detail/" + this.entityName + "/" + id);
       },
       // 新增 / 修改
       addOrUpdateHandle(id) {
-      var url="";
-        if (id != undefined)
-         url="/entity/edit/" + this.entityName+ "/" + id;
-         else
-         url="/entity/create/"+this.entityName
+        var url ="/system/entity/edit/" + this.entityName;
+        if (id != undefined) url += "/" + id;
         this.$router.push(url);
       },
       searchCmd(cmd) {
@@ -131,7 +130,7 @@ define([
 
         var mockEntitiyMeta =
           "entity/user.entitymeta.json?entityName" + this.entityName;
-        this.$http({ url: this.$http.addUrl(mockEntitiyMeta) })
+        this.$http({ url: this.$http.addUrl(config.service.entityMetaPath+this.entityName) })
           .then(({ data }) => {
             self.entityMeta = data.data;
           })
@@ -146,7 +145,7 @@ define([
         var self = this;
         var mock = "entity/user.columnmeta.json";
         this.$http({
-          url: this.$http.addUrl(mock),
+          url: this.$http.addUrl(config.service.columnMetaPath+this.entityName),
           method: "get"
         })
           .then(({ data }) => {
@@ -165,7 +164,7 @@ define([
         this.dataListLoading = true;
         var mock = "entity/userlist.json?entityName=" + this.entityName;
         this.$http({
-          url: this.$http.addUrl(mock),
+          url: this.$http.addUrl(config.service.entityListPath+this.entityName),
           method: "get",
           params: this.$http.adornParams({
             page: this.pageIndex,
@@ -217,7 +216,7 @@ define([
         )
           .then(() => {
             this.$http({
-              url: this.$http.addUrl("/sys/user/delete"),
+              url: this.$http.addUrl(config.service.entityDeletePath+this.entityName),
               method: "post",
               data: this.$http.adornData(userIds, false)
             }).then(({ data }) => {
@@ -239,10 +238,13 @@ define([
       }
     },
     mounted() {
+    
       this.entityName = this.$route.params.entityName;
+      console.info('--------mounted entityList-------'+this.entityName);
       this.loadData();
     },
     beforeRouteUpdate(to, from, next) {
+     console.info('--------mounted entityList-------'+this.entityName);
       this.entityName = to.params.entityName;
       this.loadData();
       next();

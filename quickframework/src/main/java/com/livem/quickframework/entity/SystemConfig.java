@@ -11,9 +11,10 @@ import java.util.Date;
 @Entity
 @EntityConfig(title = "系统配置")
 public class SystemConfig extends BaseEntity {
-	@NaturalId
+	@Column(unique = true)
 	@Field(title = "属性名称")
 	private String propertyName;
+
 	@Field(title = "属性值")
 	private String dataValue;
 

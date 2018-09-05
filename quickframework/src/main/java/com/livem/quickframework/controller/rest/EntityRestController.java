@@ -21,7 +21,7 @@ import java.util.Map;
 public class EntityRestController extends BaseRestController {
 
 
-    @RequestMapping("/{entityName}/insert")
+    @RequestMapping("/insert/{entityName}")
     public BaseStaus insert(@PathVariable("entityName") String entityName, HttpServletRequest req) {
         BaseEntity entity = readAndValidRequest(entityName, req);
         generiEntityService.updateOrSave(entity);
@@ -40,7 +40,7 @@ public class EntityRestController extends BaseRestController {
     }
 
 
-    @RequestMapping("/{entityName}/update")
+    @RequestMapping("/update/{entityName}")
     public BaseStaus update(@PathVariable("entityName") String entityName, HttpServletRequest request) {
         BaseEntity entity = readAndValidRequest(entityName, request);
 
@@ -48,7 +48,7 @@ public class EntityRestController extends BaseRestController {
         return new ResponseStatus(BaseStaus.CODE_SUCCESS, "ok", entity);
     }
 
-    @RequestMapping("/{entityName}/delete")
+    @RequestMapping("/delete/{entityName}")
     public BaseStaus delete(@PathVariable("entityName") String entityName, Long id) {
         try {
             generiEntityService.deleteById(getEntityClass(entityName), id);
@@ -59,7 +59,7 @@ public class EntityRestController extends BaseRestController {
     }
 
 
-    @RequestMapping("/{entityName}/list")
+    @RequestMapping("/list/{entityName}")
     public BaseStaus list(@PathVariable("entityName") String entityName, HttpServletRequest request, @RequestBody(required = false) Map<String, Object> map) {
         if(map==null)map=new HashMap<>();
         for (Map.Entry<String, String[]> en : request.getParameterMap().entrySet()) {
@@ -72,12 +72,12 @@ public class EntityRestController extends BaseRestController {
 
     }
 
-    @RequestMapping("/{entityName}/findone")
+    @RequestMapping("/findone/{entityName}")
     public BaseStaus findOne(@PathVariable("entityName") String entityName, Long id) {
         return ResponseStatus.ok(generiEntityService.findOne(getEntityClass(entityName), id));
     }
 
-    @RequestMapping("/{entityName}/singlePage")
+    @RequestMapping("/singlePage/{entityName}")
     public BaseStaus singlePage(@PathVariable("entityName") String entityName) {
         Query2 query = generiEntityService.createQuery(getEntityClass(entityName));
         return ResponseStatus.ok(generiEntityService.findOne(query));

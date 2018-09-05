@@ -75,7 +75,7 @@
  </span>
 </template>
 <script>
-define(['vue', 'v!views/common/embedded', 'v!views/common/dictionary'], function(Vue) {
+define(['vue',"config", 'v!views/common/embedded', 'v!views/common/dictionary'], function(Vue,config) {
     return Vue.component('l-field', {
         template: template,
         props: {
@@ -86,7 +86,7 @@ define(['vue', 'v!views/common/embedded', 'v!views/common/dictionary'], function
         },
         data() {
             return {
-                  dictUrl: this.$http.addUrl("dictionary.json"), // config.service.dictionaryPath),
+                  dictUrl: this.$http.addUrl(config.service.dictionaryPath),
                   cvalue:this.value,
                 
             }

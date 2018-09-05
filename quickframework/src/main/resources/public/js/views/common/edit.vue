@@ -8,7 +8,7 @@
 </el-breadcrumb>
      </p>
 
-    <el-form  size="mini" label-width="80px">
+    <el-form :model="entity"  size="mini" label-width="80px" ref='form'>
       <l-autoformitem v-if="item.uiMeta.insertAble && !item.uiMeta.disAsReadOnly"
        v-for="item in columns" 
        :cmeta="item"
@@ -36,7 +36,7 @@ define([
     template: template,
     data() {
       return {
-        dictUrl: this.$http.addUrl("dictionary.json"), // config.service.dictionaryPath),
+        dictUrl: this.$http.addUrl(config.service.dictionaryPath),
         columns: [],
         entity: {},
         id: null,
@@ -47,8 +47,13 @@ define([
     },
     methods: {
       save() {
-        this.$message("正在保存。。。。。");
+        this.$refs['form'].validate(d=>{
+          if(d){
+       this.$message("正在保存。。。。。");
         console.info(this.entity);
+          }
+        })
+      
       },
       getupfilelist(data) {
         if (data instanceof Array) {
@@ -62,44 +67,43 @@ define([
           else return [];
         }
       },
-      loadcolMeta() {
+      loaddata() {
         //get column metainfo
 
         var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
         var self = this;
-        this.$http({ url: this.$http.addUrl(mock) })
+        this.$http({ url: this.$http.addUrl(config.service.columnMetaPath+this.entityName) })
           .then(({ data }) => {
             if (data.code === 0) {
               self.columns = data.data;
+              //get entity info
+              self.loadEntityInfo();
             }
           })
           .catch(ex => {
             this.$message("get column info error ," + ex);
           });
 
-      
+        self.loadEntityMeta();
       },
-      loaddata() {
+      loadEntityInfo() {
         var self = this;
-          var mockEntitiyInfo = "/entity/user.json?id=" + this.id;
-          console.info('eidt mockurl='+mockEntitiyInfo)
-          this.$http({ url: this.$http.addUrl(mockEntitiyInfo) })
+          var mockEntitiyInfo = "entity/user.json?id=" + this.id;
+          this.$http({ url: this.$http.addUrl(config.service.entityInfoPath+this.entityName+'/'+this.id) })
             .then(({ data }) => {
               self.entity = data.data;
-              console.info('edit mock data'+JSON.stringify(data.data))
-              self.loadcolMeta()
             })
             .catch(ex => {
               this.$message("get entity info error ," + ex);
             });
-          self.loadEntityMeta();
+        
       },
       loadEntityMeta() {
         var self = this;
 
         var mockEntitiyMeta =
           "entity/user.entitymeta.json?entityName" + this.entityName;
-        this.$http({ url: this.$http.addUrl(mockEntitiyMeta) })
+        this.$http({ url: this.$http.addUrl(config.service.entityMetaPath+this.entityName) })
           .then(({ data }) => {
             self.entityMeta = data.data;
           })

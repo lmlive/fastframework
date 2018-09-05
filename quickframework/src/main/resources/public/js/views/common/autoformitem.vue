@@ -1,6 +1,6 @@
 <template  >
-     <div>
-    <el-form-item v-if="cmeta.uiMeta.visable" :label="cmeta.title" :prop="cmeta.dataKey">
+     
+    <el-form-item v-if="cmeta.uiMeta.visable" :label="cmeta.title" :prop="cmeta.dataKey" :rules="rules">
     <el-input v-if="cmeta.uiMeta.uiType==='RichContent'" autosize type="textarea" v-model="cvalue"></el-input>
 
     <template v-else-if="cmeta.uiMeta.uiType==='Boolean'">
@@ -34,11 +34,11 @@
 
     <l-dictionary v-else-if="cmeta.uiMeta.uiType==='Dictionary'" :key="cmeta.uiMeta.dictKey" :group="cmeta.uiMeta.dictGroup" :source="dictUrl" :readonly="false" v-model="cvalue"></l-dictionary>
 
-    <l-pickupfield  v-else-if="cmeta.uiMeta.uiType==='Pick'" 
+     <l-pickupfield  v-else-if="cmeta.uiMeta.uiType==='Pick'" 
             :entityName="cmeta.uiMeta.pickEntityShortName"    
             :multiPick="cmeta.uiMeta.multiPick"   
-            :pickFields="cmeta.uiMeta.pickFields"
-                v-model="cvalue"></l-pickupfield> 
+            :pickFields="cmeta.uiMeta.pickColumns"
+                v-model="cvalue"></l-pickupfield>   
    
    
     <l-embedded :readonly="false" v-else-if="cmeta.uiMeta.uiType==undefined" v-model="cvalue" :columnMeta="cmeta"></l-embedded>
@@ -47,15 +47,15 @@
         <el-input v-model="cvalue" type="text"></el-input>
     </template>
     </el-form-item>
-    </div>  
+     
 </template>
 <script>
 define([
-  "vue",
+  "vue","config",
   "v!views/common/embedded",
   "v!views/common/dictionary",
-  "v!views/common/pickupfield"
-], function(Vue) {
+   "v!views/common/pickupfield"
+], function(Vue,config) {
   return Vue.component("l-autoformitem", {
     template: template,
     props: {
@@ -64,8 +64,9 @@ define([
     },
     data() {
       return {
-        dictUrl: this.$http.addUrl("dictionary.json"), // config.service.dictionaryPath),
-        cvalue: this.value
+        dictUrl: this.$http.addUrl(config.service.dictionaryPath),
+        cvalue: this.value,
+        rules:[]
       };
     },
     watch: {
@@ -76,9 +77,17 @@ define([
         this.$emit("input", v);
       }
     },
-
+    created(){ 
+      console.info('created'+this.cmeta.uiMeta.validMeta.length)
+         var rule=[]
+          this.cmeta.uiMeta.validMeta.forEach(d=>{
+              rule.push({message:d.errorMsg, pattern:d.regEx,required:d.required})
+          })
+          this.rules=rule
+          console.info(this.rules)
+     },
     methods: {
-     
+   
       getupfilelist(data) {
         if (data instanceof Array && data.length > 0) {
           return data.map(d => {

@@ -9,17 +9,15 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 
 import com.livem.quickframework.FrameWorkBooter;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @SpringBootApplication
-@Import(FrameWorkBooter.class)
 @EntityScan(basePackageClasses = Product.class)
 public class TestBoot     {
 
 	public static void main(String[] args) {
 		startWeb(args);
 		// new ZookeeperTester().test();
-		
-		
 	}
 
 	private static void startWeb(String[] args) {
@@ -27,7 +25,8 @@ public class TestBoot     {
 		app.setBannerMode(Mode.OFF);
 		app.setWebEnvironment(true);
 		ConfigurableApplicationContext con = app.run(args);
-
+		String transmang = con.getBean(PlatformTransactionManager.class).getClass().getName();
+		System.out.println("-----transactionManager::::"+transmang);
 		
 	}
 

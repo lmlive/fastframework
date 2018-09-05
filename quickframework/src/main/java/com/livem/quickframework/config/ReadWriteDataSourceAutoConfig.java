@@ -17,7 +17,7 @@ import com.livem.quickframework.advance.AspectDataSourceTransactionManager;
 import com.livem.quickframework.advance.AspectReadWriteDataSource;
 
 @Configuration
-@ConditionalOnProperty(prefix = "ds.readwritedatasource",name="enable")
+@ConditionalOnProperty(prefix = "ds.readwritedatasource",name="enable",matchIfMissing = false)
 @EnableConfigurationProperties({ ReadWriteDataSourceAutoConfig.class })
 @ConfigurationProperties(prefix = "ds")
 public class ReadWriteDataSourceAutoConfig {

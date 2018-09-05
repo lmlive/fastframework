@@ -9,15 +9,18 @@
       "entityName": null,
       "extendMeta": null,
       "uiMeta": {
-        "updateAble": true,
-        "insertAble": true,
-        "visable": true,
-        "disAsReadOnly": false,
-        "uiType": "Pick",
-        "validMeta": [],
-        "pickEntityShortName": "List",
-        "pickEntityType": "java.util.List",
-        "multiPick": true
+        "disAsReadOnly":false,
+        "insertAble":true,
+        "multiPick":true,
+        "pickColumns":[
+            "id","loginName"
+        ],
+        "pickEntityShortName":"Role",
+        "pickEntityType":"org.livem.test.entity.Role",
+        "uiType":"Pick",
+        "updateAble":true,
+        "validMeta":[],
+        "visable":true
       },
       "key": false
     },
@@ -88,7 +91,9 @@
         "visable": true,
         "disAsReadOnly": false,
         "uiType": "Text",
-        "validMeta": []
+        "validMeta": [{"regEx":"^\\S+$",
+          "required":true,
+          "validName":"required"}]
       },
       "key": false
     },
@@ -139,7 +144,9 @@
         "visable": true,
         "disAsReadOnly": false,
         "uiType": "RichContent",
-        "validMeta": []
+        "validMeta": [{ "errorMsg":"最多500字",
+          "regEx":"^(\\S|\\s){0,500}$",
+          "validName":"range"}]
       },
       "key": false
     },

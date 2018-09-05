@@ -1,8 +1,12 @@
 package org.livem.meta;
 
+import java.util.List;
+
 public class PickUiMeta extends BaseUiMeta {
 	private String pickEntityShortName;
 	private Class<?> pickEntityType;
+
+	private List<String> pickColumns;
 
 	private boolean multiPick=false;
 	
@@ -28,4 +32,11 @@ public class PickUiMeta extends BaseUiMeta {
 		this.pickEntityType = pickEntityType;
 	}
 
+	public List<String> getPickColumns() {
+		return pickColumns;
+	}
+
+	public void setPickColumns(List<String> pickColumns) {
+		this.pickColumns = pickColumns;
+	}
 }

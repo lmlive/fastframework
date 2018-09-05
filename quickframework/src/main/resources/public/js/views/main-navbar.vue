@@ -2,7 +2,7 @@
     <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
         <div class="site-navbar__header">
             <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
-                <a class="site-navbar__brand-lg" href="javascript:;">{{app.name}}</a>
+                <a class="site-navbar__brand-lg" href="javascript:;">{{app['name']}}</a>
                 <a class="site-navbar__brand-mini" href="javascript:;">LM</a>
             </h1>
         </div>
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-    define(['vue',  'validate','v!views/main-navbar-update-password'], function (Vue,  validate) {
+    define(['vue','config',  'validate','v!views/main-navbar-update-password'], function (Vue,config,validate) {
         var isURL = validate.isURL
         return Vue.component('main-navbar',{
             template: template,
@@ -69,15 +69,17 @@
             },
             mounted(){
                 var url="system/entity/Application/singlePage";
-                url="singlepage/application.json";
+             //   url="singlepage/application.json";
+            
+          //   console.info('config path='+config.service.signPagePath);
               var self=this;
                 self.$http({
-                    url: self.$http.addUrl(url),
+                    url: self.$http.addUrl(config.service.signPagePath+'Application'),
                     method: 'post',
                 }).then(function(res){
                     var  data=res.data
                     if (data && data.code === 0) {
-                     self.app=data.application;
+                     self.app=data.application||{};
                     }
                 })
             },

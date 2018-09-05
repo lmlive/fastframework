@@ -6,7 +6,6 @@ import org.hibernate.validator.constraints.Range;
 import org.livem.entitymeta.annotation.EntityConfig;
 import org.livem.entitymeta.annotation.Field;
 import org.livem.entitymeta.annotation.Ordered;
-import org.livem.entitymeta.annotation.Picked;
 import org.livem.meta.UIType;
 
 import javax.persistence.*;
@@ -17,8 +16,7 @@ import java.util.List;
 
 @Entity
 @Ordered("id,LoginName,password,age,sex,introduce,regDate,recordInfo,photo,file")
-@Picked("username,photo,recrodInfo")
-@EntityConfig(title = "系统账号")
+@EntityConfig(title = "系统账号",pickColumns = {"id","disName"})
 public class SystemUser extends BaseEntity {
 
 	@NotNull(message = "登录账号不能为空")

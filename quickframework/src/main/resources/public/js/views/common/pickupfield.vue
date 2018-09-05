@@ -1,76 +1,82 @@
 <template>
-  <el-select v-model="selectValue" :multiple="multiPick" placeholder="请选择" :remote="true" :filterable="true" :remote-method="querySearch" :loading="loading">
-    <el-option v-for="item in options" :key="item.id" :label="displayLabel(item)" :value="item.id">
+ 
+      
+ <el-select @change="onchange"  v-model="selectValue" :multiple="multiPick" placeholder="请选择"   
+ :remote ="true"
+ :filterable="true"
+ :remote-method="querySearch" :loading="loading">
+    <el-option
+      v-for="item in options"
+      :key="item.id"
+      :label="displayLabel(item)"
+      :value="item.id"> 
     </el-option>
   </el-select>
+
+
 </template>
 <script>
 /*
 insert ,update  显示单选，多选
 info ，list 显示连接
 */
-define(["vue", "config"], function(Vue, config) {
+define([ "vue", "config"], function( Vue, config) {
   "use strict";
   return Vue.component("l-pickupfield", {
     template: template,
     props: {
       entityName: { required: true },
-      pickFields: { required: false },
+      pickFields: { required: false,default:null,type:Array },
       multiPick: { type: Boolean, required: false, default: false },
-      value: null,
+      value: {},
       url: { type: String, required: false }
     },
     watch: {
       value: function(v) {
-        this.cvalue = v; 
-       // this.selectValue =this.convertToSelectValue(v)
-      },
-      selectValue:function(v){
-        
-        this.cvalue=this.convertToReturnValue(v)
-      },
-      cvalue:function(v){
-         this.$emit('input',v)
-     // console.info(v)
-      //console.info(old)
+        this.selectValue = this.objToSelectValue(v);
       }
+    
     },
     data() {
       return {
         cvalue: null,
         loading: false,
-        options: [],
-        selectValue: null
+        selectValue:null,
+        options: []
       };
     },
     mounted() {
-      // console.info('-----------------pick mounted--------------------'+JSON.stringify(this.value))
+      console.info('-----------------pick mounted--------------------')
+      
       if (this.value != null) {
-        var v=this.convertToSelectValue(this.value)
-        this.querySearch("", v);
+        this.selectValue=this.objToSelectValue(this.value)
+        this.querySearch("", this.selectValue);
       }
     },
     methods: {
-    
-      convertToSelectValue(value){
-     if (this.multiPick)
-          return  value.map((d) => { return d.id })
-        else
-         return   value
+      onchange(v){
+        this.$emit('input',this.selectValueToObj(v))
       },
-      convertToReturnValue(value){
-          if (this.multiPick)
-          return  value.map((d) => { return {id:d} })
-        else
-          return   {id:value}
+      objToSelectValue(v){
+        if(this.multiPick){
+          return v.map(d=>{return d.id})
+        }else
+        return v.id
+      },
+      selectValueToObj(v){
+        if(this.multiPick){
+          return v.map(d=>{
+            return {id:d}
+          })
+        }else
+        return {id:d}
       },
       displayLabel(item) {
-        if (this.pickFields) {
-          return this.pickFields
-            .map(d => {
+        if (this.pickFields!=null ) {
+          console.info(this.pickFields)
+          return this.pickFields.map(d => {
               return item[d];
-            })
-            .join(",");
+            }).join(",");
         } else {
           return item["id"];
         }
@@ -81,7 +87,7 @@ define(["vue", "config"], function(Vue, config) {
       querySearch(q, value) {
         var _this = this;
         _this.loading = true;
-        var mockurl = "entity/userlist.json";
+        var mockurl =config.service.entityListPath+this.entityName;// "entity/userlist.json";
         if (value) mockurl += "?ids=" + value;
 
         this.$http({

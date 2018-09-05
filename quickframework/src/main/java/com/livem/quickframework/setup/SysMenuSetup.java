@@ -6,6 +6,7 @@ import com.livem.quickframework.entity.SystemUser;
 import org.livem.dao.GeneriEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class SysMenuSetup {
@@ -24,28 +25,28 @@ public class SysMenuSetup {
         //add menu
         SysMenu m=new SysMenu();
         m.setName("应用配置");
-        m.setUrl("/system/entity/Application/list");
+        m.setUrl("/system/entity/signPage/Application");
         m.setPerms("sys:application:all");
         m.setParentId(root.getId());
         generiEntityService.updateOrSave(m);
 
         m=new SysMenu();
         m.setName("用户管理");
-        m.setUrl("/system/entity/SystemUser/list");
+        m.setUrl("/system/entity/list/SystemUser");
         m.setPerms("sys:user:all");
         m.setParentId(root.getId());
         generiEntityService.updateOrSave(m);
 
         m=new SysMenu();
         m.setName("角色管理");
-        m.setUrl("/system/entity/Role/list");
+        m.setUrl("/system/entity/list/Role");
         m.setPerms("sys:role:all");
         m.setParentId(root.getId());
         generiEntityService.updateOrSave(m);
 
         m=new SysMenu();
         m.setName("菜单管理");
-        m.setUrl("/system/entity/SysMenu/list");
+        m.setUrl("/system/entity/list/SysMenu");
         m.setPerms("sys:menu:all");
         m.setParentId(root.getId());
         generiEntityService.updateOrSave(m);
@@ -53,7 +54,7 @@ public class SysMenuSetup {
 
         m=new SysMenu();
         m.setName("字典管理");
-        m.setUrl("/system/entity/Dictionary/list");
+        m.setUrl("/system/entity/list/Dictionary");
         m.setPerms("sys:dictionary:all");
         m.setParentId(root.getId());
         generiEntityService.updateOrSave(m);

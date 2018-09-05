@@ -70,7 +70,7 @@
     </span>
 </template>
 <script>
-define(["vue", "v!views/common/dictionary",'v!views/common/embedded'], function(Vue) {
+define(["vue","config", "v!views/common/dictionary",'v!views/common/embedded'], function(Vue,config) {
   return Vue.component("l-autotablecolumn", {
     template: template,
     props: {
@@ -80,7 +80,7 @@ define(["vue", "v!views/common/dictionary",'v!views/common/embedded'], function(
     },
     data() {
       return {
-        dictUrl: this.$http.addUrl("dictionary.json"), // config.service.dictionaryPath),
+        dictUrl: this.$http.addUrl(config.service.dictionaryPath),
         cvalue: this.value == undefined ? null : this.value
       };
     },

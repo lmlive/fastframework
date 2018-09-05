@@ -6,7 +6,7 @@
     "loginName": "admin",
     "disName": "test",
     "password": "123456",
-    "roles": [],
+    "roles": [{"id":0},{"id":10}],
     "recordInfo": {
       "createDate": "2018-08-17 11:44:36",
       "updateDate": null

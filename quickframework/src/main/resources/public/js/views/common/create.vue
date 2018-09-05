@@ -3,12 +3,12 @@
     <p>
       <el-breadcrumb separator-class="el-icon-arrow-right">
   <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-  <el-breadcrumb-item :to="{ path: '/entity/list/'+this.entityName }">{{entityMeta.title}}列表</el-breadcrumb-item>
+  <el-breadcrumb-item :to="{ path: '/system/entity/list/'+this.entityName }">{{entityMeta.title}}列表</el-breadcrumb-item>
   <el-breadcrumb-item >新增{{entityMeta.title}}</el-breadcrumb-item>
 </el-breadcrumb>
      </p>
 
-    <el-form  size="mini" label-width="80px">
+    <el-form  :model="entity" size="mini" label-width="80px" ref='form'>
       <l-autoformitem v-if="item.uiMeta.insertAble && !item.uiMeta.disAsReadOnly"
        v-for="item in columns" 
        :cmeta="item"
@@ -36,19 +36,37 @@ define([
     template: template,
     data() {
       return {
-        dictUrl: this.$http.addUrl("dictionary.json"), // config.service.dictionaryPath),
+        dictUrl: this.$http.addUrl(config.service.dictionaryPath),
         columns: [],
         entity: {},
         id: null,
         entityMeta: {},
         entityName: null,
-        uploadUrl: this.$http.addUrl(config.service.uploadPath)
+        uploadUrl: this.$http.addUrl(config.service.uploadPath),
+       
       };
     },
     methods: {
       save() {
-        this.$message("正在保存。。。。。");
+          var _this=this;
+        this.$refs['form'].validate(v=>{
+          if(v){
+       this.$message("正在保存。。。。。");
         console.info(this.entity);
+        this.$http({url:this.$http.addUrl(config.service.entityInsertPath+_this.entityName),data:this.entity}).
+        	then(({data})=>{
+        	if(data.code===0){
+        		_this.$message('operation successfull')
+        	}else
+        	{
+        	 _this.$message('operation failed'+data.msg)
+        	}
+        	}).catch(e=>{
+        	_this.$message('save data error '+e)
+        	})
+          }
+        })
+     
       },
       getupfilelist(data) {
         if (data instanceof Array) {
@@ -67,7 +85,7 @@ define([
 
         var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
         var self = this;
-        this.$http({ url: this.$http.addUrl(mock) })
+        this.$http({ url: this.$http.addUrl(config.service.columnMetaPath+this.entityName) })
           .then(({ data }) => {
             if (data.code === 0) {
               self.columns = data.data;
@@ -79,12 +97,13 @@ define([
 
         self.loadEntityMeta();
       },
+  
       loadEntityMeta() {
         var self = this;
 
         var mockEntitiyMeta =
           "entity/user.entitymeta.json?entityName" + this.entityName;
-        this.$http({ url: this.$http.addUrl(mockEntitiyMeta) })
+        this.$http({ url: this.$http.addUrl(config.service.entityMetaPath+this.entityName) })
           .then(({ data }) => {
             self.entityMeta = data.data;
           })

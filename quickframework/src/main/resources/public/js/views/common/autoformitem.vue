@@ -51,11 +51,11 @@
 </template>
 <script>
 define([
-  "vue",
+  "vue","config",
   "v!views/common/embedded",
   "v!views/common/dictionary",
    "v!views/common/pickupfield"
-], function(Vue) {
+], function(Vue,config) {
   return Vue.component("l-autoformitem", {
     template: template,
     props: {
@@ -64,7 +64,7 @@ define([
     },
     data() {
       return {
-        dictUrl: this.$http.addUrl("dictionary.json"), // config.service.dictionaryPath),
+        dictUrl: this.$http.addUrl(config.service.dictionaryPath),
         cvalue: this.value,
         rules:[]
       };

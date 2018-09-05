@@ -36,7 +36,7 @@ define([
     template: template,
     data() {
       return {
-        dictUrl: this.$http.addUrl("dictionary.json"), // config.service.dictionaryPath),
+        dictUrl: this.$http.addUrl(config.service.dictionaryPath),
         columns: [],
         entity: {},
         id: null,
@@ -72,7 +72,7 @@ define([
 
         var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
         var self = this;
-        this.$http({ url: this.$http.addUrl(mock) })
+        this.$http({ url: this.$http.addUrl(config.service.columnMetaPath+this.entityName) })
           .then(({ data }) => {
             if (data.code === 0) {
               self.columns = data.data;
@@ -89,7 +89,7 @@ define([
       loadEntityInfo() {
         var self = this;
           var mockEntitiyInfo = "entity/user.json?id=" + this.id;
-          this.$http({ url: this.$http.addUrl(mockEntitiyInfo) })
+          this.$http({ url: this.$http.addUrl(config.service.entityInfoPath+this.entityName+'/'+this.id) })
             .then(({ data }) => {
               self.entity = data.data;
             })
@@ -103,7 +103,7 @@ define([
 
         var mockEntitiyMeta =
           "entity/user.entitymeta.json?entityName" + this.entityName;
-        this.$http({ url: this.$http.addUrl(mockEntitiyMeta) })
+        this.$http({ url: this.$http.addUrl(config.service.entityMetaPath+this.entityName) })
           .then(({ data }) => {
             self.entityMeta = data.data;
           })

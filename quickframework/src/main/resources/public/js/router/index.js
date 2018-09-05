@@ -48,9 +48,9 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
         name: 'main',
         beforeEnter (to, from, next) {
             var token = Vue.cookies.get('token')
-            // if (!token || !/\S/.test(token)) {
-            //     next({ name: 'login' })
-            // }
+             if (!token || !/\S/.test(token)) {
+                 next({ name: 'login' })
+             }
             next()
         },
         meta: {
@@ -104,7 +104,7 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
                     isTab: true
                 }
             },{
-                path:'/entity/list/:entityName',
+                path:'/system/entity/list/:entityName',
                 name:'dynamicList',
                 component:function(){
                     return loader('views/common/entitylist')
@@ -115,7 +115,7 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
                 }
             }
             ,{
-                path:'/entity/edit/:entityName/:id',
+                path:'/system/entity/edit/:entityName/:id',
                 name:'dynamicEdit',
                 component:function(){
                     return loader('views/common/edit')
@@ -126,7 +126,7 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
                 }
             }
             ,{
-                path:'/entity/edit/:entityName',
+                path:'/system/entity/edit/:entityName',
                 name:'dynamicCreate',
                 component:function(){
                     return loader('views/common/create')
@@ -137,13 +137,23 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
                 }
             }
             ,{
-                path:'/entity/detail/:entityName/:id',
+                path:'/system/entity/detail/:entityName/:id',
                 name:'dynamicInfo',
                 component:function(){
                     return loader('views/common/info')
                 },
                 meta:{
                     title:'详情',
+                    isTab:false
+                }
+            },{
+                path:'/system/entity/signPage/:entityName',
+                name:'dynamicSignPage',
+                component:function(){
+                    return loader('views/common/info')
+                },
+                meta:{
+                    title:'单页',
                     isTab:false
                 }
             }

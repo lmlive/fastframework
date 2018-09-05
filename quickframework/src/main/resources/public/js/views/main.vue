@@ -74,14 +74,14 @@
                 getUserInfo() {
                     var self = this
                     var url='/system/SystemUser/info';
-                    url="user.json"
+                    //url="user.json"
                     this.$http({
                         url: this.$http.addUrl(url),
                         method: 'get',
                         params: this.$http.adornParams()
                     }).then(function (res) {
                         var data = res.data
-                    
+                    console.info('-----userinfo=='+data)
                         if (data && data.code === 0) {
                             data=data.data;
                             self.loading = false

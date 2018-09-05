@@ -87,7 +87,7 @@ define([ "vue", "config"], function( Vue, config) {
       querySearch(q, value) {
         var _this = this;
         _this.loading = true;
-        var mockurl = "entity/userlist.json";
+        var mockurl =config.service.entityListPath+this.entityName;// "entity/userlist.json";
         if (value) mockurl += "?ids=" + value;
 
         this.$http({

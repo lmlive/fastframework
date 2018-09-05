@@ -22,16 +22,17 @@
 </template>
 
 <script>
-define(["require", "vue", "v!views/common/autotablecolumn"], function(
+define(["require", "vue","config", "v!views/common/autotablecolumn"], function(
   require,
-  Vue
+  Vue,
+  config
 ) {
   "use strict";
   return Vue.component("l-info", {
     template: template,
     data() {
       return {
-        dictUrl: this.$http.addUrl("dictionary.json"), // config.service.dictionaryPath),
+        dictUrl: this.$http.addUrl(config.service.dictionaryPath),
         columns: [],
         entity: {},
         entityName: null,
@@ -55,7 +56,7 @@ define(["require", "vue", "v!views/common/autotablecolumn"], function(
         //get column metainfo
         var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
         var self = this;
-        this.$http({ url: this.$http.addUrl(mock) })
+        this.$http({ url: this.$http.addUrl(config.service.columnMetaPath+this.entityName) })
           .then(({ data }) => {
             if (data.code === 0) {
               self.columns = data.data;
@@ -72,7 +73,7 @@ define(["require", "vue", "v!views/common/autotablecolumn"], function(
       loadEntityData() {
         var self = this;
         var mockEntitiyInfo = "entity/user.json?id=" + this.id;
-        this.$http({ url: this.$http.addUrl(mockEntitiyInfo) })
+        this.$http({ url: this.$http.addUrl(config.service.entityInfoPath+this.entityName+'/'+this.id) })
           .then(({ data }) => {
             self.entity = data.data;
           })
@@ -85,7 +86,7 @@ define(["require", "vue", "v!views/common/autotablecolumn"], function(
 
         var mockEntitiyMeta =
           "entity/user.entitymeta.json?entityName" + this.entityName;
-        this.$http({ url: this.$http.addUrl(mockEntitiyMeta) })
+        this.$http({ url: this.$http.addUrl(config.service.entityMetaPath+this.entityName) })
           .then(({ data }) => {
             self.entityMeta = data.data;
           })
@@ -97,10 +98,12 @@ define(["require", "vue", "v!views/common/autotablecolumn"], function(
         return this.entity[column.dataKey] + "";
       }
     },
-
+created(){console.info('create info component')},
     mounted() {
+    
       this.entityName = this.$route.params.entityName;
       this.id = this.$route.params.id;
+      console.info('----------entity info page '+this.entityName);
       this.loaddata();
     },
     beforeRouteUpdate(to, from, next) {

@@ -79,7 +79,7 @@
             methods: {
                 // 提交表单
                 dataFormSubmit: function () {
-                    const self = this
+                    let self = this
                     this.$refs['dataForm'].validate(function (valid) {
                         if (valid) {
                             var url='/admin/login';

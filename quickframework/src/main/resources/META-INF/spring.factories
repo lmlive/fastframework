@@ -7,4 +7,5 @@ com.livem.quickframework.config.ReadWriteDataSourceAutoConfig,\
 com.livem.quickframework.config.ShiroAutoConfig,\
 com.livem.quickframework.config.StoreServiceAutoConfig,\
   com.livem.quickframework.config.KaptachAutoConfig,\
-  com.livem.quickframework.config.FrameWrockAutoConfig
+  com.livem.quickframework.config.FrameWrockAutoConfig,\
+  com.livem.quickframework.config.WebAutoConfig

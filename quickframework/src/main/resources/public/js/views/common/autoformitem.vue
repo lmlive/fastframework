@@ -78,13 +78,11 @@ define([
       }
     },
     created(){ 
-      console.info('created'+this.cmeta.uiMeta.validMeta.length)
          var rule=[]
           this.cmeta.uiMeta.validMeta.forEach(d=>{
               rule.push({message:d.errorMsg, pattern:d.regEx,required:d.required})
           })
           this.rules=rule
-          console.info(this.rules)
      },
     methods: {
    

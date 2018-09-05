@@ -28,13 +28,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.livem.quickframework.convert.custEditor.IdToEntityConverter;
 import com.livem.quickframework.convert.custEditor.StringToMapConverter;
-import com.livem.quickframework.exception.CustExceptionResolver;
 
 @Configuration
 @EnableConfigurationProperties(value = ServerProperties.class)
-public class WebConfig implements WebMvcConfigurer, InitializingBean {
+public class WebAutoConfig implements WebMvcConfigurer, InitializingBean {
 
-    Logger log = LoggerFactory.getLogger(WebConfig.class);
+    Logger log = LoggerFactory.getLogger(WebAutoConfig.class);
 
     @Value("${application.docBase:}")
     private String docBase = ".";

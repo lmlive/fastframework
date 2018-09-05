@@ -8,7 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.*;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.support.WebRequestDataBinder;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -17,13 +21,21 @@ import java.util.List;
 public abstract class BaseRestController extends BaseController {
     final Logger logger = LoggerFactory.getLogger(getClass());
 
+
     @Autowired
-    protected List<HttpMessageConverter> converters;
+    private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
+
     @Autowired
     protected List<Validator> validators;
 
     public <T extends BaseEntity> T convertRequestToEntity(Class<T> entityClass, HttpServletRequest request) {
-        for (HttpMessageConverter converter : converters) {
+
+
+//        WebRequestDataBinder webDataBinder = new WebRequestDataBinder(null);
+//        requestMappingHandlerAdapter.getWebBindingInitializer().initBinder(webDataBinder);
+//        webDataBinder.bind(request);
+
+        for (HttpMessageConverter converter : requestMappingHandlerAdapter.getMessageConverters()) {
             if (converter.canRead(entityClass, MediaType.ALL)) {
                 try {
                     return (T) converter.read(entityClass, new ServletServerHttpRequest(request));

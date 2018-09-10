@@ -66,7 +66,7 @@ define(['axios', 'lib/vue-cookies', 'vue', 'VueRouter', 'lib/qs', 'lib/merge'],
          *  json: 'application/json; charset=utf-8'
          *  form: 'application/x-www-form-urlencoded; charset=utf-8'
          */
-        http.adornData = function (data, openDefultdata, contentType) {
+        http.addData = function (data, openDefultdata, contentType) {
             var defaults = {
                 't': new Date().getTime()
             }

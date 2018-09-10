@@ -4,12 +4,15 @@ import com.livem.quickframework.entity.BaseEntity;
 import com.livem.quickframework.exception.RestException;
 import com.livem.quickframework.model.BaseStaus;
 import com.livem.quickframework.model.ResponseStatus;
-import org.livem.dao.Page;
 import org.livem.dao.Pager;
 import org.livem.dao.Query2;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -22,7 +25,7 @@ public class EntityRestController extends BaseRestController {
 
 
     @RequestMapping("/insert/{entityName}")
-    public BaseStaus insert(@PathVariable("entityName") String entityName, HttpServletRequest req) {
+    public BaseStaus insert(@PathVariable("entityName") String entityName, WebRequest req) {
         BaseEntity entity = readAndValidRequest(entityName, req);
         generiEntityService.updateOrSave(entity);
         return new ResponseStatus(BaseStaus.CODE_SUCCESS, "ok", entity.getId());
@@ -30,20 +33,19 @@ public class EntityRestController extends BaseRestController {
     }
 
 
-
-    private BaseEntity readAndValidRequest(String entityName, HttpServletRequest req) {
+    private BaseEntity readAndValidRequest(String entityName, WebRequest req) {
         Class<? extends BaseEntity> entityClass = getEntityClass(entityName);
-        BaseEntity entity = convertRequestToEntity(entityClass, req);
-        Errors errors = valid(entity);
-        if (errors.hasErrors()) {
-            throw new RestException(BaseStaus.CODE_ERROR, errors.getAllErrors().get(0).getDefaultMessage());
+        BindingResult bindresult = convertRequestToEntity(entityClass, req);
+
+        if (bindresult.hasErrors()) {
+            throw new RestException(BaseStaus.CODE_ERROR, bindresult.getAllErrors().get(0).getDefaultMessage());
         }
-        return entity;
+        return (BaseEntity) bindresult.getTarget();
     }
 
 
     @RequestMapping("/update/{entityName}")
-    public BaseStaus update(@PathVariable("entityName") String entityName, HttpServletRequest request) {
+    public BaseStaus update(@PathVariable("entityName") String entityName, WebRequest request) {
         BaseEntity entity = readAndValidRequest(entityName, request);
 
         generiEntityService.updateOrSave(entity);
@@ -63,7 +65,7 @@ public class EntityRestController extends BaseRestController {
 
     @RequestMapping("/list/{entityName}")
     public BaseStaus list(@PathVariable("entityName") String entityName, HttpServletRequest request, @RequestBody(required = false) Map<String, Object> map) {
-        if(map==null)map=new HashMap<>();
+        if (map == null) map = new HashMap<>();
         for (Map.Entry<String, String[]> en : request.getParameterMap().entrySet()) {
             map.put(en.getKey(), en.getValue() == null ? null : en.getValue()[0]);
         }

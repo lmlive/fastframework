@@ -53,7 +53,7 @@ define([
           if(v){
        this.$message("正在保存。。。。。");
         console.info(this.entity);
-        this.$http({url:this.$http.addUrl(config.service.entityInsertPath+_this.entityName),data:this.entity}).
+        this.$http({url:this.$http.addUrl(config.service.entityInsertPath+_this.entityName),data:this.$http.addData(this.entity)}).
         	then(({data})=>{
         	if(data.code===0){
         		_this.$message('operation successfull')

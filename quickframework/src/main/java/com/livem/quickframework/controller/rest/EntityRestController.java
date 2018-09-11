@@ -25,7 +25,9 @@ public class EntityRestController extends BaseRestController {
 
 
     @RequestMapping("/insert/{entityName}")
-    public BaseStaus insert(@PathVariable("entityName") String entityName, WebRequest req) {
+    public BaseStaus insert(@PathVariable("entityName") String entityName, HttpServletRequest req) {
+
+
         BaseEntity entity = readAndValidRequest(entityName, req);
         generiEntityService.updateOrSave(entity);
         return new ResponseStatus(BaseStaus.CODE_SUCCESS, "ok", entity.getId());
@@ -33,7 +35,7 @@ public class EntityRestController extends BaseRestController {
     }
 
 
-    private BaseEntity readAndValidRequest(String entityName, WebRequest req) {
+    private BaseEntity readAndValidRequest(String entityName, HttpServletRequest req) {
         Class<? extends BaseEntity> entityClass = getEntityClass(entityName);
         BindingResult bindresult = convertRequestToEntity(entityClass, req);
 
@@ -45,7 +47,7 @@ public class EntityRestController extends BaseRestController {
 
 
     @RequestMapping("/update/{entityName}")
-    public BaseStaus update(@PathVariable("entityName") String entityName, WebRequest request) {
+    public BaseStaus update(@PathVariable("entityName") String entityName, HttpServletRequest request) {
         BaseEntity entity = readAndValidRequest(entityName, request);
 
         generiEntityService.updateOrSave(entity);

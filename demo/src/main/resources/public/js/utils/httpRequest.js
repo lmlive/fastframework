@@ -15,6 +15,7 @@ define(['axios', 'lib/vue-cookies', 'vue', 'VueRouter', 'lib/qs', 'lib/merge'],
          */
         http.interceptors.request.use(function (config) {
             config.headers['token'] = Vue.cookies['token'] // 请求头带上token
+          //  config.headers['Content-Type']='application/x-www-form-urlencoded;charset=utf-8'
           //  console.info(Vue.cookies['token'])
             return config
         }, function (error) {

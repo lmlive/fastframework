@@ -160,7 +160,7 @@
                         self.$http({
                             url: self.$http.addUrl('/sys/config/delete'),
                             method: 'post',
-                            data: self.$http.adornData(ids, false)
+                            data: self.$http.addData(ids, false)
                         }).then(function (res) {
                             if (res.data && res.data.code === 0) {
                                 self.$message({

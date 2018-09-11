@@ -182,7 +182,7 @@
             this.$http({
               url: this.$http.addUrl(`/sys/menu/${!this.dataForm.id ? 'save' : 'update'}`),
               method: 'post',
-              data: this.$http.adornData({
+              data: this.$http.addData({
                 'menuId': this.dataForm.id || undefined,
                 'type': this.dataForm.type,
                 'name': this.dataForm.name,

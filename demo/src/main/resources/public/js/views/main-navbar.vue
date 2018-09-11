@@ -133,7 +133,7 @@
                         self.$http({
                             url: self.$http.addUrl('/sys/logout'),
                             method: 'post',
-                            data: self.$http.adornData()
+                            data: self.$http.addData()
                         }).then(function(res){
                             var data=res.data
                             if (data && data.code === 0) {

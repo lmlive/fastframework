@@ -38,24 +38,7 @@ public class LoginController {
         return loginViewName;
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = {MediaType.TEXT_HTML_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public ModelAndView login_in(ModelMap map, String username, String password, boolean remeber) {
-        AuthenticationToken token = new UsernamePasswordToken(username, password, remeber);
-        try {
-            SecurityUtils.getSubject().login(token);
-            return new ModelAndView("/admin/index");
-        } catch (AuthenticationException ex) {
-
-            ModelAndView mv = new ModelAndView(loginViewName);
-            mv.addObject("username", username);
-            mv.addObject("remeber", remeber);
-            mv.addObject("error", ex.getMessage());
-            return mv;
-        }
-
-    }
-
-    @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = {MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public BaseStaus login_in2(@RequestBody(required = false) Map map) {
         AuthenticationToken token = new UsernamePasswordToken(String.valueOf(map.get("username")), String.valueOf(map.get("password")), Boolean.parseBoolean(String.valueOf(map.get("remeber"))));

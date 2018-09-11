@@ -85,7 +85,7 @@
             this.$http({
               url: this.$http.addUrl(`/sys/schedule/${!this.dataForm.id ? 'save' : 'update'}`),
               method: 'post',
-              data: this.$http.adornData({
+              data: this.$http.addData({
                 'jobId': this.dataForm.id || undefined,
                 'beanName': this.dataForm.beanName,
                 'methodName': this.dataForm.methodName,

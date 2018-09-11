@@ -94,7 +94,7 @@
             this.$http({
               url: this.$http.addUrl(`/sys/role/${!this.dataForm.id ? 'save' : 'update'}`),
               method: 'post',
-              data: this.$http.adornData({
+              data: this.$http.addData({
                 'roleId': this.dataForm.id || undefined,
                 'roleName': this.dataForm.roleName,
                 'remark': this.dataForm.remark,

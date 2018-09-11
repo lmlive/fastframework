@@ -138,7 +138,7 @@
           this.$http({
             url: this.$http.addUrl(`/sys/menu/delete/${id}`),
             method: 'post',
-            data: this.$http.adornData()
+            data: this.$http.addData()
           }).then(({data}) => {
             if (data && data.code === 0) {
               this.$message({

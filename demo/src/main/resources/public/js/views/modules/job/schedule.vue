@@ -188,7 +188,7 @@
           this.$http({
             url: this.$http.addUrl('/sys/schedule/delete'),
             method: 'post',
-            data: this.$http.adornData(ids, false)
+            data: this.$http.addData(ids, false)
           }).then(({data}) => {
             if (data && data.code === 0) {
               this.$message({
@@ -218,7 +218,7 @@
           this.$http({
             url: this.$http.addUrl('/sys/schedule/pause'),
             method: 'post',
-            data: this.$http.adornData(ids, false)
+            data: this.$http.addData(ids, false)
           }).then(({data}) => {
             if (data && data.code === 0) {
               this.$message({
@@ -248,7 +248,7 @@
           this.$http({
             url: this.$http.addUrl('/sys/schedule/resume'),
             method: 'post',
-            data: this.$http.adornData(ids, false)
+            data: this.$http.addData(ids, false)
           }).then(({data}) => {
             if (data && data.code === 0) {
               this.$message({
@@ -278,7 +278,7 @@
           this.$http({
             url: this.$http.addUrl('/sys/schedule/run'),
             method: 'post',
-            data: this.$http.adornData(ids, false)
+            data: this.$http.addData(ids, false)
           }).then(({data}) => {
             if (data && data.code === 0) {
               this.$message({

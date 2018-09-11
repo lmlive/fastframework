@@ -147,7 +147,7 @@
             this.$http({
               url: this.$http.addUrl(`/sys/user/${!this.dataForm.id ? 'save' : 'update'}`),
               method: 'post',
-              data: this.$http.adornData({
+              data: this.$http.addData({
                 'userId': this.dataForm.id || undefined,
                 'username': this.dataForm.userName,
                 'password': this.dataForm.password,

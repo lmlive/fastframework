@@ -1,13 +1,13 @@
 <template>
-  <div class="mod-role">
+  <div class="mod-user">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.roleName" placeholder="角色名称" clearable></el-input>
+        <el-input v-model="dataForm.userName" placeholder="用户名" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('sys:role:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('sys:role:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('sys:user:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('sys:user:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -23,23 +23,39 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="roleId"
+        prop="userId"
         header-align="center"
         align="center"
         width="80"
         label="ID">
       </el-table-column>
       <el-table-column
-        prop="roleName"
+        prop="username"
         header-align="center"
         align="center"
-        label="角色名称">
+        label="用户名">
       </el-table-column>
       <el-table-column
-        prop="remark"
+        prop="email"
         header-align="center"
         align="center"
-        label="备注">
+        label="邮箱">
+      </el-table-column>
+      <el-table-column
+        prop="mobile"
+        header-align="center"
+        align="center"
+        label="手机号">
+      </el-table-column>
+      <el-table-column
+        prop="status"
+        header-align="center"
+        align="center"
+        label="状态">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.status === 0" size="small" type="danger">禁用</el-tag>
+          <el-tag v-else size="small">正常</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="createTime"
@@ -55,8 +71,8 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button v-if="isAuth('sys:role:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.roleId)">修改</el-button>
-          <el-button v-if="isAuth('sys:role:delete')" type="text" size="small" @click="deleteHandle(scope.row.roleId)">删除</el-button>
+          <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.userId)">修改</el-button>
+          <el-button v-if="isAuth('sys:user:delete')" type="text" size="small" @click="deleteHandle(scope.row.userId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -75,12 +91,12 @@
 </template>
 
 <script>
-  import AddOrUpdate from './role-add-or-update'
+  import AddOrUpdate from './user-add-or-update'
   export default {
     data () {
       return {
         dataForm: {
-          roleName: ''
+          userName: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -102,12 +118,12 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.addUrl('/sys/role/list'),
+          url: this.$http.addUrl('/sys/user/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'roleName': this.dataForm.roleName
+            'username': this.dataForm.userName
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
@@ -144,18 +160,18 @@
       },
       // 删除
       deleteHandle (id) {
-        var ids = id ? [id] : this.dataListSelections.map(item => {
-          return item.roleId
+        var userIds = id ? [id] : this.dataListSelections.map(item => {
+          return item.userId
         })
-        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+        this.$confirm(`确定对[id=${userIds.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.addUrl('/sys/role/delete'),
+            url: this.$http.addUrl('/sys/user/delete'),
             method: 'post',
-            data: this.$http.adornData(ids, false)
+            data: this.$http.addData(userIds, false)
           }).then(({data}) => {
             if (data && data.code === 0) {
               this.$message({

@@ -86,7 +86,7 @@
                               // url='login.json'
                             self.$http.post(
                                 self.$http.addUrl(url),
-                                self.$http.adornData({
+                                self.$http.addData({
                                     'username': self.dataForm.userName,
                                     'password': self.dataForm.password,
                                     'uuid': self.dataForm.uuid,

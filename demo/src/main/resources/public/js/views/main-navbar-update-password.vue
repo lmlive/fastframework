@@ -92,7 +92,7 @@
                             self.$http({
                                 url: self.$http.addUrl('/sys/user/password'),
                                 method: 'post',
-                                data: self.$http.adornData({
+                                data: self.$http.addData({
                                     'password': self.dataForm.password,
                                     'newPassword': self.dataForm.newPassword
                                 })

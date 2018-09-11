@@ -74,7 +74,7 @@
                           this.$http({
                               url: this.$http.addUrl(`/sys/config/${!this.dataForm.id ? 'save' : 'update'}`),
                               method: 'post',
-                              data: this.$http.adornData({
+                              data: this.$http.addData({
                                   'id': this.dataForm.id || undefined,
                                   'paramKey': this.dataForm.paramKey,
                                   'paramValue': this.dataForm.paramValue,

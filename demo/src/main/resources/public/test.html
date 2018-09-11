@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>quickframework manager</title>
+		<link rel="stylesheet" href="css/app.css">
+
+</head>
+
+<body>
+    <div id="root">
+      <button onclick="test()">test axios</button>
+      <div id="result"></div>
+    </div>
+    <script src="js/lib/axios.min.js" data-main="js/main"></script>
+    <script>
+      function test(){
+        axios.get('http://www.baidu.com').then(d=>{
+          document.getElementById('result').innerHTML=d.data
+        }).catch(e=>{
+          alert(e)
+        })
+      }
+      </script>
+</body>
+
+</html>

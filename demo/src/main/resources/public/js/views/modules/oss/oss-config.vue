@@ -109,7 +109,7 @@
             this.$http({
               url: this.$http.addUrl('/sys/oss/saveConfig'),
               method: 'post',
-              data: this.$http.adornData(this.dataForm)
+              data: this.$http.addData(this.dataForm)
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.$message({

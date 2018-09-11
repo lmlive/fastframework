@@ -218,7 +218,7 @@ define([
             this.$http({
               url: this.$http.addUrl(config.service.entityDeletePath+this.entityName),
               method: "post",
-              data: this.$http.adornData(userIds, false)
+              data: this.$http.addData(userIds, false)
             }).then(({ data }) => {
               if (data && data.code === 0) {
                 this.$message({

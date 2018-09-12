@@ -3,6 +3,7 @@ package com.livem.quickframework.config;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import com.livem.quickframework.convert.custEditor.StringToDateConverter;
 import com.livem.quickframework.exception.RestExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,12 +56,13 @@ public class WebAutoConfig implements WebMvcConfigurer, InitializingBean {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         // registry.addFormatter(new DateFormatter("yyyy-MM-dd"));
-        // registry.addFormatter(new DateFormatter("yyyy-MM-dd hh:mm:ss"));
-        registry.addFormatter(new DateFormatter());
+//        registry.addFormatter(new DateFormatter("yyyy-MM-dd hh:mm:ss"));
+        //registry.addFormatter(new DateFormatter());
         IdToEntityConverter idtoentityConvert = new IdToEntityConverter();
         idtoentityConvert.setBeanFactory(this.beanFactory);
         registry.addConverter(idtoentityConvert);
         registry.addConverter(new StringToMapConverter());
+     //   registry.addConverter(new StringToDateConverter());
 
     }
 
@@ -71,13 +73,15 @@ public class WebAutoConfig implements WebMvcConfigurer, InitializingBean {
 
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new FastJsonHttpMessageConverter());
-        for (HttpMessageConverter<?> c : converters) {
-            if (c instanceof MappingJackson2HttpMessageConverter) {
-                ((MappingJackson2HttpMessageConverter) c).getObjectMapper().setDateFormat(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"));
-                break;
-            }
-        }
+        FastJsonHttpMessageConverter fastjson = new FastJsonHttpMessageConverter();
+        fastjson.getFastJsonConfig().setDateFormat("yyyy-MM-dd HH:mm:ss");
+        converters.add(0, fastjson);
+//        for (HttpMessageConverter<?> c : converters) {
+//            if (c instanceof MappingJackson2HttpMessageConverter) {
+//                ((MappingJackson2HttpMessageConverter) c).getObjectMapper().setDateFormat(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"));
+//                break;
+//            }
+//        }
 
     }
 
@@ -92,8 +96,6 @@ public class WebAutoConfig implements WebMvcConfigurer, InitializingBean {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("asset/**").addResourceLocations("classpath:asset/");
-        registry.addResourceHandler("assets/**").addResourceLocations("classpath:assets/");
         registry.addResourceHandler("public/**").addResourceLocations("classpath:public/");
 
     }

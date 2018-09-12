@@ -95,8 +95,8 @@
                             ).then(function (res) {
                                 var  data=res.data
                                 if (data && data.code === 0) {
-                                    self.$cookies['token'] = data.token
-                                    self.$router.replace({
+                                    vue.cookies.set('token',data.data)
+                                    self.$router.push({
                                         name: 'main'
                                     })
                                 } else {

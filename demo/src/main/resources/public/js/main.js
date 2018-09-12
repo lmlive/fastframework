@@ -14,10 +14,8 @@ requirejs.config({
 		"loader":'lib/loader',
 		'merge':'lib/merge',
 		'vuex':'lib/vuex',
-        'validate':'utils/validate',
-        'config':'utils/config'
-		//'vue-cookie':'lib/vue-cookie'
-		 
+        'config':'utils/config',
+		'cookie':'lib/vue-cookies'
     },
 	shim: {
 			'VueRouter': {exports: "VueRouter"}
@@ -26,9 +24,10 @@ requirejs.config({
 
 })
 
-require(['vue', 'ELEMENT', 'store/index','routeInfo','utils/httpRequest'],
+require(['vue', 'ELEMENT', 'store/index','routeInfo','utils/httpRequest','cookie'],
     function (Vue, elementui, store,routeInfo,http,cookie) {
         Vue.use(elementui)
+        Vue.use(cookie)
 	    Vue.prototype.$http=http
         new Vue({
             router: routeInfo,

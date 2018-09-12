@@ -204,8 +204,8 @@ public class AttributeParser {
 		Version version = Util.getAttrAnnotation(attribute, Version.class);
 		if (version != null) {
 			uimeta.setInsertAble(false);
-			uimeta.setUpdateAble(false);
-			uimeta.setDisAsReadOnly(false);
+			uimeta.setUpdateAble(true);
+			uimeta.setVisable(false);
 
 		}
 	}

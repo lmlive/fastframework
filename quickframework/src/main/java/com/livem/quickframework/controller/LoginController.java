@@ -1,12 +1,15 @@
 package com.livem.quickframework.controller;
 
+import com.livem.quickframework.auth.oauth2.OAuthService;
 import com.livem.quickframework.exception.RestException;
 import com.livem.quickframework.model.BaseStaus;
+import com.livem.quickframework.model.ResponseStatus;
 import com.livem.quickframework.utils.ShiroUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,24 +21,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
 public class LoginController {
-
-
-    String loginViewName = "/admin/login";
-
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login() {
-
-        return loginViewName;
-    }
+    @Autowired
+    OAuthService oAuthService;
 
     @RequestMapping("/loginout")
-    public String loginout() {
+    public BaseStaus loginout() {
         SecurityUtils.getSubject().logout();
-        return loginViewName;
+        return BaseStaus.success;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -47,7 +44,12 @@ public class LoginController {
             throw new RestException(-1, "验证码错误");
         }
         SecurityUtils.getSubject().login(token);
-        return BaseStaus.success;
+        String tokenStr = UUID.randomUUID().toString();
+
+        String username = ((UsernamePasswordToken) token).getUsername();
+        this.oAuthService.addCode(username,username);
+        this.oAuthService.addToken(tokenStr, username);
+        return ResponseStatus.ok(tokenStr);
 
     }
 

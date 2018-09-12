@@ -1,142 +1,145 @@
 <template>
-<div>
-    <p>
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-  <el-breadcrumb-item :to="{ path: '/entity/list/'+this.entityName }">{{entityMeta.title}}列表</el-breadcrumb-item>
-  <el-breadcrumb-item >编辑{{entityMeta.title}}</el-breadcrumb-item>
-</el-breadcrumb>
-     </p>
+    <div v-loading="loading">
+        <p>
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{ path: '/system/entity/list/'+this.entityName }">{{entityMeta.title}}列表
+                </el-breadcrumb-item>
+                <el-breadcrumb-item>编辑{{entityMeta.title}}</el-breadcrumb-item>
+            </el-breadcrumb>
+        </p>
 
-    <el-form :model="entity"  size="mini" label-width="80px" ref='form'>
-      <l-autoformitem v-if="item.uiMeta.insertAble && !item.uiMeta.disAsReadOnly"
-       v-for="item in columns" 
-       :cmeta="item"
-       v-model="entity[item.dataKey]"
-       :key="item.dataKey">
-      </l-autoformitem>
-      <el-form-item >
-        <el-button @click="save">保存</el-button>
-      </el-form-item>
-      
-    </el-form>
-</div>
+        <el-form :model="entity" size="mini" label-width="20%" ref='form'>
+            <l-autoformitem v-if="item.uiMeta.updateAble && !item.uiMeta.disAsReadOnly"
+                            v-for="item in columns"
+                            :cmeta="item"
+                            v-model="entity[item.dataKey]"
+                            :key="item.dataKey">
+            </l-autoformitem>
+            <el-form-item>
+                <el-button @click="save">保存</el-button>
+                <el-button @click="()=>{this.$router.back()}">返回</el-button>
+            </el-form-item>
+
+        </el-form>
+    </div>
 </template>
 
 <script>
-define([
-  "require",
-  "vue",
-  "v!views/common/dictionary",
-  "config",
-  "v!views/common/autoformitem"
-], function(require, Vue, d, config) {
-  "use strict";
-  return Vue.component("l-edit", {
-    template: template,
-    data() {
-      return {
-        dictUrl: this.$http.addUrl(config.service.dictionaryPath),
-        columns: [],
-        entity: {},
-        id: null,
-        entityMeta: {},
-        entityName: null,
-        uploadUrl: this.$http.addUrl(config.service.uploadPath)
-      };
-    },
-    methods: {
-      save() {
-        this.$refs['form'].validate(d=>{
-          if(d){
-       this.$message("正在保存。。。。。");
-        console.info(this.entity);
-          }
-        })
-      
-      },
-      getupfilelist(data) {
-        if (data instanceof Array) {
-          if (data.length > 0)
-            return data.map(d => {
-              return { name: d, url: d };
-            });
-          return [];
-        } else {
-          if (data) return [{ name: data, url: data }];
-          else return [];
-        }
-      },
-      loaddata() {
-        //get column metainfo
+    define([
+        "require",
+        "vue",
+        "v!views/common/dictionary",
+        "config",
+        "v!views/common/autoformitem"
+    ], function (require, Vue, d, config) {
+        "use strict";
+        return Vue.component("l-edit", {
+            template: template,
+            data() {
+                return {
+                    dictUrl: this.$http.addUrl(config.service.dictionaryPath),
+                    columns: [],
+                    entity: {},
+                    id: null,
+                    entityMeta: {},
+                    entityName: null,
+                    uploadUrl: this.$http.addUrl(config.service.uploadPath),
+                    loading:true
+                };
+            },
+            methods: {
+                save() {
+                    var _this=this;
+                    this.$refs['form'].validate(d => {
+                        if (d) {
+                            _this.$message("正在保存。。。。。");
+                            console.info(this.entity);
+                            _this.$http.post(config.service.entityUpdatePath+_this.entityName,_this.entity).then(({data})=>{
+                                if(data.code===0){
+                                    _this.$message('保存成功');
+                                    _this.$router.back()
+                                }else
+                                    _this.$message('保存失败！！'+data.msg)
+                            }).catch((e)=>{
+                                _this.$message('操作失败！'+e)
+                            })
+                        }
+                    })
 
-        var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
-        var self = this;
-        this.$http({ url: this.$http.addUrl(config.service.columnMetaPath+this.entityName) })
-          .then(({ data }) => {
-            if (data.code === 0) {
-              self.columns = data.data;
-              //get entity info
-              self.loadEntityInfo();
+                },
+                getupfilelist(data) {
+                    if (data instanceof Array) {
+                        if (data.length > 0)
+                            return data.map(d => {
+                                return {name: d, url: d};
+                            });
+                        return [];
+                    } else {
+                        if (data) return [{name: data, url: data}];
+                        else return [];
+                    }
+                },
+                loaddata() {
+                    //get column metainfo
+                    this.loading=true
+                    var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
+                    var self = this;
+                    this.$http({url: this.$http.addUrl(config.service.columnMetaPath + this.entityName)})
+                        .then(({data}) => {
+                            self.loading=false
+                            if (data.code === 0) {
+                                self.columns = data.data;
+                                //get entity info
+                                self.loadEntityInfo();
+                            }
+                        })
+                        .catch(ex => {
+                            this.$message("获取列属性失败： ," + ex);
+                        });
+
+                    self.loadEntityMeta();
+                },
+                loadEntityInfo() {
+                    var self = this;
+                    //    var mockEntitiyInfo = "entity/user.json?id=" + this.id;
+                    this.$http({url: this.$http.addUrl(config.service.entityInfoPath + this.entityName + '?id=' + this.id)})
+                        .then(({data}) => {
+                            self.entity = data.data;
+                        })
+                        .catch(ex => {
+                            this.$message("获取数据失败：," + ex);
+                        });
+
+                },
+                loadEntityMeta() {
+                    var self = this;
+
+                    // var mockEntitiyMeta =  "entity/user.entitymeta.json?entityName" + this.entityName;
+                    this.$http({url: this.$http.addUrl(config.service.entityMetaPath + this.entityName)})
+                        .then(({data}) => {
+                            self.entityMeta = data.data;
+                        })
+                        .catch(ex => {
+                            this.$message("获取实体属性失败： ," + ex);
+                        });
+                },
+                getColumnValue(column) {
+                    return this.entity[column.dataKey] + "";
+                },
+
+            },
+            mounted() {
+                this.entityName = this.$route.params.entityName;
+                this.id = this.$route.params.id;
+                this.loaddata();
+            },
+
+            activated(){
+                this.entityName = this.$route.params.entityName;
+                this.id = this.$route.params.id;
+                this.loaddata();
             }
-          })
-          .catch(ex => {
-            this.$message("get column info error ," + ex);
-          });
-
-        self.loadEntityMeta();
-      },
-      loadEntityInfo() {
-        var self = this;
-          var mockEntitiyInfo = "entity/user.json?id=" + this.id;
-          this.$http({ url: this.$http.addUrl(config.service.entityInfoPath+this.entityName+'/'+this.id) })
-            .then(({ data }) => {
-              self.entity = data.data;
-            })
-            .catch(ex => {
-              this.$message("get entity info error ," + ex);
-            });
-        
-      },
-      loadEntityMeta() {
-        var self = this;
-
-        var mockEntitiyMeta =
-          "entity/user.entitymeta.json?entityName" + this.entityName;
-        this.$http({ url: this.$http.addUrl(config.service.entityMetaPath+this.entityName) })
-          .then(({ data }) => {
-            self.entityMeta = data.data;
-          })
-          .catch(ex => {
-            this.$message("get entityMeta   error ," + ex);
-          });
-      },
-      getColumnValue(column) {
-        return this.entity[column.dataKey] + "";
-      },
-      reset() {
-        this.columns = [];
-        this.entity = {};
-        this.id = null;
-        this.entityMeta = [];
-        this.entityName = null;
-      }
-    },
-    mounted() {
-      this.reset()
-      this.entityName = this.$route.params.entityName;
-      this.id = this.$route.params.id;
-      
-      this.loaddata();
-    },
-    beforeRouteUpdate(to, from, next) {
-      this.reset()
-      this.entityName = to.params.entityName;
-      this.id = to.params.id;
-      console.info('--------edit '+JSON.stringify(this.$data))
-      this.loadData();
-      next();
-    }
-  });
-});
+        });
+    });
 </script>

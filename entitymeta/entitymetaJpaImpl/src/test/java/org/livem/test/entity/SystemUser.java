@@ -66,6 +66,8 @@ public class SystemUser  extends  BaseEntity   {
 	}
 
 	@Version
+	private  Long version;
+
 	private Date regDate;
 
 
@@ -92,7 +94,16 @@ public class SystemUser  extends  BaseEntity   {
 	// @UIField(ftype=FType.File)
 	// private List<String> downloads;
 
-	 private Integer sex;
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
+	private Integer sex;
 
 	public Integer getSex() {
 		return sex;

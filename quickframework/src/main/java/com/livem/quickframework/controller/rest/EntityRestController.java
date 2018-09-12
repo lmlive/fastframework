@@ -6,47 +6,37 @@ import com.livem.quickframework.model.BaseStaus;
 import com.livem.quickframework.model.ResponseStatus;
 import org.livem.dao.Pager;
 import org.livem.dao.Query2;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @RequestMapping("/system/entity")
-@Transactional
 @RestController
 public class EntityRestController extends BaseRestController {
 
+    private BaseEntity readAndValidRequest(String entityName, HttpServletRequest req) {
+        Class<? extends BaseEntity> entityClass = getEntityClass(entityName);
+        BindingResult bindResult = convertRequestToEntity(entityClass, req);
 
-    @RequestMapping("/insert/{entityName}")
+        if (bindResult.hasErrors()) {
+            throw new RestException(BaseStaus.CODE_ERROR, bindResult.getAllErrors().get(0).getDefaultMessage());
+        }
+        return (BaseEntity) bindResult.getTarget();
+    }
+
+    @PostMapping("/insert/{entityName}")
     public BaseStaus insert(@PathVariable("entityName") String entityName, HttpServletRequest req) {
-
-
         BaseEntity entity = readAndValidRequest(entityName, req);
         generiEntityService.updateOrSave(entity);
         return new ResponseStatus(BaseStaus.CODE_SUCCESS, "ok", entity.getId());
-
     }
 
 
-    private BaseEntity readAndValidRequest(String entityName, HttpServletRequest req) {
-        Class<? extends BaseEntity> entityClass = getEntityClass(entityName);
-        BindingResult bindresult = convertRequestToEntity(entityClass, req);
-
-        if (bindresult.hasErrors()) {
-            throw new RestException(BaseStaus.CODE_ERROR, bindresult.getAllErrors().get(0).getDefaultMessage());
-        }
-        return (BaseEntity) bindresult.getTarget();
-    }
-
-
-    @RequestMapping("/update/{entityName}")
+    @PostMapping("/update/{entityName}")
     public BaseStaus update(@PathVariable("entityName") String entityName, HttpServletRequest request) {
         BaseEntity entity = readAndValidRequest(entityName, request);
 
@@ -64,7 +54,6 @@ public class EntityRestController extends BaseRestController {
         return BaseStaus.success;
     }
 
-
     @RequestMapping("/list/{entityName}")
     public BaseStaus list(@PathVariable("entityName") String entityName, HttpServletRequest request, @RequestBody(required = false) Map<String, Object> map) {
         if (map == null) map = new HashMap<>();
@@ -72,13 +61,13 @@ public class EntityRestController extends BaseRestController {
             map.put(en.getKey(), en.getValue() == null ? null : en.getValue()[0]);
         }
         Query2 query = buildCustQueryCriterion(getEntityClass(entityName), map == null ? new HashMap<>(3) : map);
-        int pageIndex = map.get("page") == null ? 1 : (int) map.get("page");
-        int pageSize = map.get("pageSize") == null ? 10 : (int) map.get("pageSize");
+        int pageIndex = map.get("page") == null ? 1 : Integer.parseInt(map.get("page").toString());
+        int pageSize = map.get("pageSize") == null ? 10 : Integer.parseInt( map.get("pageSize").toString());
         return ResponseStatus.ok(generiEntityService.findByCriteria(query, new Pager(pageSize, pageIndex)));
 
     }
 
-    @RequestMapping("/findone/{entityName}")
+    @RequestMapping("/one/{entityName}")
     public BaseStaus findOne(@PathVariable("entityName") String entityName, Long id) {
         return ResponseStatus.ok(generiEntityService.findOne(getEntityClass(entityName), id));
     }
@@ -88,4 +77,5 @@ public class EntityRestController extends BaseRestController {
         Query2 query = generiEntityService.createQuery(getEntityClass(entityName));
         return ResponseStatus.ok(generiEntityService.findOne(query));
     }
+
 }

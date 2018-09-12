@@ -1,11 +1,11 @@
 
 <template>
-    <l-create></l-create>
+    <l-info></l-info>
 </template>
 <script>
 define([
     'vue',
-    'v!views/common/create'
+    'v!views/common/info'
 ], function(Vue) {
     'use strict';
     return Vue.component('l-testcreate',{

@@ -87,7 +87,7 @@ public class SystemUser extends BaseEntity {
 		this.password = password;
 	}
 
-	@Version
+
 	private Date regDate;
 	
  

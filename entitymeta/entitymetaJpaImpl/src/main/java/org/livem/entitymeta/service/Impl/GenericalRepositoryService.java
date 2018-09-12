@@ -14,11 +14,9 @@ import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.List;
 
-@Transactional(readOnly = true)
 public class GenericalRepositoryService implements GeneriEntityService {
 
     private EntityManager em;
-
     public GenericalRepositoryService(EntityManager em) {
         this.em = em;
     }
@@ -84,7 +82,6 @@ public class GenericalRepositoryService implements GeneriEntityService {
         if (((JpaMetamodelEntityInformation) metadata).isNew(entity)) {
             this.em.persist(entity);
         } else this.em.merge(entity);
-       // em.flush();
     }
 
     @Override

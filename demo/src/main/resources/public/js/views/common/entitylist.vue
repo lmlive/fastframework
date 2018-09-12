@@ -1,5 +1,5 @@
 <template>
-  <div class="mod-user">
+  <div class="mod-user"  v-loading="loading">
         <p>
       <el-breadcrumb separator-class="el-icon-arrow-right">
   <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -32,14 +32,14 @@
     
     </el-form>
      <el-alert  v-show="searchDialog.searchDesc!=''"   :title="searchDialog.searchDesc"     type="info">  </el-alert>
-    <el-table :data="dataList" border stripe size="mini" v-loading="dataListLoading" @selection-change="selectionChangeHandle" style="width: 100%;">
+    <el-table :data="dataList" border stripe size="mini"  @selection-change="selectionChangeHandle" style="width: 100%;">
       <el-table-column type="selection" header-align="center" align="center" width="50">
       </el-table-column>
 
       <el-table-column v-for="c in columns" :label="c.title" :prop="c.dataKey" :key="c.dataKey">
         <template slot-scope="scope">
           <el-button v-if="scope.column.property=='id'" type="text" size="small" @click="detail(scope.row['id'])">{{scope.row.id}}</el-button>
-          <l-autotablecolumn v-else :value="scope.row[scope.column.property]" :cmeta="c"> </l-autotablecolumn>
+          <l-autotablecolumn name="c.dataKey" v-else :value="scope.row[scope.column.property]" :cmeta="c"> </l-autotablecolumn>
         </template>
       </el-table-column>
 
@@ -62,7 +62,7 @@ define([
   "vue",
   'config',
   "v!views/common/searchbox",
-  //"v!views/common/autotablecolumn" 
+  "v!views/common/autotablecolumn"
   
 ], function(Vue,config) {
   "use strict";
@@ -88,13 +88,13 @@ define([
           showdialog: false,
           searchDesc: ""
         },
-
+        loading:true,
         searchEntity: {},
         dataList: [],
         pageIndex: 1,
         pageSize: 10,
         totalCount: 0,
-        dataListLoading: false,
+
         dataListSelections: [],
         addOrUpdateVisible: false
       };
@@ -120,16 +120,13 @@ define([
         }
       },
       doSearch(searchEntity, desc) {
-        console.info(
-          "-----TODO dosearch from server ---" + JSON.stringify(searchEntity)
-        );
+       this.$message('待实现。。。。。。。。')
         this.searchDialog.searchDesc = desc;
       },
       loadEntityMeta() {
         var self = this;
 
-        var mockEntitiyMeta =
-          "entity/user.entitymeta.json?entityName" + this.entityName;
+        // var mockEntitiyMeta =          "entity/user.entitymeta.json?entityName" + this.entityName;
         this.$http({ url: this.$http.addUrl(config.service.entityMetaPath+this.entityName) })
           .then(({ data }) => {
             self.entityMeta = data.data;
@@ -141,30 +138,28 @@ define([
 
       // 获取数据列表
       loadData() {
-        this.dataListLoading = true;
+
+        this.loading = true;
         var self = this;
-        var mock = "entity/user.columnmeta.json";
-        this.$http({
-          url: this.$http.addUrl(config.service.columnMetaPath+this.entityName),
-          method: "get"
-        })
+        // var mock = "entity/user.columnmeta.json";
+        this.$http.get( this.$http.addUrl(config.service.columnMetaPath+this.entityName))
           .then(({ data }) => {
             if (data && data.code === 0) {
               self.columns = data.data;
               self.loadList();
             }
-            self.dataListLoading = false;
+            self.loading = false;
           })
           .catch(ex => {
-            alert(ex);
+           self.$message('加载列表出错'+ex)
           });
         self.loadEntityMeta();
       },
       loadList() {
-        this.dataListLoading = true;
-        var mock = "entity/userlist.json?entityName=" + this.entityName;
+        var _this=this
+        // var mock = "entity/userlist.json?entityName=" + this.entityName;
         this.$http({
-          url: this.$http.addUrl(config.service.entityListPath+this.entityName),
+          url: _this.$http.addUrl(config.service.entityListPath+this.entityName),
           method: "get",
           params: this.$http.adornParams({
             page: this.pageIndex,
@@ -173,13 +168,13 @@ define([
           })
         }).then(({ data }) => {
           if (data && data.code === 0) {
-            this.dataList = data.data.list;
-            this.totalCount = data.data.totalCount;
+            _this.dataList = data.data.list;
+            _this.totalCount = data.data.totalCount;
           } else {
-            this.dataList = [];
-            this.totalCount = 0;
+           _this.dataList = [];
+            _this.totalCount = 0;
           }
-          this.dataListLoading = false;
+
         });
       },
       // 每页数
@@ -200,11 +195,8 @@ define([
 
       // 删除
       deleteHandle(id) {
-        var ids = id
-          ? [id]
-          : this.dataListSelections.map(item => {
-              return item.id;
-            });
+          var _this=this;
+        var ids = id ? [id]: this.dataListSelections.map(item => {        return item.id;        });
         this.$confirm(
           `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
           "提示",
@@ -215,40 +207,38 @@ define([
           }
         )
           .then(() => {
-            this.$http({
-              url: this.$http.addUrl(config.service.entityDeletePath+this.entityName),
+            _this.$http({
+              url: _this.$http.addUrl(config.service.entityDeletePath+_this.entityName),
               method: "post",
-              data: this.$http.addData(userIds, false)
+              data: _this.$http.addData(userIds, false)
             }).then(({ data }) => {
               if (data && data.code === 0) {
-                this.$message({
+                _this.$message({
                   message: "操作成功",
                   type: "success",
                   duration: 1500,
                   onClose: () => {
-                    this.loadData();
+                    _this.loadData();
                   }
                 });
               } else {
-                this.$message.error(data.msg);
+                _this.$message.error(data.msg);
               }
             });
           })
-          .catch(() => {});
+          .catch((ex) => {_this.message('删除失败：'+ex)});
       }
     },
     mounted() {
-    
       this.entityName = this.$route.params.entityName;
-      console.info('--------mounted entityList-------'+this.entityName);
       this.loadData();
     },
-    beforeRouteUpdate(to, from, next) {
-     console.info('--------mounted entityList-------'+this.entityName);
-      this.entityName = to.params.entityName;
-      this.loadData();
-      next();
-    }
+
+      activated(){
+            this.entityName = this.$route.params.entityName;
+            this.loadData();
+        }
+
   });
 });
 </script>

@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-loading="loading">
     <p>
       <el-breadcrumb separator-class="el-icon-arrow-right">
   <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -8,7 +8,7 @@
 </el-breadcrumb>
      </p>
 
-    <el-form  :model="entity" size="mini" label-width="80px" ref='form'>
+    <el-form  :model="entity" size="mini" label-width="20%" ref='form'>
       <l-autoformitem v-if="item.uiMeta.insertAble && !item.uiMeta.disAsReadOnly"
        v-for="item in columns" 
        :cmeta="item"
@@ -17,6 +17,7 @@
       </l-autoformitem>
       <el-form-item >
         <el-button @click="save">保存</el-button>
+          <el-button @click="()=>{this.$router.back()}">返回</el-button>
       </el-form-item>
       
     </el-form>
@@ -43,6 +44,7 @@ define([
         entityMeta: {},
         entityName: null,
         uploadUrl: this.$http.addUrl(config.service.uploadPath),
+          loading:true
        
       };
     },
@@ -52,17 +54,19 @@ define([
         this.$refs['form'].validate(v=>{
           if(v){
        this.$message("正在保存。。。。。");
-        console.info(this.entity);
-        this.$http.post(this.$http.addUrl(config.service.entityInsertPath+_this.entityName),this.$http.adornParams(this.entity)).
+
+        this.$http.post(this.$http.addUrl(config.service.entityInsertPath+_this.entityName),this.entity).
+
         	then(({data})=>{
         	if(data.code===0){
-        		_this.$message('operation successfull')
+        		_this.$message('保存成功');
+        		_this.$router.back()
         	}else
         	{
-        	 _this.$message('operation failed'+data.msg)
+        	 _this.$message('保存失败：'+data.msg)
         	}
         	}).catch(e=>{
-        	_this.$message('save data error '+e)
+        	_this.$message('操作失败 '+e)
         	})
           }
         })
@@ -82,11 +86,12 @@ define([
       },
       loaddata() {
         //get column metainfo
-
+          this.loading=true
         var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
         var self = this;
         this.$http({ url: this.$http.addUrl(config.service.columnMetaPath+this.entityName) })
           .then(({ data }) => {
+              self.loading=false
             if (data.code === 0) {
               self.columns = data.data;
             }
@@ -129,14 +134,12 @@ define([
       
       this.loaddata();
     },
-    beforeRouteUpdate(to, from, next) {
-      this.reset()
-      this.entityName = to.params.entityName;
-      this.id = to.params.id;
- console.info('--------create '+JSON.stringify(this.$data))
-      this.loadData();
-      next();
-    }
+      activated(){
+          this.entityName = this.$route.params.entityName;
+          this.id = this.$route.params.id;
+          this.loaddata();
+      }
+
   });
 });
 </script>

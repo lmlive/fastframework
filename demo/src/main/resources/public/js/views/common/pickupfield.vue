@@ -46,8 +46,7 @@ define([ "vue", "config"], function( Vue, config) {
       };
     },
     mounted() {
-      console.info('-----------------pick mounted--------------------')
-      
+
       if (this.value != null) {
         this.selectValue=this.objToSelectValue(this.value)
         this.querySearch("", this.selectValue);

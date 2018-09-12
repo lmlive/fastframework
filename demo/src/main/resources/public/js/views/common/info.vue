@@ -1,22 +1,22 @@
 <template>
 
-    <el-form ref="dataForm" label-width="80px">
+    <el-form ref="dataForm" label-width="20%"  v-loading="loading">
         <p>
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item :to="{ path: '/entity/list/'+this.entityName }">{{entityMeta.title}}列表
+                <el-breadcrumb-item :to="{ path: '/system/entity/list/'+this.entityName }">{{entityMeta.title}}列表
                 </el-breadcrumb-item>
                 <el-breadcrumb-item>{{entityMeta.title}} 详情</el-breadcrumb-item>
 
             </el-breadcrumb>
         </p>
 
-        <el-form>
+
             <el-form-item :label="item.title+'：'" v-for="item in columns" :key="item.dataKey">
                 <l-autotablecolumn :value="entity[item.dataKey]" :cmeta="item"/>
             </el-form-item>
-        </el-form>
 
+        <el-button @click="()=>{this.$router.back()}">返回</el-button>
 
     </el-form>
 
@@ -28,7 +28,6 @@
         Vue,
         config
     ) {
-        "use strict";
         return Vue.component("l-info", {
             template: template,
             data() {
@@ -38,6 +37,7 @@
                     entity: {},
                     entityName: null,
                     id: null,
+                    loading:true,
                     entityMeta: {}
                 };
             },
@@ -45,10 +45,10 @@
             methods: {
                 getupfilelist(data) {
                     if (data instanceof Array && data.length > 0) {
-                        return data.map(d = > {
+                        return data.map(d => {
                             return {name: d, url: d};
                     })
-                        ;
+
                     } else if (data) {
                         return [{name: data, url: data}];
                     } else return [];
@@ -58,15 +58,13 @@
                     //get column metainfo
                     //var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
                     var self = this;
+                    this.loading=true
                     this.$http({url: this.$http.addUrl(config.service.columnMetaPath + this.entityName)})
-                        .then(({data}) = > {
-                        if(data.code === 0
-                )
-                    {
+                        .then(({data}) => {
                         self.columns = data.data;
                         self.loadEntityData();
-                    }
-                }).catch(ex = > {
+                        self.loading=false
+                }).catch(ex => {
                         self.$message("get column info error ," + ex);
                 }) ;
 
@@ -76,14 +74,15 @@
                 loadEntityData() {
                     var self = this;
                    // var mockEntitiyInfo = "entity/user.json?id=" + this.id;
-                    var url=config.service.entityInfoPath + this.entityName + '/' + this.id
+                    var url=config.service.entityInfoPath + this.entityName + '?id=' + this.id
                     if(this.id==undefined){
                         url=config.service.signPagePath+this.entityName
                     }
                     this.$http({url: this.$http.addUrl(url)})
-                        .then(({data}) = > {
+                        .then(({data}) => {
                         self.entity = data.data;
-                }). catch(ex = > {
+                        self.loading=false
+                }). catch(ex => {
                         self.$message("get entity info error ," + ex);
                 })
 
@@ -92,32 +91,30 @@
                     var self = this;
                    // var mockEntitiyMeta ="entity/user.entitymeta.json?entityName" + this.entityName;
                     this.$http({url: this.$http.addUrl(config.service.entityMetaPath + this.entityName)})
-                        .then(({data}) = > {
+                        .then(({data}) => {
                         self.entityMeta = data.data;
-                }).catch(ex = > {
+                }).catch(ex => {
                         self.$message("get entityMeta   error ," + ex);
                 })
-                    ;
+
                 },
                 getColumnValue(column) {
                     return this.entity[column.dataKey] + "";
                 }
             },
-            created() {
-                console.info('create info component')
-            },
+
             mounted() {
                 this.entityName = this.$route.params.entityName;
                 this.id = this.$route.params.id;
-                console.info('----------entity info page ' + this.entityName);
                 this.loaddata();
             },
-            beforeRouteUpdate(to, from, next) {
-                this.entityName = to.params.entityName;
-                this.id = to.params.id;
-                this.loadData();
-                next();
+            activated(){
+                this.entityName = this.$route.params.entityName;
+                this.id = this.$route.params.id;
+                this.loaddata();
             }
+
+
         });
     });
 </script>

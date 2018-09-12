@@ -6,9 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Import;
-
-import com.livem.quickframework.FrameWorkBooter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @SpringBootApplication

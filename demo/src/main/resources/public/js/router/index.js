@@ -6,7 +6,7 @@
  */
 
 define(['vue','VueRouter', 'validate', 'loader','store/index','router/custRoute'],
-function (Vue, Router, validate, loader,cookie,custRoute) {
+function (Vue, Router, validate, loader,store,custRoute) {
     Vue.use(Router)
     var isURL = validate.isURL;
    
@@ -48,10 +48,13 @@ function (Vue, Router, validate, loader,cookie,custRoute) {
         name: 'main',
         beforeEnter (to, from, next) {
             var token = Vue.cookies.get('token')
+            console.info('=====token='+token)
              if (!token || !/\S/.test(token)) {
                  next({ name: 'login' })
+             }else{
+                 next()
              }
-            next()
+
         },
         meta: {
             title: '主入口整体布局'

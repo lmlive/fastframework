@@ -1,4 +1,4 @@
-define(['axios', 'lib/vue-cookies', 'vue', 'VueRouter', 'lib/qs', 'lib/merge'],
+define(['axios', 'cookie', 'vue', 'VueRouter', 'lib/qs', 'lib/merge'],
     function (axios, cookie, Vue, router, qs, merge) {
         Vue.use(cookie)
         var  baseUrl = "http://localhost/";//http://localhost:900/js/mock/"
@@ -14,9 +14,7 @@ define(['axios', 'lib/vue-cookies', 'vue', 'VueRouter', 'lib/qs', 'lib/merge'],
          * 请求拦截
          */
         http.interceptors.request.use(function (config) {
-            config.headers['token'] = Vue.cookies['token'] // 请求头带上token
-          //  config.headers['Content-Type']='application/x-www-form-urlencoded;charset=utf-8'
-          //  console.info(Vue.cookies['token'])
+            config.headers['token'] = Vue.cookies.get('token') // 请求头带上token
             return config
         }, function (error) {
             return Promise.reject(error)

@@ -57,12 +57,12 @@
       <span class="el-dropdown-link">列表<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown"  >
-                    <el-dropdown-item   v-for="item in cvalue" :key="item"  >  
-                        <a :href="'/entity/detail/'+item.id">{{item.id}}</a>
+                    <el-dropdown-item   v-for="item in cvalue" :key="item.id"  >
+                        <a :href="getPickNav(item.id)">{{getPickDesc(item)}}</a>
                     </el-dropdown-item>
                 </el-dropdown-menu>
   </el-dropdown>    
-   <a :href="'/entity/detail/'+cvalue.id" v-else>{{cvalue}}</a>
+   <a :href="getPickNav(cvalue.id)" v-else>{{getPickDesc(cvalue)}}</a>
    </template>
 </template>
  <l-embedded :readonly="true" v-else-if="cmeta.uiMeta.uiType==undefined" v-model="cvalue" :columnMeta="cmeta"></l-embedded>
@@ -91,7 +91,15 @@ define(["vue","config", "v!views/common/dictionary",'v!views/common/embedded'], 
     },
 
     methods: {
-      
+      getPickNav(value){
+        return '#'+config.service.entityInfoPath+this.cmeta.uiMeta.pickEntityShortName+'/'+value
+      },
+        getPickDesc(value){
+         let vs=  this.cmeta.uiMeta.pickColumns.map(d=>{
+              return  value[d]
+          })
+            return vs.join(',')
+        },
       getupfilelist(data) {
         if (data instanceof Array && data.length > 0) {
           return data.map(d => {

@@ -109,10 +109,11 @@
                 this.entityName = this.$route.params.entityName;
                 this.id = this.$route.params.id;
                 this.loaddata();
-            }, beforeRouteUpdate(to){
+            }, beforeRouteUpdate(to,from,next){
                 this.entityName = to.params.entityName;
                 this.id = to.params.id;
                 this.loadData();
+                next()
             }
 
 

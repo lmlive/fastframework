@@ -138,7 +138,7 @@ public class JpaMetaService implements EntityMetaService, PropertyMetaService {
         EntityType<?> entityType = em.getMetamodel().entity(entityClass);
         if (entityType != null) {
             Set<? extends Attribute<?, ?>> attrs = entityType.getAttributes();
-           
+           //TODO  columns display order
             List<ColumnMeta> result = new ArrayList<>();
             for (Attribute<?, ?> attr : attrs) {
                 result.add(attributeParser.getColumnMeta(entityClass,attr));

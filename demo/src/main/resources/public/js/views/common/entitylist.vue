@@ -19,8 +19,8 @@
           </el-dropdown-menu>
         </el-dropdown>
 
-        <el-button type="primary" @click="addOrUpdateHandle(null)">新增</el-button>
-        <el-button type="danger" @click="deleteHandle" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button type="primary" @click="create()"  icon="el-icon-plus">新增</el-button>
+        <el-button type="danger" @click="deleteHandle" :disabled="dataListSelections.length <= 0" icon="el-icon-delete">批量删除</el-button>
       </el-form-item>
     
     </el-form>
@@ -36,9 +36,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" width="100" fixed="right" label="操作">
+      <el-table-column align="center" width="120" fixed="right" label="操作">
         <span slot-scope="scope">
-           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+           <el-button type="text" size="small" @click="update(scope.row.id)" >修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </span>
       </el-table-column>
@@ -88,26 +88,30 @@ define([
         pageSize: 10,
         totalCount: 0,
 
-        dataListSelections: [],
-        addOrUpdateVisible: false
+        dataListSelections: []
+
       };
     },
 
     methods: {
         navs(){
-            var data=[]
+            let  data=[]
             data.push({name:'首页',path:'/'})
             data.push({name:this.entityMeta.title+'列表'})
             return data
         },
       //详情
       detail(id) {
-        this.$router.push("/system/entity/detail/" + this.entityName + "/" + id);
+        this.$router.push(config.service.entityInfoPath + this.entityName + "/" + id);
       },
-      // 新增 / 修改
-      addOrUpdateHandle(id) {
-        var url ="/system/entity/edit/" + this.entityName;
-        if (id != undefined) url += "/" + id;
+        //新增
+        create(){
+            let  url =config.service.entityInsertPath + this.entityName
+            this.$router.push(url);
+        },
+      // 修改
+      update(id) {
+        let  url =config.service.entityUpdatePath + this.entityName+'/'+id;
         this.$router.push(url);
       },
       searchCmd(cmd) {
@@ -123,7 +127,7 @@ define([
         this.searchDialog.searchDesc = desc;
       },
       loadEntityMeta() {
-        var self = this;
+        const  self = this;
 
         // var mockEntitiyMeta =          "entity/user.entitymeta.json?entityName" + this.entityName;
         this.$http({ url: this.$http.addUrl(config.service.entityMetaPath+this.entityName) })
@@ -139,7 +143,7 @@ define([
       loadData() {
 
         this.loading = true;
-        var self = this;
+        const  self = this;
         // var mock = "entity/user.columnmeta.json";
         this.$http.get( this.$http.addUrl(config.service.columnMetaPath+this.entityName))
           .then(({ data }) => {
@@ -155,7 +159,7 @@ define([
         self.loadEntityMeta();
       },
       loadList() {
-        var _this=this
+        const  _this=this
         // var mock = "entity/userlist.json?entityName=" + this.entityName;
         this.$http({
           url: _this.$http.addUrl(config.service.entityListPath+this.entityName),
@@ -194,8 +198,8 @@ define([
 
       // 删除
       deleteHandle(id) {
-          var _this=this;
-        var ids = id ? [id]: this.dataListSelections.map(item => {        return item.id;        });
+          const  _this=this;
+        let  ids = id ? [id]: this.dataListSelections.map(item => {        return item.id;        });
         this.$confirm(
           `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
           "提示",
@@ -232,9 +236,10 @@ define([
             this.entityName = this.$route.params.entityName;
             this.loadData();
         },
-      beforeRouteUpdate(to){
+      beforeRouteUpdate(to,from,next){
           this.entityName = to.params.entityName;
           this.loadData();
+          next()
       }
 
   });

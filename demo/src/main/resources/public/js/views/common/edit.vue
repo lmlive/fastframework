@@ -10,8 +10,8 @@
                             :key="item.dataKey">
             </l-autoformitem>
             <el-form-item>
-                <el-button @click="save">保存</el-button>
-                <el-button @click="()=>{this.$router.back()}">返回</el-button>
+                <el-button @click="save" type="primary"  icon="el-icon-circle-check-outline">保存</el-button>
+                <el-button @click="()=>{this.$router.back()}" icon="el-icon-back">返回</el-button>
             </el-form-item>
 
         </el-form>
@@ -46,7 +46,7 @@
                 navs(){
                     var data=[]
                     data.push({name:'首页',path:'/'})
-                    data.push({name:this.entityMeta.title+'列表',path:'/system/entity/list/'+this.entityName})
+                    data.push({name:this.entityMeta.title+'列表',path:config.service.entityListPath+this.entityName})
                     data.push({name:this.entityMeta.title+'编辑'})
                     return data
                 },
@@ -137,10 +137,11 @@
                 this.id = this.$route.params.id;
                 this.loaddata();
             },
-            beforeRouteUpdate(to){
+            beforeRouteUpdate(to,from,next){
                 this.entityName = to.params.entityName;
                 this.id = to.params.id;
                 this.loadData();
+                next()
             }
         });
     });

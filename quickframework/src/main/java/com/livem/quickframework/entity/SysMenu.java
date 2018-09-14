@@ -2,12 +2,13 @@ package com.livem.quickframework.entity;
 
 import org.livem.entitymeta.annotation.EntityConfig;
 import org.livem.entitymeta.annotation.Field;
+import org.livem.meta.UIType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
-@EntityConfig(title = "菜单")
+@EntityConfig(title = "菜单",pickColumns = {"id","name"})
 public class SysMenu extends BaseEntity {
 
     public  static  enum  menuType{
@@ -44,7 +45,7 @@ public class SysMenu extends BaseEntity {
     /**
      * 类型     0：目录   1：菜单   2：按钮
      */
-    @Field(title = "类型     0：目录   1：菜单   2：按钮")
+    @Field(title = "类型 ",uitype = UIType.Enum,enumValues = {"FOLDER","MENU","BUTTON"})
     private menuType type;
 
     /**

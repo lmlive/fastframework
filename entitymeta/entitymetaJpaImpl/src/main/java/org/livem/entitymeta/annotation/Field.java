@@ -38,4 +38,6 @@ public @interface Field {
 
     abstract boolean readOnly() default false;
 
+    abstract  String[] enumValues() default  "";
+
 }

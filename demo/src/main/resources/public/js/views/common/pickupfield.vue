@@ -34,6 +34,7 @@ define([ "vue", "config"], function( Vue, config) {
     watch: {
       value: function(v) {
         this.selectValue = this.objToSelectValue(v);
+        this.options=v
       }
     
     },
@@ -46,7 +47,6 @@ define([ "vue", "config"], function( Vue, config) {
       };
     },
     mounted() {
-
       if (this.value != null) {
         this.selectValue=this.objToSelectValue(this.value)
         this.querySearch("", this.selectValue);
@@ -71,8 +71,8 @@ define([ "vue", "config"], function( Vue, config) {
         return {id:d}
       },
       displayLabel(item) {
-        if (this.pickFields!=null ) {
 
+        if (this.pickFields!=null ) {
           return this.pickFields.map(d => {
               return item[d];
             }).join(",");
@@ -84,10 +84,9 @@ define([ "vue", "config"], function( Vue, config) {
         return this.$http.addUrl(config.entityListPath);
       },
       querySearch(q, value) {
-        var _this = this;
+        const _this = this;
         _this.loading = true;
         // const mockurl =config.service.entityListPath+this.entityName;// "entity/userlist.json";
-        // if (value) mockurl += "?ids=" + value;
         let url=config.service.entityListPath+this.entityName
           if(value!=null){
               url+='?ids='+value
@@ -100,9 +99,7 @@ define([ "vue", "config"], function( Vue, config) {
             _this.loading = false;
             if (data.code == 0) {
               _this.options = data.data.list;
-              if (value) {
-                _this.selectValue = value;
-              }
+
             } else {
               _this.$message("---load data error" + data.msg);
             }

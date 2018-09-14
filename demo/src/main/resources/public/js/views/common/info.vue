@@ -6,8 +6,9 @@
                 <l-autotablecolumn :value="entity[item.dataKey]" :cmeta="item"/>
             </el-form-item>
 
-        <el-button @click="()=>{this.$router.back()}">返回</el-button>
-
+        <el-form-item>
+        <el-button @click="()=>{this.$router.back()}" icon="el-icon-back">返回</el-button>
+        </el-form-item>
     </el-form>
 
 </template>
@@ -37,7 +38,7 @@
                 navs(){
                   var data=[]
                   data.push({name:'首页',path:'/'})
-                    data.push({name:this.entityMeta.title+'列表',path:'/system/entity/list/'+this.entityName})
+                    data.push({name:this.entityMeta.title+'列表',path:config.service.entityListPath+this.entityName})
                     data.push({name:this.entityMeta.title+'详情'})
                     return data
                 },
@@ -55,7 +56,7 @@
                 loaddata() {
                     //get column metainfo
                     //var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
-                    var self = this;
+                    const  self = this;
                     this.loading=true
                     this.$http({url: this.$http.addUrl(config.service.columnMetaPath + this.entityName)})
                         .then(({data}) => {
@@ -70,9 +71,9 @@
                 },
                 //get entity info
                 loadEntityData() {
-                    var self = this;
+                    const  self = this;
                    // var mockEntitiyInfo = "entity/user.json?id=" + this.id;
-                    var url=config.service.entityInfoPath + this.entityName + '?id=' + this.id
+                    let  url=config.service.entityInfoPath + this.entityName + '?id=' + this.id
                     if(this.id==undefined){
                         url=config.service.signPagePath+this.entityName
                     }
@@ -86,7 +87,7 @@
 
                 },
                 loadEntityMeta() {
-                    var self = this;
+                    const  self = this;
                    // var mockEntitiyMeta ="entity/user.entitymeta.json?entityName" + this.entityName;
                     this.$http({url: this.$http.addUrl(config.service.entityMetaPath + this.entityName)})
                         .then(({data}) => {
@@ -104,10 +105,11 @@
                 this.entityName = this.$route.params.entityName;
                 this.id = this.$route.params.id;
                 this.loaddata();
-            }, beforeRouteUpdate(to){
+            }, beforeRouteUpdate(to,from,next){
                 this.entityName = to.params.entityName;
                 this.id = to.params.id;
                 this.loadData();
+                next()
             }
 
 

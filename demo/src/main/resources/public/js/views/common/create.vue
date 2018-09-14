@@ -9,8 +9,8 @@
        :key="item.dataKey">
       </l-autoformitem>
       <el-form-item >
-        <el-button @click="save">保存</el-button>
-          <el-button @click="()=>{this.$router.back()}">返回</el-button>
+        <el-button @click="save" icon="el-icon-circle-check-outline">保存</el-button>
+          <el-button @click="()=>{this.$router.back()}" icon="el-icon-back">返回</el-button>
       </el-form-item>
       
     </el-form>
@@ -44,14 +44,14 @@ define([
     },
     methods: {
         navs(){
-            var data=[]
+            const  data=[]
             data.push({name:'首页',path:'/'})
-            data.push({name:this.entityMeta.title+'列表',path:'/system/entity/list/'+this.entityName})
+            data.push({name:this.entityMeta.title+'列表',path:config.service.entityListPath+this.entityName})
             data.push({name:this.entityMeta.title+'创建'})
             return data
         },
       save() {
-          var _this=this;
+          const _this=this;
         this.$refs['form'].validate(v=>{
           if(v){
        this.$message("正在保存。。。。。");
@@ -88,8 +88,8 @@ define([
       loaddata() {
         //get column metainfo
           this.loading=true
-        var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
-        var self = this;
+        // var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
+        const  self = this;
         this.$http({ url: this.$http.addUrl(config.service.columnMetaPath+this.entityName) })
           .then(({ data }) => {
               self.loading=false
@@ -107,8 +107,7 @@ define([
       loadEntityMeta() {
         var self = this;
 
-        var mockEntitiyMeta =
-          "entity/user.entitymeta.json?entityName" + this.entityName;
+        // var mockEntitiyMeta ="entity/user.entitymeta.json?entityName" + this.entityName;
         this.$http({ url: this.$http.addUrl(config.service.entityMetaPath+this.entityName) })
           .then(({ data }) => {
             self.entityMeta = data.data;
@@ -134,10 +133,11 @@ define([
           this.id = this.$route.params.id;
           this.loaddata();
       },
-      beforeRouteUpdate(to){
+      beforeRouteUpdate(to,from,next){
           this.entityName = to.params.entityName;
           this.id =to.params.id;
           this.loadData();
+          next()
       }
 
   });

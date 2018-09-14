@@ -1,11 +1,7 @@
 <template>
 <div>
-  <el-form :model="entity"  ref="form" :rules="rules" >
-    <el-form-item prop="test">
-     <el-input type="text" v-model="entity['test']" ></el-input>
-     </el-form-item>
-      
-    
+  <el-form   >
+
     <l-autoformitem  
        v-for="item in columns"
        :cmeta="item"
@@ -26,45 +22,65 @@ define(["vue", "v!views/common/pickupfield",'v!views/common/autoformitem'], func
     template: template,
     data() {
       return {
-        columns:[ 
-    {
-      "dataKey": "name",
-      "title": "LoginName",
-      "type": "java.lang.String",
-      "entityClass": "com.livem.quickframework.entity.SystemUser",
-      "entityName": null,
-      "extendMeta": null,
-      "uiMeta": {
-        "updateAble": true,
-        "insertAble": true,
-        "visable": true,
-        "disAsReadOnly": false,
-        "uiType": "text",
-        "validMeta": [{regEx:'\\S+',message:'can not null'}],
-        "multi": false
-      },
-      "key": false
-    },
-     
-    {
-      "dataKey": "sex",
-      "title": "性别",
-      "type": "java.lang.Integer",
-      "entityClass": "com.livem.quickframework.entity.SystemUser",
-      "entityName": null,
-      "extendMeta": null,
-      "uiMeta": {
-        "updateAble": true,
-        "insertAble": true,
-        "visable": true,
-        "disAsReadOnly": false,
-        "uiType": "Dictionary",
-        "validMeta": [],
-        "dictKey": "sex",
-        "dictGroup": "SYSTEM_DATA"
-      },
-      "key": false
-    }
+        columns:[
+            {
+                "dataKey":"id",
+                "entityClass":"com.livem.quickframework.entity.Role",
+                "key":true,
+                "title":"ID",
+                "type":"java.lang.Long",
+                "uiMeta":{
+                    "disAsReadOnly":true,
+                    "insertAble":false,
+                    "uiType":"Number",
+                    "updateAble":false,
+                    "validMeta":[
+
+                    ],
+                    "visable":true
+                }
+            },
+            {
+                "dataKey":"menus",
+                "entityClass":"com.livem.quickframework.entity.Role",
+                "key":false,
+                "title":"权限点",
+                "type":"java.util.List",
+                "uiMeta":{
+                    "disAsReadOnly":false,
+                    "insertAble":true,
+                    "multiPick":true,
+                    "pickColumns":[
+                        "id",
+                        "name"
+                    ],
+                    "pickEntityShortName":"SysMenu",
+                    "pickEntityType":"com.livem.quickframework.entity.SysMenu",
+                    "uiType":"Pick",
+                    "updateAble":true,
+                    "validMeta":[
+
+                    ],
+                    "visable":true
+                }
+            },
+            {
+                "dataKey":"role_name",
+                "entityClass":"com.livem.quickframework.entity.Role",
+                "key":false,
+                "title":"角色名称",
+                "type":"java.lang.String",
+                "uiMeta":{
+                    "disAsReadOnly":false,
+                    "insertAble":true,
+                    "uiType":"Text",
+                    "updateAble":true,
+                    "validMeta":[
+
+                    ],
+                    "visable":true
+                }
+            }
         ],
         pick: [{ id: 10 }],
         entity: {},
@@ -85,15 +101,15 @@ define(["vue", "v!views/common/pickupfield",'v!views/common/autoformitem'], func
     },
     methods: {
       getValue() {
-        var _this = this;
-        _this.$refs["form"].validate(v => {
-          if (v) _this.$message("validated ...");
-        });
+        const  _this = this;
         console.info(JSON.stringify(_this.entity));
-        console.info(JSON.stringify(_this.test));
       },
       setValue() {
-        this.pick = [{ id: 9 }];
+
+        this.entity={
+             menus: [{ id: 2,  "name": "应用配置" },{id:3, "name": "用户管理"}],
+            id:10
+      }
       }
     },
     mounted() {

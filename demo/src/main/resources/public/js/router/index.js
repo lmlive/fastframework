@@ -118,7 +118,7 @@ function (Vue, Router, validate, loader,store,custRoute) {
                 }
             }
             ,{
-                path:'/system/entity/edit/:entityName/:id',
+                path:'/system/entity/update/:entityName/:id',
                 name:'dynamicEdit',
                 component:function(){
                     return loader('views/common/edit')
@@ -129,7 +129,7 @@ function (Vue, Router, validate, loader,store,custRoute) {
                 }
             }
             ,{
-                path:'/system/entity/edit/:entityName',
+                path:'/system/entity/insert/:entityName',
                 name:'dynamicCreate',
                 component:function(){
                     return loader('views/common/create')
@@ -140,7 +140,7 @@ function (Vue, Router, validate, loader,store,custRoute) {
                 }
             }
             ,{
-                path:'/system/entity/detail/:entityName/:id',
+                path:'/system/entity/one/:entityName/:id',
                 name:'dynamicInfo',
                 component:function(){
                     return loader('views/common/info')

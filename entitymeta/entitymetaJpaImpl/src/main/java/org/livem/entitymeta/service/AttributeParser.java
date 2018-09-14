@@ -133,6 +133,10 @@ public class AttributeParser {
 				((DictUiMeta) uimeta).setDictGroup(uitype.dictGroup());
 				((DictUiMeta) uimeta).setDictKey(uitype.dictKey());
 				break;
+				case Enum:
+					uimeta=new EnumMeta();
+					((EnumMeta) uimeta).setEnumSource(uitype.enumValues());
+					break;
 			case Password:
 				uimeta.setUiType(UIType.Password);
 				uitype2 = UIType.Password;

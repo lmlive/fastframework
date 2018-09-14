@@ -9,8 +9,8 @@
                             :key="item.dataKey">
             </l-autoformitem>
             <el-form-item>
-                <el-button @click="save">保存</el-button>
-                <el-button @click="()=>{this.$router.back()}">返回</el-button>
+                <el-button @click="save" icon="el-icon-circle-check-outline">保存</el-button>
+                <el-button @click="()=>{this.$router.back()}" icon="el-icon-back">返回</el-button>
             </el-form-item>
 
         </el-form>
@@ -140,9 +140,10 @@
                     this.entityName = this.$route.params.entityName;
                     this.loaddata();
             },
-            beforeRouteUpdate(to){
+            beforeRouteUpdate(to,from,next){
                 this.entityName = to.params.entityName;
                 this.loadData();
+                next()
             }
         });
     });

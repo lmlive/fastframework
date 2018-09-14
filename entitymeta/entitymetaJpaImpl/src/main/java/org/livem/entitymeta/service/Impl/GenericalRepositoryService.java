@@ -42,7 +42,9 @@ public class GenericalRepositoryService implements GeneriEntityService {
     public <T> T findOne(Query2<T> query) {
         EntityQuery<T> entityQuery = (EntityQuery<T>) query;
         try {
-            return (T) this.em.createQuery(entityQuery.newCriteriaQuery().select(entityQuery.getFrom())).getSingleResult();
+            entityQuery.setOrder("id","asc");
+
+            return (T) this.em.createQuery(entityQuery.newCriteriaQuery().select(entityQuery.getFrom())).setMaxResults(1).getSingleResult();
         } catch (Exception ex) {
             return null;
         }

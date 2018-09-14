@@ -1,7 +1,6 @@
 <template>
     <div v-loading="loading">
 
-<l-navbread :navs="navs()"></l-navbread>
         <el-form :model="entity" size="mini" label-width="20%" ref='form'>
             <l-autoformitem v-if="item.uiMeta.updateAble && !item.uiMeta.disAsReadOnly"
                             v-for="item in columns"
@@ -24,18 +23,17 @@
         "vue",
         "v!views/common/dictionary",
         "config",
-        "v!views/common/autoformitem",
-        "v!views/common/navbread"
+        "v!views/common/autoformitem"
+
     ], function (require, Vue, d, config) {
         "use strict";
-        return Vue.component("l-edit", {
+        return Vue.component("l-singlePage", {
             template: template,
             data() {
                 return {
                     dictUrl: this.$http.addUrl(config.service.dictionaryPath),
                     columns: [],
                     entity: {},
-                    id: null,
                     entityMeta: {},
                     entityName: null,
                     uploadUrl: this.$http.addUrl(config.service.uploadPath),
@@ -51,12 +49,13 @@
                     return data
                 },
                 save() {
-                    const  _this=this;
+                    const _this=this;
                     this.$refs['form'].validate(d => {
                         if (d) {
                             _this.$message("正在保存。。。。。");
                             console.info(this.entity);
-                            _this.$http.post(config.service.entityUpdatePath+_this.entityName,_this.entity).then(({data})=>{
+                            let url = config.service.singlePageEditPath+_this.entityName;
+                            _this.$http.post(url,_this.entity).then(({data})=>{
                                 if(data.code===0){
                                     _this.$message('保存成功');
                                     _this.$router.back()
@@ -85,28 +84,32 @@
                     //get column metainfo
                     this.loading=true
                     // var mock = "entity/user.columnmeta.json?entityName=" + this.entityName;
-                    const  self = this;
-                    this.$http({url: this.$http.addUrl(config.service.columnMetaPath + this.entityName)})
+                    const self = this;
+                    let url = this.$http.addUrl(config.service.columnMetaPath + this.entityName);
+                    console.info('columnmeta url='+url)
+                    this.$http({url: url})
                         .then(({data}) => {
                             self.loading=false
                             if (data.code === 0) {
                                 self.columns = data.data;
                                 //get entity info
-                                self.loadEntityInfo();
+                                self.loadSignData();
                             }
                         })
                         .catch(ex => {
                             this.$message("获取列属性失败： ," + ex);
                         });
 
-                    self.loadEntityMeta();
+                     self.loadEntityMeta();
                 },
-                loadEntityInfo() {
-                    const  self = this;
+                loadSignData() {
+                    const self = this;
                     //    var mockEntitiyInfo = "entity/user.json?id=" + this.id;
-                    this.$http({url: this.$http.addUrl(config.service.entityInfoPath + this.entityName + '?id=' + this.id)})
+                    let url = this.$http.addUrl(config.service.singlePagePath + this.entityName );
+                    console.info('loaddata url='+url)
+                    this.$http({url: url})
                         .then(({data}) => {
-                            self.entity = data.data;
+                            self.entity = data.data || {}
                         })
                         .catch(ex => {
                             this.$message("获取数据失败：," + ex);
@@ -114,10 +117,11 @@
 
                 },
                 loadEntityMeta() {
-                    const  self = this;
-
+                    const self = this;
                     // var mockEntitiyMeta =  "entity/user.entitymeta.json?entityName" + this.entityName;
-                    this.$http({url: this.$http.addUrl(config.service.entityMetaPath + this.entityName)})
+                    let url = this.$http.addUrl(config.service.entityMetaPath + this.entityName)
+                    console.info('entityInfometa='+url)
+                    this.$http({url: url})
                         .then(({data}) => {
                             self.entityMeta = data.data;
                         })
@@ -133,13 +137,11 @@
 
 
             activated(){
-                this.entityName = this.$route.params.entityName;
-                this.id = this.$route.params.id;
-                this.loaddata();
+                    this.entityName = this.$route.params.entityName;
+                    this.loaddata();
             },
             beforeRouteUpdate(to){
                 this.entityName = to.params.entityName;
-                this.id = to.params.id;
                 this.loadData();
             }
         });

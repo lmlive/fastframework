@@ -1,13 +1,6 @@
 <template>
 <div v-loading="loading">
-    <p>
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-  <el-breadcrumb-item :to="{ path: '/system/entity/list/'+this.entityName }">{{entityMeta.title}}列表</el-breadcrumb-item>
-  <el-breadcrumb-item >新增{{entityMeta.title}}</el-breadcrumb-item>
-</el-breadcrumb>
-     </p>
-
+    <l-navbread :navs="navs()"></l-navbread>
     <el-form  :model="entity" size="mini" label-width="20%" ref='form'>
       <l-autoformitem v-if="item.uiMeta.insertAble && !item.uiMeta.disAsReadOnly"
        v-for="item in columns" 
@@ -30,7 +23,8 @@ define([
   "vue",
   "v!views/common/dictionary",
   "config",
-  "v!views/common/autoformitem"
+  "v!views/common/autoformitem",
+    "v!views/common/navbread"
 ], function(require, Vue, d, config) {
   "use strict";
   return Vue.component("l-create", {
@@ -49,6 +43,13 @@ define([
       };
     },
     methods: {
+        navs(){
+            var data=[]
+            data.push({name:'首页',path:'/'})
+            data.push({name:this.entityMeta.title+'列表',path:'/system/entity/list/'+this.entityName})
+            data.push({name:this.entityMeta.title+'创建'})
+            return data
+        },
       save() {
           var _this=this;
         this.$refs['form'].validate(v=>{
@@ -127,17 +128,16 @@ define([
         this.entityName = null;
       }
     },
-    mounted() {
-      this.reset()
-      this.entityName = this.$route.params.entityName;
-      this.id = this.$route.params.id;
-      
-      this.loaddata();
-    },
+
       activated(){
           this.entityName = this.$route.params.entityName;
           this.id = this.$route.params.id;
           this.loaddata();
+      },
+      beforeRouteUpdate(to){
+          this.entityName = to.params.entityName;
+          this.id =to.params.id;
+          this.loadData();
       }
 
   });

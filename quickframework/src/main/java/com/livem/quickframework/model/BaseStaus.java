@@ -5,6 +5,8 @@ import java.io.Serializable;
 public class BaseStaus implements Serializable {
 	public final static int CODE_SUCCESS=0;
 	public final static int CODE_ERROR=-1;
+	public  final  static  int CODE_NOT_AUTHED=401;
+
 	public final static String MSG_SUCCESS="成功";
 	public final static String MSG_ERROR="失败";
 	private int code=CODE_SUCCESS;

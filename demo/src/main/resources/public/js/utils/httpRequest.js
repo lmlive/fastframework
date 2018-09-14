@@ -1,6 +1,7 @@
-define(['axios', 'cookie', 'vue', 'VueRouter', 'lib/qs', 'lib/merge'],
+define(['axios', 'cookie', 'vue', 'routeInfo', 'lib/qs', 'lib/merge'],
     function (axios, cookie, Vue, router, qs, merge) {
         Vue.use(cookie)
+
         var  baseUrl = "http://localhost/";//http://localhost:900/js/mock/"
         var http = axios.create({
             timeout: 1000 * 30,
@@ -25,9 +26,9 @@ define(['axios', 'cookie', 'vue', 'VueRouter', 'lib/qs', 'lib/merge'],
          */
         http.interceptors.response.use(function (response) {
             if (response.data && response.data.code === 401) { // 401, token失效
-                Vue.cookies.cookie = undefined
-               // router.options.isAddDynamicMenuRoutes = false
-                router.push({
+                Vue.cookies.set('token',null)
+                console.info(router)
+               router.replace({
                     name: 'login'
                 })
             }

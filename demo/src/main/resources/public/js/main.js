@@ -24,15 +24,17 @@ requirejs.config({
 
 })
 
-require(['vue', 'ELEMENT', 'store/index','routeInfo','utils/httpRequest','cookie'],
-    function (Vue, elementui, store,routeInfo,http,cookie) {
+require(['vue', 'ELEMENT', 'store/index','routeInfo','utils/httpRequest','cookie','v!App'],
+    function (Vue, elementui, store,routeInfo,http,cookie,app) {
         Vue.use(elementui)
         Vue.use(cookie)
 	    Vue.prototype.$http=http
-        new Vue({
+          new Vue({
             router: routeInfo,
             store:store,
             el: '#root',
+         render:h=>h(app)
 
         })
+        return app;
     })

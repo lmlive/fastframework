@@ -78,4 +78,13 @@ public class EntityRestController extends BaseRestController {
         return ResponseStatus.ok(generiEntityService.findOne(query));
     }
 
+
+    @PostMapping("/singlePageEdit/{entityName}")
+    public BaseStaus signPageEdit(@PathVariable("entityName") String entityName, HttpServletRequest req) {
+        BaseEntity entity = readAndValidRequest(entityName, req);
+
+        generiEntityService.updateOrSave(entity);
+        return new ResponseStatus(BaseStaus.CODE_SUCCESS, "ok", entity.getId());
+    }
+
 }

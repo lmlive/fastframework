@@ -58,7 +58,7 @@
 
 <script>
     define(['vue','config',  'validate','v!views/main-navbar-update-password'], function (Vue,config,validate) {
-        var isURL = validate.isURL
+        const isURL = validate.isURL
         return Vue.component('main-navbar',{
             template: template,
             data() {
@@ -68,18 +68,14 @@
                 }
             },
             mounted(){
-                var url="system/entity/Application/singlePage";
-             //   url="singlepage/application.json";
-            
-          //   console.info('config path='+config.service.signPagePath);
-              var self=this;
+              const self=this;
                 self.$http({
-                    url: self.$http.addUrl(config.service.signPagePath+'Application'),
+                    url: self.$http.addUrl(config.service.singlePagePath+'Application'),
                     method: 'post',
                 }).then(function(res){
-                    var  data=res.data
+                    const  data=res.data
                     if (data && data.code === 0) {
-                     self.app=data.application||{};
+                     self.app=data.data||{};
                     }
                 })
             },
@@ -114,7 +110,7 @@
             methods: {
                 // 修改密码
                 updatePasswordHandle() {
-                    var  self=this
+                    const  self=this
                     this.updatePassowrdVisible = true
                     this.$nextTick(function () {
                         self.$refs.updatePassowrd.init()

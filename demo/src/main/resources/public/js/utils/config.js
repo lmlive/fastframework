@@ -14,7 +14,8 @@ define([
          
             entityDeletePath:'/system/entity/delete/',
             entityInfoPath:'/system/entity/one/',
-            signPagePath:'/system/entity/singlePage/',
+            singlePagePath:'/system/entity/singlePage/',
+            singlePageEditPath:'/system/entity/singlePageEdit/'
         }
     }
 });

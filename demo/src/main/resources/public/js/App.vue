@@ -5,6 +5,10 @@
 </template>
 
 <script>
-  export default {
-  }
+  define(['vue'],function (Vue) {
+      return Vue.component('l-app',{
+          template:template,
+          data(){return {}}
+      })
+  })
 </script>

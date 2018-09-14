@@ -76,12 +76,6 @@ public class WebAutoConfig implements WebMvcConfigurer, InitializingBean {
         FastJsonHttpMessageConverter fastjson = new FastJsonHttpMessageConverter();
         fastjson.getFastJsonConfig().setDateFormat("yyyy-MM-dd HH:mm:ss");
         converters.add(0, fastjson);
-//        for (HttpMessageConverter<?> c : converters) {
-//            if (c instanceof MappingJackson2HttpMessageConverter) {
-//                ((MappingJackson2HttpMessageConverter) c).getObjectMapper().setDateFormat(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"));
-//                break;
-//            }
-//        }
 
     }
 

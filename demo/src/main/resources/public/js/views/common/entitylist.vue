@@ -1,14 +1,7 @@
 <template>
   <div class="mod-user"  v-loading="loading">
-        <p>
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-  <el-breadcrumb-item :to="{ path: '/entity/list/'+this.entityName }">{{entityMeta.title}}列表</el-breadcrumb-item>
- 
- 
-</el-breadcrumb>
-     </p>
 
+      <l-navbread :navs="navs()"></l-navbread>
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="loadData()">
       <el-form-item>
         <el-input v-model="dataForm.query" placeholder="关键词" clearable></el-input>
@@ -62,8 +55,8 @@ define([
   "vue",
   'config',
   "v!views/common/searchbox",
-  "v!views/common/autotablecolumn"
-  
+  "v!views/common/autotablecolumn",
+  "v!views/common/navbread"
 ], function(Vue,config) {
   "use strict";
   return Vue.component("l-entitylist", {
@@ -101,6 +94,12 @@ define([
     },
 
     methods: {
+        navs(){
+            var data=[]
+            data.push({name:'首页',path:'/'})
+            data.push({name:this.entityMeta.title+'列表'})
+            return data
+        },
       //详情
       detail(id) {
         this.$router.push("/system/entity/detail/" + this.entityName + "/" + id);
@@ -229,15 +228,14 @@ define([
           .catch((ex) => {_this.message('删除失败：'+ex)});
       }
     },
-    mounted() {
-      this.entityName = this.$route.params.entityName;
-      this.loadData();
-    },
-
       activated(){
             this.entityName = this.$route.params.entityName;
             this.loadData();
-        }
+        },
+      beforeRouteUpdate(to){
+          this.entityName = to.params.entityName;
+          this.loadData();
+      }
 
   });
 });

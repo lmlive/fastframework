@@ -14,16 +14,13 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
 import java.util.UUID;
 
-@Controller
+@RestController
 @RequestMapping("/admin")
 public class LoginController {
     @Autowired
@@ -36,7 +33,6 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    @ResponseBody
     public BaseStaus login_in2(@RequestBody(required = false) Map map) {
         AuthenticationToken token = new UsernamePasswordToken(String.valueOf(map.get("username")), String.valueOf(map.get("password")), Boolean.parseBoolean(String.valueOf(map.get("remeber"))));
         String captcha = (String) map.get("captcha");

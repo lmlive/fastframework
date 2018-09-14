@@ -22,12 +22,12 @@
     <el-date-picker v-else-if="cmeta.uiMeta.uiType==='DateTime'"  value-format="yyyy-MM-dd HH:mm:ss" v-model="cvalue" type="datetime" placeholder="选择日期">
     </el-date-picker>
 
-    <el-upload v-else-if="cmeta.uiMeta.uiType==='Img'" :multiple="cmeta.uiMeta.multi" class="upload-demo" action="uploadUrl" :file-list="getupfilelist(cvalue)" ist-type="picture-card">
+    <el-upload v-else-if="cmeta.uiMeta.uiType==='Img'" :multiple="cmeta.uiMeta.multi" class="upload-demo" :action="uploadUrl" :file-list="getupfilelist(cvalue)" ist-type="picture-card">
         <el-button size="small" type="primary">点击上传</el-button>
         <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>
     </el-upload>
 
-    <el-upload v-else-if="cmeta.uiMeta.uiType==='File'" class="upload-demo" :multiple="cmeta.uiMeta.multi" action="uploadUrl" :file-list="getupfilelist(cvalue)">
+    <el-upload v-else-if="cmeta.uiMeta.uiType==='File'" class="upload-demo" :multiple="cmeta.uiMeta.multi" :action="uploadUrl" :file-list="getupfilelist(cvalue)">
         <el-button size="small" type="primary">点击上传</el-button>
         <div slot="tip" class="el-upload__tip">上传文件</div>
     </el-upload>
@@ -66,7 +66,8 @@ define([
       return {
         dictUrl: this.$http.addUrl(config.service.dictionaryPath),
         cvalue: this.value,
-        rules:[]
+        rules:[],
+          uploadUrl:this.$http.addUrl(config.service.uploadPath)
       };
     },
     watch: {

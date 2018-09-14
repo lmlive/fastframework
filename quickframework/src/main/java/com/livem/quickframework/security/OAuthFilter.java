@@ -49,10 +49,6 @@ public class OAuthFilter extends AccessControlFilter {
 			ServletResponse response) throws Exception {
 
 		saveRequest(request);
-		// OAuthResponse r = OAuthResponse
-		// .errorResponse(HttpServletResponse.SC_EXPECTATION_FAILED)
-		// .error(OAuthProblemException.error("Auth failed"))
-		// .buildJSONMessage();
 		HttpServletResponse res = (HttpServletResponse) response;
 		res.addHeader("Access-Control-Allow-Origin", "*");
 		res.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
@@ -61,7 +57,7 @@ public class OAuthFilter extends AccessControlFilter {
 		res.addHeader("Access-Control-Allow-Headers", "content-type");
 		res.addHeader("Access-Control-Max-Age", "1");
 		JSON.writeJSONString(response.getOutputStream(), new BaseStaus(
-				BaseStaus.CODE_ERROR, "not authed"));
+				BaseStaus.CODE_NOT_AUTHED, "not authed"));
 		// throw new AuthenticationException();
 		return false;
 

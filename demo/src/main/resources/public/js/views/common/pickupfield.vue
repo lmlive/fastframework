@@ -28,7 +28,7 @@ define([ "vue", "config"], function( Vue, config) {
       entityName: { required: true },
       pickFields: { required: false,default:null,type:Array },
       multiPick: { type: Boolean, required: false, default: false },
-      value: {},
+      value: {default:null},
       url: { type: String, required: false }
     },
     watch: {
@@ -72,7 +72,7 @@ define([ "vue", "config"], function( Vue, config) {
       },
       displayLabel(item) {
         if (this.pickFields!=null ) {
-          console.info(this.pickFields)
+
           return this.pickFields.map(d => {
               return item[d];
             }).join(",");
@@ -86,11 +86,14 @@ define([ "vue", "config"], function( Vue, config) {
       querySearch(q, value) {
         var _this = this;
         _this.loading = true;
-        var mockurl =config.service.entityListPath+this.entityName;// "entity/userlist.json";
-        if (value) mockurl += "?ids=" + value;
-
+        // const mockurl =config.service.entityListPath+this.entityName;// "entity/userlist.json";
+        // if (value) mockurl += "?ids=" + value;
+        let url=config.service.entityListPath+this.entityName
+          if(value!=null){
+              url+='?ids='+value
+          }
         this.$http({
-          url: _this.$http.addUrl(mockurl),
+          url: _this.$http.addUrl(url),
           params: { entityName: _this.entityName, keyword: q }
         })
           .then(({ data }) => {

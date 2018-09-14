@@ -173,17 +173,6 @@ public class ShiroAutoConfig implements ServletContextInitializer {
 		this.filterChain = filterChain;
 	}
 
-	// public static void main(String[] args) {
-	// String json =
-	// "{'/':'anon','/css/**':'anon','/js/**':'anon','/images/**':'anon','/**':'autc'}";
-	// JSONObject map = JSONObject.parseObject(json);
-	// LinkedHashMap<String, String> objmap = JSON.parseObject(json,
-	// LinkedHashMap.class);
-	// System.out.println(map.size());
-	// for (Entry<String, String> en : objmap.entrySet()) {
-	// System.out.println(en.getKey() + "----" + en.getValue());
-	// }
-	// }
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {

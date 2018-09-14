@@ -25,7 +25,7 @@ public class SysMenuSetup {
         //add menu
         SysMenu m=new SysMenu();
         m.setName("应用配置");
-        m.setUrl("/system/entity/signPage/Application");
+        m.setUrl("/system/entity/singlePage/Application");
         m.setPerms("sys:application:all");
         m.setParentId(root.getId());
         generiEntityService.updateOrSave(m);

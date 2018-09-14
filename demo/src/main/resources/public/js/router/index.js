@@ -150,13 +150,23 @@ function (Vue, Router, validate, loader,store,custRoute) {
                     isTab:false
                 }
             },{
-                path:'/system/entity/signPage/:entityName',
-                name:'dynamicSignPage',
+                path:'/system/entity/singlePage/:entityName',
+                name:'dynamicSinglePage',
                 component:function(){
-                    return loader('views/common/info')
+                    return loader('views/common/singlePageInfo')
                 },
                 meta:{
                     title:'单页',
+                    isTab:false
+                }
+            },{
+                path:'/system/entity/singlePageEdit/:entityName',
+                name:'dynamicSinglePageEdit',
+                component:function(){
+                    return loader('views/common/singlePageEdit')
+                },
+                meta:{
+                    title:'单页编辑',
                     isTab:false
                 }
             }

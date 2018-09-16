@@ -1,8 +1,6 @@
 package com.livem.quickframework.controller;
 
-import com.google.code.kaptcha.Producer;
 import com.livem.quickframework.entity.BaseEntity;
-import com.livem.quickframework.utils.ShiroUtils;
 import org.livem.dao.GeneriEntityService;
 import org.livem.dao.Query2;
 import org.livem.meta.ColumnMeta;
@@ -16,14 +14,8 @@ import org.springframework.cglib.core.ReflectUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.util.StringUtils;
 
-import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -56,7 +48,28 @@ public abstract class BaseController {
 
     }
 
+    protected Query2 buildQueryByKeyword(Class<?> entityClass, String keyword) {
+        Query2 query = generiEntityService.createQuery(entityClass);
+        if (StringUtils.isEmpty(keyword)) return query;
+        List<ColumnMeta> columns = propertyMetaService.getColumnMetasByEntityClass(entityClass);
+        List<String> strColumns = new ArrayList<>();
+        for (ColumnMeta c : columns) {
+            if (String.class.isAssignableFrom(c.getType())) {
+                strColumns.add(c.getDataKey());
+            }
+        }
+        if (!strColumns.isEmpty()) query.orLike(strColumns, keyword);
+        return query;
+
+    }
+
     protected Query2 buildCustQueryCriterion(Class<?> entityClass, Map<String, Object> mapParas) {
+
+        String keyword = "_keyword";
+        if(mapParas.containsKey(keyword)){
+            return buildQueryByKeyword(entityClass, (String) mapParas.get(keyword));
+        }
+
         Query2 query = generiEntityService.createQuery(entityClass);
 
         List<ColumnMeta> columns = propertyMetaService.getColumnMetasByEntityClass(entityClass);
@@ -69,7 +82,7 @@ public abstract class BaseController {
             String operKey = c.getDataKey().concat("_operation");
             if (mapParas.containsKey(operKey)) {
                 String operation = (String) mapParas.get(operKey);
-                String v = (String) mapParas.get(c.getDataKey());
+                Object v =  mapParas.get(c.getDataKey());
 
                 mapParas.put(operKey, operation);
 
@@ -80,23 +93,30 @@ public abstract class BaseController {
                     switch (operation) {
                         case "betwwen":
                             String keyBw2 = c.getDataKey() + "_bw2";
-                            String v2 = (String) mapParas.get(keyBw2);
+                            Object v2 =  mapParas.get(keyBw2);
 
                             bw.setPropertyValue(c.getDataKey(), v2);
                             Object obj2 = bw.getPropertyValue(c.getDataKey());
                             if (propertyValue != null && obj2 != null) {
-
-                                query.between(c.getDataKey(), (Date) propertyValue, (Date) obj2);
+                                query.between(c.getDataKey(),    propertyValue,  obj2);
                                 mapParas.put(keyBw2, obj2);
                             }
                             queryDesc.append(" ".concat(c.getTitle()).concat(" between ").concat(propertyValue.toString()).concat(",").concat(obj2.toString()).concat(";"));
                             break;
                         case ">":
-                            query.gt(c.getDataKey(), (Number) propertyValue);
+                              query.gt(c.getDataKey(),  propertyValue);
+                            queryDesc.append(" ".concat(c.getTitle()).concat(">").concat(propertyValue.toString()).concat(";"));
+                            break;
+                            case ">=":
+                              query.ge(c.getDataKey(),  propertyValue);
                             queryDesc.append(" ".concat(c.getTitle()).concat(">").concat(propertyValue.toString()).concat(";"));
                             break;
                         case "<":
-                            query.le(c.getDataKey(), Double.parseDouble(propertyValue.toString()));
+                            query.lt(c.getDataKey(), propertyValue);
+                            queryDesc.append(" ".concat(c.getTitle()).concat("<").concat(propertyValue.toString()).contains(";"));
+                            break;
+                            case "<=":
+                            query.le(c.getDataKey(), propertyValue);
                             queryDesc.append(" ".concat(c.getTitle()).concat("<").concat(propertyValue.toString()).contains(";"));
                             break;
                         case "==":
@@ -104,7 +124,7 @@ public abstract class BaseController {
                             queryDesc.append(" ".concat(c.getTitle()).concat("==").concat(propertyValue.toString()).contains(";"));
                             break;
                         case "like":
-                            query.like(c.getDataKey(), propertyValue + "");
+                            query.like(c.getDataKey(), String.valueOf(propertyValue) );
                             queryDesc.append(" ".concat(c.getTitle()).concat(" like ").concat(propertyValue.toString()).concat(";"));
                             break;
                         case "is null":

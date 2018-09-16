@@ -214,23 +214,22 @@ public class EntityQuery<T> implements Query2<T> {
      * @param go           属性结束值
      */
     @Override
-    public Query2 between(String propertyName, Date lo, Date go) {
+    public Query2 between(String propertyName, Object lo, Object go) {
         if (!isNullOrEmpty(lo) && !isNullOrEmpty(go)) {
-            this.predicates.add(criteriaBuilder.between(from.get(propertyName), lo, go));
+            if (lo instanceof Date)
+                this.predicates.add(criteriaBuilder.between(from.get(propertyName), (Date) lo, (Date) go));
+            else if (lo instanceof Number) {
+                if (!(isNullOrEmpty(lo))) ge(propertyName, lo);
+
+                if (!(isNullOrEmpty(go))) le(propertyName, go);
+            }
+
         }
 
         return this;
 
     }
 
-    @Override
-    public Query2 between(String propertyName, Number lo, Number go) {
-        if (!(isNullOrEmpty(lo))) ge(propertyName, lo);
-
-        if (!(isNullOrEmpty(go))) le(propertyName, go);
-
-        return this;
-    }
 
     /**
      * 小于等于
@@ -239,11 +238,15 @@ public class EntityQuery<T> implements Query2<T> {
      * @param value        属性值
      */
     @Override
-    public Query2 le(String propertyName, Number value) {
+    public Query2 le(String propertyName, Object value) {
         if (isNullOrEmpty(value)) {
             return this;
         }
-        this.predicates.add(criteriaBuilder.le(from.get(propertyName), value));
+        if (value instanceof Number) this.predicates.add(criteriaBuilder.le(from.get(propertyName), (Number) value));
+        else if (value instanceof Date) {
+            this.predicates.add(criteriaBuilder.lessThanOrEqualTo(from.get(propertyName), (Date) value));
+        }
+
         return this;
     }
 
@@ -254,11 +257,14 @@ public class EntityQuery<T> implements Query2<T> {
      * @param value        属性值
      */
     @Override
-    public Query2 lt(String propertyName, Number value) {
+    public Query2 lt(String propertyName, Object value) {
         if (isNullOrEmpty(value)) {
             return this;
         }
-        this.predicates.add(criteriaBuilder.lt(from.get(propertyName), value));
+        if (value instanceof Number) this.predicates.add(criteriaBuilder.lt(from.get(propertyName), (Number) value));
+        else if (value instanceof Date) {
+            this.predicates.add(criteriaBuilder.lessThan(from.get(propertyName), (Date) value));
+        }
         return this;
     }
 
@@ -269,11 +275,14 @@ public class EntityQuery<T> implements Query2<T> {
      * @param value        属性值
      */
     @Override
-    public Query2 ge(String propertyName, Number value) {
+    public Query2 ge(String propertyName, Object value) {
         if (isNullOrEmpty(value)) {
             return this;
         }
-        this.predicates.add(criteriaBuilder.ge(from.get(propertyName), value));
+        if (value instanceof Number) this.predicates.add(criteriaBuilder.ge(from.get(propertyName), (Number) value));
+        else if (value instanceof Date) {
+            this.predicates.add(criteriaBuilder.greaterThanOrEqualTo(from.get(propertyName), (Date) value));
+        }
         return this;
     }
 
@@ -284,11 +293,15 @@ public class EntityQuery<T> implements Query2<T> {
      * @param value        属性值
      */
     @Override
-    public Query2 gt(String propertyName, Number value) {
+    public Query2 gt(String propertyName, Object value) {
         if (isNullOrEmpty(value)) {
             return this;
         }
-        this.predicates.add(criteriaBuilder.gt(from.get(propertyName), value));
+        if (value instanceof Number)
+        this.predicates.add(criteriaBuilder.gt(from.get(propertyName), (Number) value));
+    else if (value instanceof Date) {
+            this.predicates.add(criteriaBuilder.greaterThan(from.get(propertyName), (Date) value));
+        }
         return this;
     }
 
@@ -355,7 +368,7 @@ public class EntityQuery<T> implements Query2<T> {
     @Override
     public Long count() {
         Expression<Long> q = this.criteriaBuilder.count(this.from);
-        return (Long) this.entityManager.createQuery( this.newCriteriaQuery().select(q)).getSingleResult();
+        return (Long) this.entityManager.createQuery(this.newCriteriaQuery().select(q)).getSingleResult();
     }
 
     @Override

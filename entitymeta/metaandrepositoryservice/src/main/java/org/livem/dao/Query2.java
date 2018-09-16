@@ -24,17 +24,17 @@ public interface Query2<T> {
 
     Query2 like(String propertyName, String value);
 
-    Query2 between(String propertyName, Date lo, Date go);
+    Query2 between(String propertyName, Object lo, Object go);
 
-    Query2 between(String propertyName, Number lo, Number go);
 
-    Query2 le(String propertyName, Number value);
 
-    Query2 lt(String propertyName, Number value);
+    Query2 le(String propertyName, Object value);
 
-    Query2 ge(String propertyName, Number value);
+    Query2 lt(String propertyName, Object value);
 
-    Query2 gt(String propertyName, Number value);
+    Query2 ge(String propertyName, Object value);
+
+    Query2 gt(String propertyName, Object value);
 
     Query2 in(String propertyName, Collection value);
 

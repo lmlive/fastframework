@@ -1,5 +1,6 @@
 package org.livem.entitymeta.service.Impl;
 
+import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.livem.entitymeta.service.AttributeParser;
 import org.livem.entitymeta.service.EntityTypeParser;
 import org.livem.meta.ColumnMeta;
@@ -16,6 +17,7 @@ import javax.persistence.metamodel.EntityType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class JpaMetaService implements EntityMetaService, PropertyMetaService {
 
@@ -59,8 +61,6 @@ public class JpaMetaService implements EntityMetaService, PropertyMetaService {
 
         EntityMeta meta = getCache().get(entityName, EntityMeta.class);
         if (meta != null) return meta;
-
-
         Class<?> type = getEntityClass(entityName);
         if (type != null) {
             EntityType<?> entityType = em.getMetamodel().entity(type);
@@ -135,19 +135,38 @@ public class JpaMetaService implements EntityMetaService, PropertyMetaService {
 
     @Override
     public List<ColumnMeta> getColumnMetasByEntityClass(Class<?> entityClass) {
-        EntityType<?> entityType = em.getMetamodel().entity(entityClass);
-        if (entityType != null) {
-            Set<? extends Attribute<?, ?>> attrs = entityType.getAttributes();
-           //TODO  columns display order
-            List<ColumnMeta> result = new ArrayList<>();
-            for (Attribute<?, ?> attr : attrs) {
-                result.add(attributeParser.getColumnMeta(entityClass,attr));
-            }
-            getCache().putIfAbsent(getColumnMetaCacheKey(entityClass.getSimpleName()), result);
-            getCache().putIfAbsent(getColumnMetaCacheKey(entityClass.getName()), result);
-            return result;
+        String key = getColumnMetaCacheKey(entityClass.getName());
+        List<ColumnMeta> cached=   getCache().get(key,List.class);
+        if(cached!=null)return cached;
+
+        List<? extends Attribute<?, ?>> attrs = getOrderedColumns(entityClass);
+        List<ColumnMeta> result = new ArrayList<>();
+        for (Attribute<?, ?> attr : attrs) {
+            result.add(attributeParser.getColumnMeta(entityClass, attr));
         }
-        return  null;
+        getCache().putIfAbsent(getColumnMetaCacheKey(entityClass.getSimpleName()), result);
+        getCache().putIfAbsent(getColumnMetaCacheKey(entityClass.getName()), result);
+        return result;
+
+    }
+
+
+    List<Attribute<?, ?>> getOrderedColumns(Class<?> entityClass) {
+        EntityType<?> entityType = em.getMetamodel().entity(entityClass);
+        List<String> orders = getEntityMetaByClass(entityClass).getOrderColumns();
+        List<Attribute<?, ?>> attributes = new ArrayList<>();
+        for (String column : orders) {
+            Attribute<?, ?> att = entityType.getAttribute(column);
+            if (att != null) {
+                attributes.add(att);
+            }
+        }
+
+        for (Attribute<?, ?> att : entityType.getAttributes()) {
+            if(!attributes.contains(att))
+                continue;;
+        }
+        return attributes;
 
     }
 }

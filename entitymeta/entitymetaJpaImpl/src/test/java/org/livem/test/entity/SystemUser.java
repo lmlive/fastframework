@@ -1,6 +1,7 @@
 package org.livem.test.entity;
 
 import org.hibernate.annotations.NaturalId;
+import org.livem.entitymeta.annotation.EntityConfig;
 import org.livem.entitymeta.annotation.Field;
 import  org.livem.test.EntityListProprertyConvert;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@EntityConfig(orders = {"id","loginName","password","age","roles","introduce"})
 public class SystemUser  extends  BaseEntity   {
 
 	@Column(unique=true)

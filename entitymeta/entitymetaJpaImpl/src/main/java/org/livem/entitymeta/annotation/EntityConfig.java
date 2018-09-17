@@ -17,11 +17,16 @@ public @interface EntityConfig {
      * 列表显示的列
      * @return
      */
-    String[] value() default "";
+    String[] value() default {};
+
+    /*
+    列显示顺序
+     */
+    String[] orders() default {};
     /*
     * 关联选择显示的列
      */
-    String[] pickColumns() default "";
+    String[] pickColumns() default {};
 
     /**
      * 是否单页

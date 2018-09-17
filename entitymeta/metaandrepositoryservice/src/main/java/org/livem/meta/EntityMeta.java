@@ -16,6 +16,8 @@ public class EntityMeta implements Serializable{
 	private List<String> pickFields;
 //	显示字段
 	private List<String> disColumn=new ArrayList<String>();
+	//列排序
+	private List<String> orderColumns=new ArrayList<>();
 	/**
 	 * 是否是单页对象(单页entity无list页面)
 	 */
@@ -86,4 +88,11 @@ public class EntityMeta implements Serializable{
 		this.disColumn = disColumn;
 	}
 
+	public List<String> getOrderColumns() {
+		return orderColumns;
+	}
+
+	public void setOrderColumns(List<String> orderColumns) {
+		this.orderColumns = orderColumns;
+	}
 }

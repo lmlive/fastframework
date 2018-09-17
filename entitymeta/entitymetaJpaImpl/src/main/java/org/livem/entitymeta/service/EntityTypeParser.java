@@ -9,10 +9,11 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import java.util.*;
 
-public class EntityTypeParser     {
+public class EntityTypeParser {
     private MessageSource messageSource;
     private EntityType<?> entityType;
     private Locale locale;
+
     public EntityTypeParser(EntityType<?> entityType) {
         this.entityType = entityType;
     }
@@ -33,30 +34,44 @@ public class EntityTypeParser     {
         EntityConfig display = entityType.getJavaType().getAnnotation(EntityConfig.class);
         Set<? extends Attribute<?, ?>> columns = entityType.getDeclaredAttributes();
         List<String> listColumns = new ArrayList<>();
-        for (Attribute<?, ?> column : columns) {
-            listColumns.add(column.getName());
-        }
-        meta.setDisColumn(listColumns);
-        meta.setPickFields(listColumns);
+        List<String> orderedDisplay = getDefaultOrderedColumn(display.orders(), columns);
+
+        meta.setDisColumn(orderedDisplay);
+        meta.setPickFields(orderedDisplay);
+
         if (display != null) {
             String[] vs = display.value();
-            if (vs != null) meta.setDisColumn(Arrays.asList(vs));
+            if (vs.length > 0) meta.setDisColumn(Arrays.asList(vs));
+
             String[] ps = display.pickColumns();
-            if (ps != null) meta.setPickFields(Arrays.asList(ps));
+            if (ps.length > 0) meta.setPickFields(Arrays.asList(ps));
             meta.setSinglePage(display.siglePage());
             meta.setTitle(display.title());
+            meta.setOrderColumns(Arrays.asList(display.orders()));
+
         }
 
-
         if (StringUtils.isEmpty(meta.getTitle()) && messageSource != null) {
-            String key = meta.getEntityClass().getSimpleName() ;
-            String disName = messageSource.getMessage(key, new Object[]{meta.getEntityName()},key, locale);
+            String key = meta.getEntityClass().getSimpleName();
+            String disName = messageSource.getMessage(key, new Object[]{meta.getEntityName()}, key, locale);
             meta.setTitle(disName);
         }
 
         return meta;
 
 
+    }
+
+    List<String> getDefaultOrderedColumn(String[] ordered, Set<? extends Attribute<?, ?>> attributes) {
+        List<String> orderedDisplay = new ArrayList<>();
+        orderedDisplay.addAll(Arrays.asList(ordered));
+        for (Attribute<?, ?> column : attributes) {
+            String name = column.getName();
+            if (!orderedDisplay.contains(name)) {
+                orderedDisplay.add(name);
+            }
+        }
+        return orderedDisplay;
     }
 
 

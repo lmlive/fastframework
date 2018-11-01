@@ -16,7 +16,6 @@ import org.livem.dao.GeneriEntityService;
 import org.livem.dao.Query2;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.util.Assert;
-import org.thymeleaf.dialect.springdata.util.Strings;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -63,7 +62,7 @@ public class ComposeRelm extends AuthorizingRealm {
             throw new AuthenticationException("账号已不存在");
         }
 
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user.getId(), Strings.EMPTY, getName());// password
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user.getId(), "", getName());// password
         // set empty
         // when
         // oauth

@@ -38,6 +38,7 @@ public class EntityTypeParser {
 
         meta.setDisColumn(orderedDisplay);
         meta.setPickFields(orderedDisplay);
+        meta.setOrderColumns(orderedDisplay);
 
         if (display != null) {
             String[] vs = display.value();
@@ -47,6 +48,7 @@ public class EntityTypeParser {
             if (ps.length > 0) meta.setPickFields(Arrays.asList(ps));
             meta.setSinglePage(display.siglePage());
             meta.setTitle(display.title());
+            if(display.orders().length>0)
             meta.setOrderColumns(Arrays.asList(display.orders()));
 
         }

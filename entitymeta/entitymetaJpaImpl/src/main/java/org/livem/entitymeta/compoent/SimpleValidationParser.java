@@ -31,7 +31,7 @@ public class SimpleValidationParser implements ValidationParser {
         if (ann != null) {
             Validation info = new Validation();
             info.setErrorMsg(StringUtils.isEmpty(ann.message()) ? "此字段不能为空" : ann.message());
-            info.setRegEx("^\\S+$");
+            info.setRegEx("\\S+");
             info.setValidName("required");
             info.setRequired(true);
             lst.add(info);
@@ -77,7 +77,7 @@ public class SimpleValidationParser implements ValidationParser {
         NotBlank ann7 = Util.getAttrAnnotation(attribute, NotBlank.class);
         if (ann7 != null) {
             Validation info=new Validation();
-            info.setRegEx("^\\S+$");
+            info.setRegEx("\\S+");
             info.setValidName("required");
             info.setErrorMsg("不能为空");
             info.setRequired(true);

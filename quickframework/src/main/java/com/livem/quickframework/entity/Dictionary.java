@@ -1,8 +1,10 @@
 package com.livem.quickframework.entity;
 
+import com.alibaba.fastjson.JSON;
 import com.livem.quickframework.convert.attr.EntityMapPropertyConvert;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.NotBlank;
+import org.json.JSONObject;
 import org.livem.entitymeta.annotation.EntityConfig;
 import org.livem.entitymeta.annotation.Field;
 import org.livem.meta.UIType;
@@ -11,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.Map;
 
 @Entity
@@ -62,4 +65,20 @@ public class Dictionary extends BaseEntity {
 		this.value = value;
 	}
 
+
+	public static void main(String[] args) {
+		Map<String,Object> map=new HashMap<>();
+		map.put("0","男");
+		map.put("1","女");
+
+
+		Dictionary dictionary=new Dictionary();
+		dictionary.setGroup("1");
+		dictionary.setKey("test");
+		dictionary.setValue(map);
+		System.out.println(JSON.toJSONString(dictionary));
+		String json="{\"group\":\"SYSTEM_DATA\",\"id\":1,\"key\":\"sex\",\"value\":\"{\\\"0\\\":\\\"男\\\",\\\"1\\\":\\\"女\\\"}\"}";
+		Dictionary d = JSON.parseObject(json, Dictionary.class);
+		System.out.println(d==null);
+	}
 }

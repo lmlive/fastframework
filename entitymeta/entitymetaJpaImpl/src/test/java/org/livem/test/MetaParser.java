@@ -10,6 +10,7 @@ import org.livem.meta.EntityMeta;
 import org.livem.metaservice.EntityMetaService;
 import org.livem.metaservice.PropertyMetaService;
 import org.livem.test.entity.House;
+import org.livem.test.entity.Role;
 import org.livem.test.entity.SystemUser;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -77,7 +78,7 @@ public class MetaParser {
     public void get_column_meta() {
         runner.withConfiguration(AutoConfigurations.of(JpaEntityMetaBooter.class)).withConfiguration(AutoConfigurations.of(MetaParser.class)).run(ct -> {
             PropertyMetaService service = ct.getBean(PropertyMetaService.class);
-            List<ColumnMeta> columns = service.getColumnMetasByEntityClass(SystemUser.class);
+            List<ColumnMeta> columns = service.getColumnMetasByEntityClass(Role.class);
             Assert.assertNotNull(columns);
             Assert.assertTrue(columns.size() > 0);
 
@@ -85,6 +86,7 @@ public class MetaParser {
             for (ColumnMeta column : columns) {
                 System.out.println(JSON.toJSONString(column));
             }
+            Assert.assertFalse(columns.isEmpty());
         });
     }
 

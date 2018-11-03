@@ -33,10 +33,10 @@ public class EntityTypeParser {
         meta.setEntityName(entityType.getName());
         EntityConfig display = entityType.getJavaType().getAnnotation(EntityConfig.class);
         Set<? extends Attribute<?, ?>> columns = entityType.getDeclaredAttributes();
-        List<String> listColumns = new ArrayList<>();
         List<String> orderedDisplay = getDefaultOrderedColumn(display.orders(), columns);
 
         meta.setDisColumn(orderedDisplay);
+        meta.setOrderColumns(orderedDisplay);
         meta.setPickFields(orderedDisplay);
         meta.setOrderColumns(orderedDisplay);
 
